@@ -3,32 +3,30 @@
 
 <head>
 
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
 
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="surt.css">
 
     <script src="../js/jquery-1.9.0.js"></script>
 
+    <script src="../surt.js"></script>
     <script src="surt.js"></script>
-    <script src="script.js"></script>
 
-    <title></title>
+    <title>Surt</title>
 
 </head>
 
 <body class="page__body">
 
-    <div class="search">
-        <div class="search__input" contenteditable="true"></div>
-
-        <!-- Autocomplete -->
-        <div class="search__clone">
-            <span class="search__clone-main"></span><span class="search__clone-hint"></span>
+    <div class="surt">
+        <div class="surt__input" contenteditable="true"></div>
+        <!-- Клон инпута для подсказок -->
+        <div class="surt__clone">
+            <span class="surt__clone-main"></span><span class="surt__clone-hint"></span>
         </div>
-
-        <!-- Suggest -->
-        <ul class="search__suggests">
-            <li class="search__suggests-item"></li>
+        <!-- Выпадающий список -->
+        <ul class="surt__suggests">
+            <li class="surt__suggests-item"></li>
         </ul>
     </div>
 
