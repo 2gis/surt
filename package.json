@@ -1,0 +1,27 @@
+{
+  "name": "surt",
+  "description": "Smart suggest.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/Diokuz/surt",
+  "authors": [
+    "Dmitry Kuznecov <@Diokuz>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Diokuz/surt.git"
+  },
+  "keywords": [
+    "scrollbar",
+    "custom",
+    "crossbrowser"
+  ],
+  "main": "./surt.js",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-concat": "~0.1.3",
+    "grunt-contrib-uglify": "~0.2.0",
+    "mocha": "~1.9.0",
+    "mocha-phantomjs": "~3.0.0",
+    "chai": "~1.7.0"
+  }
+}
