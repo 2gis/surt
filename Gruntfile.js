@@ -23,7 +23,7 @@ module.exports = function(grunt) {
             options: {
                 reporter: 'dot'
             },
-            all: ['dist/parser.spec.js']
+            all: ['dist/*.spec.js']
         }
     });
 
