@@ -18,12 +18,20 @@ module.exports = function(grunt) {
                 view: '1024x768'
             },
             all: ['test/*.auto.html']
+        },
+        mochacli: {
+            options: {
+                reporter: 'dot'
+            },
+            all: ['dist/parser.spec.js']
         }
     });
 
     //grunt.loadNpmTasks('mocha-phantomjs');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-mocha-cli');
 
     grunt.registerTask('default', ['uglify:def']);
-    grunt.registerTask('test', ['mocha-phantomjs']);
+    grunt.registerTask('dom', ['mocha-phantomjs']);
+    grunt.registerTask('test', ['mochacli']);
 };
