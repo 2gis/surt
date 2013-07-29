@@ -28,7 +28,7 @@
             return this.kit;
         },
 
-        // Устанавливает новый кит (только в этом месте)
+        // Устанавливает новые данные (set - единственная точка входа на новые данные)
         set: function(data) {
             this.kit = data.kit;
             this.suggest = data.suggest;
