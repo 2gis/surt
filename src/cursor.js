@@ -37,7 +37,7 @@
 
         var selection = window.getSelection();
 
-        if ( !selection.anchorNode ) return;
+        if ( !selection.anchorNode ) return; // No selection at all
 
         var range = selection.getRangeAt(0),
             container = range.startContainer, // Returns the Node within which the Range starts.
@@ -46,7 +46,7 @@
         
         // Цикл вверх по родителям, вплоть до node
         var N = offset;
-        while (child && child != parent) {
+        while (child && child != this.inputNode) {
             var i = 0,
                 sibling = child.previousSibling,
                 text;
