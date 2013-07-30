@@ -27,6 +27,8 @@
                 };
             }
         }
+
+        return {};
     }
 
     // Сохраняет позицию курсора
@@ -64,7 +66,9 @@
     };
 
     surt.fn.restoreCursor = function() {
-        if (!node || typeof N == 'undefined') return;
+        if (!window.getSelection) return; // IE8-
+
+        // if (!node || typeof N == 'undefined') return;
 
         var input = this.input,
             range = document.createRange(),

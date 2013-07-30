@@ -28,16 +28,18 @@
         mocha.ui('bdd');
         mocha.reporter('html');
     </script>
-
-    <div class="surt surt_dropdown_true">
-        <div class="surt__wrap">
-            <div class="surt__input" contenteditable="true"></div>
-            <!-- Клон инпута для подсказок -->
-            <div class="surt__clone">
-                <span class="surt__clone-main"></span><span class="surt__clone-hint"></span>
+    
+    <div class="wrapper">
+        <div class="surt surt_dropdown_true">
+            <div class="surt__wrap">
+                <div class="surt__input" contenteditable="true"></div>
+                <!-- Клон инпута для подсказок -->
+                <div class="surt__clone">
+                    <span class="surt__clone-main"></span><span class="surt__clone-hint"></span>
+                </div>
+                <!-- Выпадающий список -->
+                <ul class="surt__suggests"></ul>
             </div>
-            <!-- Выпадающий список -->
-            <ul class="surt__suggests"></ul>
         </div>
     </div>
 

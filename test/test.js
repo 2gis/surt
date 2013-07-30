@@ -1,4 +1,10 @@
+var originalHTML = '<div class="surt surt_dropdown_true"><div class="surt__wrap"><div class="surt__input" contenteditable="true"></div><div class="surt__clone"><span class="surt__clone-main"></span><span class="surt__clone-hint"></span></div><ul class="surt__suggests"></ul></div></div>'
+
 describe('Инициализация.', function() { // При кривой инициализации конструктор должен возвращать undefined
+    beforeEach(function() {
+        $('.wrapper').html(originalHTML);
+    });
+
     it('По-умолчанию', function() {
         var suggest = surt();
 
@@ -85,6 +91,10 @@ describe('Инициализация.', function() { // При кривой ин
 });
 
 describe('События.', function() {
+    beforeEach(function() {
+        $('.wrapper').html(originalHTML);
+    });
+
     it('Параметр change', function() {
         var x = 0;
 
@@ -99,5 +109,66 @@ describe('События.', function() {
         });
 
         $('.surt__input').trigger('keyup');
+
+        suggest.dispose();
     });
 });
+
+describe('HTML.', function() {
+    before(function() {
+        $('.wrapper').html(originalHTML);
+        suggest = surt({
+            root: '.surt',
+            input: '.surt__input'
+        });
+    });
+
+    var suggest;
+
+    function getHTML() {
+        return $('.surt__input').html() + $('.surt__clone-main').html() + $('.surt__clone-hint').html() + $('.surt__suggests').html();
+    }
+
+    it('Объект данных undefined', function() {
+        suggest.set();
+
+        var html = getHTML();
+        assert(html == '', 'В отсутствии данных сагест не генерирует html');
+    });
+
+    it('Пустой объек данных', function() {
+        suggest.set({});
+
+        var html = getHTML();
+        assert(html == '', 'В отсутствии данных сагест не генерирует html');
+    });
+
+    it('Пустые кит и сагест', function() {
+        suggest.set({
+            kit: [],
+            suggest: []
+        });
+
+        var html = getHTML();
+        assert(html == '', 'В отсутствии данных сагест не генерирует html');
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

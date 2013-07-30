@@ -106,8 +106,9 @@
 
         // Устанавливает новые данные (set - единственная точка входа на новые данные)
         set: function(data) {
-            this.kit = data.kit;
-            this.suggest = data.suggest;
+            data = data || {};
+            this.kit = data.kit || [];
+            this.suggest = data.suggest || [];
             this.update();
 
             // Событие change
@@ -115,11 +116,6 @@
                 this.change();
             }
         },
-
-        
-        // query: function() {
-        //     return this.parser();
-        // },
 
         // Обновляет UI
         update: function() {
