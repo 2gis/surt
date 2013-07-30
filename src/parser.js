@@ -68,7 +68,7 @@
 
     surt.parser = parser;
 
-    if (typeof module != undefined) {
+    if (typeof module != "undefined") {
         module.exports = parser;
     }
 })(this);

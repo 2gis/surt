@@ -31,8 +31,10 @@
 
     surt.fn.cursor = {
         save: function() {
-            var selection = window.getSelection(),
-                range = selection.getRangeAt(0),
+            var selection = window.getSelection();
+            if ( !selection.anchorNode ) return;
+
+            var range = selection.getRangeAt(0),
                 container = range.startContainer, // Returns the Node within which the Range starts.
                 offset = range.startOffset, // Returns a number representing where in the startContainer the Range starts.
                 child = container; // Может быть текстовая нода, наверняка
@@ -73,10 +75,13 @@
                 n = obj.n;
             }
             
-            range.setStart(targetNode, n); // Sets the start position of a Range.
-            range.collapse(true); // Collapses the Range to one of its boundary points.
-            selection.removeAllRanges(); // Removes all ranges from the selection.
-            selection.addRange(range); // A range object that will be added to the selection.
+            if (targetNode && targetNode.nodeType == 3) {
+                range.setStart(targetNode, n); // Sets the start position of a Range.
+                range.collapse(true); // Collapses the Range to one of its boundary points.
+                selection.removeAllRanges(); // Removes all ranges from the selection.
+                selection.addRange(range); // A range object that will be added to the selection.
+            }
+            
             input.focus();
         }
     };
