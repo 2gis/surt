@@ -1,5 +1,6 @@
 $(document).ready(function() {
     var suggest = surt({
+        root: '.surt',
         input: '.surt__input',
         suggest: '.surt__suggests',
         suggestItem: '.surt__suggests-item',
@@ -29,7 +30,7 @@ $(document).ready(function() {
 
         newData.kit = data.kit; // Добавлять выбранные в кит
 
-        for (var i=0; i<mock.length; i++) {
+        for (var i = 0; i < mock.length; i++) {
 
             // Строим актуальный кит
 
@@ -37,10 +38,10 @@ $(document).ready(function() {
             // Текстовые совпадения для саггестов
             var matchPosition = mock[i]["text"].indexOf(data.token.text);
 
-            if (matchPosition+1) {
+            if (matchPosition + 1) {
                 suggest = data.kit.push(mock[i]);
 
-                if (matchPosition==0) newData.suggests.unshift(suggest);
+                if (matchPosition == 0) newData.suggests.unshift(suggest);
                 else newData.suggests.push(suggest);
             }
         }

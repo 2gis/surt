@@ -9,11 +9,40 @@
         if (!$) return;
 
         // Обработка режима плагина jQuery
-        if (!(params && params.input) && this && this[0] && this[0].nodeType == 1) {
-            params.input = this[0];
+        if (!(params && params.root) && this && this[0] && this[0].nodeType == 1) {
+            params.root = this[0];
         }
 
-        return new surt.fn.constructor(params, $);
+        function validateNode(node, name) {
+            if (!(node && node.nodeType == 1)) {
+                throw new Error('Surt: html element ' + name + ' not found or it has wrong nodeType');
+            }
+        }
+
+        try {
+            params.root = $(params.root)[0];
+
+            validateNode(params.root, 'params.root');
+            if (params.input) {
+                params.input = $(params.input)[0];
+            }
+            if (!params.input) {
+                params.input = $('[contenteditable="true"]', params.root);
+            }
+            validateNode(params.input, 'params.input');
+            
+            if ($(params.root).attr('data-surt-inited') == 'true') {
+                throw new Error('Surt: already initialized');
+                return;
+            }
+
+            ret = new surt.fn.constructor(params, $);
+        } catch (e) {
+            console.warn(e.name + ': ', e.message);
+            return;
+        }
+
+        return ret;
     };
 
     surt.fn = {
@@ -23,17 +52,21 @@
             this.params = params;
             this.parser = surt.parser;
             this.input = $(params.input)[0];
+            this.root = $(params.root)[0];
 
             if (!(this.input && this.input.nodeType == 1)) {
-                console.warn('Surt: input not found or it has wrong nodeType');
+                throw new Error('Surt: input not found or it has wrong nodeType');
                 return;
             }
 
             this.kit = [];
             // this.query = '';
 
+            // К этому месту считаем, что инициализация прошла успешно
+            $(this.root).attr('data-surt-inited', true);
+
             // Навешиваем все необходимые события
-            $(params.input)
+            $(this.input)
                 .on('keyup', function(e){
                     var key = e.keyCode;
 
@@ -60,7 +93,10 @@
                 .on('blur', function() {
                     $('.surt').removeClass('surt_state_focus');
                 });
+        },
 
+        dispose: function() {
+            $(this.root).attr('data-surt-inited', 'disposed');
         },
 
         // Возвращает текущий кит

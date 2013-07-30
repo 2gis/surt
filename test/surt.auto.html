@@ -10,7 +10,7 @@
     <script src="../src/parser.js"></script>
     <script src="../src/cursor.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="../demo/surt.css" />
     <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
 
     <title>Surt auto-test page</title>
@@ -21,6 +21,7 @@
     <div id="mocha"></div>
     <script src="../node_modules/mocha/mocha.js"></script>
     <script src="../node_modules/chai/chai.js"></script>
+
     <script>
         var assert = chai.assert;
 
@@ -28,31 +29,19 @@
         mocha.reporter('html');
     </script>
 
-    
+    <div class="surt surt_dropdown_true">
+        <div class="surt__wrap">
+            <div class="surt__input" contenteditable="true"></div>
+            <!-- Клон инпута для подсказок -->
+            <div class="surt__clone">
+                <span class="surt__clone-main"></span><span class="surt__clone-hint"></span>
+            </div>
+            <!-- Выпадающий список -->
+            <ul class="surt__suggests"></ul>
+        </div>
+    </div>
 
-
-    <script>
-        
-        describe('Инициализация. ', function() {
-            it('По-умолчанию', function() {
-                var suggest = surt();
-
-                assert(suggest);
-            });
-
-            it('С пустым объектом параметров', function() {
-                var suggest = surt();
-                
-                assert(suggest);
-            });
-
-            it('Только с инпутом в параметрах', function() {
-                var suggest = surt();
-                
-                assert(suggest);
-            });
-        });
-    </script>
+    <script src="test.js"></script>
 
     <script>
         if (window.mochaPhantomJS) { mochaPhantomJS.run(); }

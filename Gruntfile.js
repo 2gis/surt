@@ -13,7 +13,7 @@ module.exports = function(grunt) {
                 }
             }
         },
-        'mocha_phantomjs': {
+        'mocha-phantomjs': {
             options: {
                 view: '1024x768'
             },
@@ -27,12 +27,13 @@ module.exports = function(grunt) {
         }
     });
 
+    grunt.loadTasks('tasks');
     //grunt.loadNpmTasks('mocha-phantomjs');
-    grunt.loadNpmTasks('grunt-mocha-phantomjs');
+    //grunt.loadNpmTasks('grunt-mocha-phantomjs');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-mocha-cli');
 
     grunt.registerTask('default', ['uglify:def']);
-    grunt.registerTask('dom', ['mocha_phantomjs']);
-    grunt.registerTask('test', ['mochacli']);
+    //grunt.registerTask('dom', ['mocha-phantomjs']);
+    grunt.registerTask('test', ['mochacli', 'mocha-phantomjs']);
 };
