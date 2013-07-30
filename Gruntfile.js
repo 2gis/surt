@@ -1,8 +1,8 @@
 module.exports = function(grunt) {
 
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
-        uglify: {
+        'pkg': grunt.file.readJSON('package.json'),
+        'uglify': {
             options: {
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
             },
@@ -13,13 +13,13 @@ module.exports = function(grunt) {
                 }
             }
         },
-        'mocha-phantomjs': {
+        'mocha_phantomjs': {
             options: {
                 view: '1024x768'
             },
             all: ['test/*.auto.html']
         },
-        mochacli: {
+        'mochacli': {
             options: {
                 reporter: 'dot'
             },
@@ -28,6 +28,7 @@ module.exports = function(grunt) {
     });
 
     //grunt.loadNpmTasks('mocha-phantomjs');
+    grunt.loadNpmTasks('grunt-mocha-phantomjs');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-mocha-cli');
 

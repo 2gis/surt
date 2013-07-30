@@ -29,60 +29,63 @@
         }
     }
 
-    surt.fn.cursor = {
-        save: function() {
-            var selection = window.getSelection();
-            if ( !selection.anchorNode ) return;
+    // Сохраняет позицию курсора
+    surt.fn.saveCursor = function() {
+        if (!window.getSelection) return; // IE8-
 
-            var range = selection.getRangeAt(0),
-                container = range.startContainer, // Returns the Node within which the Range starts.
-                offset = range.startOffset, // Returns a number representing where in the startContainer the Range starts.
-                child = container; // Может быть текстовая нода, наверняка
+        var selection = window.getSelection();
+
+        if ( !selection.anchorNode ) return;
+
+        var range = selection.getRangeAt(0),
+            container = range.startContainer, // Returns the Node within which the Range starts.
+            offset = range.startOffset, // Returns a number representing where in the startContainer the Range starts.
+            child = container; // Может быть текстовая нода, наверняка
+        
+        // Цикл вверх по родителям, вплоть до node
+        var N = offset;
+        while (child && child != parent) {
+            var i = 0,
+                sibling = child.previousSibling,
+                text;
             
-            // Цикл вверх по родителям, вплоть до node
-            var N = offset;
-            while (child && child != parent) {
-                var i = 0,
-                    sibling = child.previousSibling,
-                    text;
-                
-                while (sibling) {
-                    text = $(sibling).text();
-                    N += text.length; // К позиции курсора внутри child прибавляем позицию самого child
-                    sibling = sibling.previousSibling;
-                };
+            while (sibling) {
+                text = $(sibling).text();
+                N += text.length; // К позиции курсора внутри child прибавляем позицию самого child
+                sibling = sibling.previousSibling;
+            };
 
-                child = child.parentNode;
-            }
-
-            this.cursorPos = N;
-
-            return N;
-        },
-
-        restore: function() {
-            var input = this.input,
-                range = document.createRange(),
-                selection = window.getSelection(),
-                child = this.input,
-                targetNode = child,
-                n = this.cursorPos;
-            
-            // Цикл вниз по детям для поиска текстовой ноды куда надо выставить курсор
-            while (targetNode && targetNode.nodeType == 1) {
-                obj = findPosChild(targetNode, n);
-                targetNode = obj.child;
-                n = obj.n;
-            }
-            
-            if (targetNode && targetNode.nodeType == 3) {
-                range.setStart(targetNode, n); // Sets the start position of a Range.
-                range.collapse(true); // Collapses the Range to one of its boundary points.
-                selection.removeAllRanges(); // Removes all ranges from the selection.
-                selection.addRange(range); // A range object that will be added to the selection.
-            }
-            
-            input.focus();
+            child = child.parentNode;
         }
+
+        this.cursorPos = N;
+
+        return N;
+    };
+
+    surt.fn.restoreCursor = function() {
+        if (!node || typeof N == 'undefined') return;
+
+        var input = this.input,
+            range = document.createRange(),
+            selection = window.getSelection(),
+            targetNode = this.input,
+            n = this.cursorPos;
+        
+        // Цикл вниз по детям для поиска текстовой ноды куда надо выставить курсор
+        while (targetNode && targetNode.nodeType == 1) {
+            obj = findPosChild(targetNode, n);
+            targetNode = obj.child;
+            n = obj.n;
+        }
+        
+        if (targetNode && targetNode.nodeType == 3) {
+            range.setStart(targetNode, n); // Sets the start position of a Range.
+            range.collapse(true); // Collapses the Range to one of its boundary points.
+            selection.removeAllRanges(); // Removes all ranges from the selection.
+            selection.addRange(range); // A range object that will be added to the selection.
+        }
+        
+        input.focus();
     };
 })(this);

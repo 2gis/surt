@@ -75,7 +75,7 @@
         // Обновляет UI
         update: function() {
             // Здесь все манипуляции с дом-деревом
-            // this.cursor.save();
+            this.saveCursor();
 
             var output = '';
 
@@ -85,7 +85,7 @@
             this.input.innerHTML = output;
             // console.log(this);
             // this.query;
-            // this.cursor.restore();
+            this.restoreCursor();
         },
 
         // Возвращает текст из поисковой строки
