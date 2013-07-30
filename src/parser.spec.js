@@ -150,7 +150,7 @@ describe('Парсер текста.', function() {
         }]);
     });
 
-    it('Объединяет текстовые токены', function() {
+    it('Объединяет текстовые токены с пробелом', function() {
         var kit = [{
                 text: 'Ресторан',
                 type: 'rubric'
@@ -172,6 +172,20 @@ describe('Парсер текста.', function() {
             type: 'rubric'
         }, {
             text: 'лыжи gprs',
+            type: 'text'
+        }]);
+    });
+
+    it('Объединяет текстовые токены без пробела', function() {
+        var kit = [{
+                text: 'а',
+                type: 'text'
+            }],
+            text = 'аб',
+            result = parser(kit, text);
+
+        assert.deepEqual(result, [{
+            text: 'аб',
             type: 'text'
         }]);
     });

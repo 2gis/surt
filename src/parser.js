@@ -47,6 +47,11 @@
         for (var i = 0 ; i < kit.length ; i++) {
             var index = text.indexOf(kit[i].text);
 
+            if ((text[index + kit[i].text.length] !== ' ' && text[index + kit[i].text.length] !== undefined) || // После найденной подстрокой не пробел и не конец строки - это не токен
+                (text[index - 1] !== ' ' && text[index - 1] !== undefined)) { // Или перед найденной подстрокой
+                index = -1;
+            }
+
             if (index == 0) {
                 pushToken(kit[i]);
             } else if (index > 0) {
