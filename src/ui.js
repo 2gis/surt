@@ -124,8 +124,7 @@
         // Обновляет UI
         update: function() {
             // Здесь все манипуляции с дом-деревом
-            var curpos = this.saveCursor();
-            console.log(curpos);
+            this.saveCursor();
 
             var inputHTML = [],
                 suggestHTML = [];
@@ -172,7 +171,6 @@
         args: function() {
             var data = {};
 
-            console.log(this.kit);
             data.kit = this.kit;
             data.suggest = {};
             data.text = this.query();
@@ -184,8 +182,7 @@
         parse: function() {
             var text = $(this.inputNode).text();
             var newKit = this.parser( this.kit, $(this.inputNode).text() );
-            console.log('newKit = ', newKit);
-            console.log('text = ', text);
+            
             this.kit = newKit;
         }
     };
