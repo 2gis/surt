@@ -65,16 +65,17 @@
         return N;
     };
 
-    surt.fn.restoreCursor = function() {
+    surt.fn.restoreCursor = function(n) {
         if (!window.getSelection) return; // IE8-
 
         // if (!node || typeof N == 'undefined') return;
 
-        var input = this.input,
+        var input = this.inputNode,
             range = document.createRange(),
             selection = window.getSelection(),
-            targetNode = this.input,
-            n = this.cursorPos;
+            targetNode = this.inputNode;
+        
+        n = n || this.cursorPos;
         
         // Цикл вниз по детям для поиска текстовой ноды куда надо выставить курсор
         while (targetNode && targetNode.nodeType == 1) {

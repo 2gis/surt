@@ -82,9 +82,7 @@ describe('Инициализация.', function() { // При кривой ин
             });
         
         assert.ok(suggest);
-        console.log('second', second);
         assert(!second, 'При повторной инициализации конструктор должен возвращать undefined');
-
 
         suggest.dispose();
     });
@@ -111,46 +109,6 @@ describe('События.', function() {
         $('.surt__input').trigger('keyup');
 
         suggest.dispose();
-    });
-});
-
-describe('HTML.', function() {
-    before(function() {
-        $('.wrapper').html(originalHTML);
-        suggest = surt({
-            root: '.surt',
-            input: '.surt__input'
-        });
-    });
-
-    var suggest;
-
-    function getHTML() {
-        return $('.surt__input').html() + $('.surt__clone-main').html() + $('.surt__clone-hint').html() + $('.surt__suggests').html();
-    }
-
-    it('Объект данных undefined', function() {
-        suggest.set();
-
-        var html = getHTML();
-        assert(html == '', 'В отсутствии данных сагест не генерирует html');
-    });
-
-    it('Пустой объек данных', function() {
-        suggest.set({});
-
-        var html = getHTML();
-        assert(html == '', 'В отсутствии данных сагест не генерирует html');
-    });
-
-    it('Пустые кит и сагест', function() {
-        suggest.set({
-            kit: [],
-            suggest: []
-        });
-
-        var html = getHTML();
-        assert(html == '', 'В отсутствии данных сагест не генерирует html');
     });
 });
 

@@ -51,10 +51,11 @@
             params = params || {};
             this.params = params;
             this.parser = surt.parser;
-            this.input = $(params.input)[0];
+            this.inputNode = $(params.input)[0];
             this.root = $(params.root)[0];
+            this.suggestNode = $(params.suggest)[0];
 
-            if (!(this.input && this.input.nodeType == 1)) {
+            if (!(this.inputNode && this.inputNode.nodeType == 1)) {
                 throw new Error('Surt: input not found or it has wrong nodeType');
                 return;
             }
@@ -66,7 +67,7 @@
             $(this.root).attr('data-surt-inited', true);
 
             // Навешиваем все необходимые события
-            $(this.input)
+            $(this.inputNode)
                 .on('keyup', function(e){
                     var key = e.keyCode;
 
@@ -122,14 +123,30 @@
             // Здесь все манипуляции с дом-деревом
             this.saveCursor();
 
-            var output = '';
+            var inputHTML = [],
+                suggestHTML = [];
 
-            for (var i = 0; i < this.kit.length; i++) 
-                output += '<div class="surt__par surt__par_type_' + this.kit[i].type + '">' + this.kit[i].text + '</div> ';
+            for (var i = 0 ; i < this.kit.length ; i++) {
+                inputHTML.push('<div class="surt__par surt__par_type_' + this.kit[i].type + '">' + this.kit[i].text + '</div>');
+            }
 
-            this.input.innerHTML = output;
-            // console.log(this);
-            // this.query;
+            inputHTML = inputHTML.join(' ');
+            this.inputNode.innerHTML = inputHTML;
+
+            for (var i = 0 ; i < this.suggest.length ; i++) {
+                var kit = [];
+
+                for (var j = 0 ; j < this.suggest[i].length ; j++) {
+                    kit.push('<div class="surt__par surt__par_type_' + this.suggest[i][j].type + '">' + this.suggest[i][j].text + '</div>');
+                }
+
+                kit = kit.join(' ');
+                suggestHTML.push('<div class="surt__suggests-item">' + kit + '</div>');
+            }
+            suggestHTML = suggestHTML.join('');
+            if (this.suggestNode) {
+                this.suggestNode.innerHTML = suggestHTML;
+            }
             this.restoreCursor();
         },
 
