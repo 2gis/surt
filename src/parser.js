@@ -56,10 +56,12 @@
                 pushToken(kit[i]);
             } else if (index > 0) {
                 var newPlainText = text.substring(0, index).trim();
+
                 pushToken({
                     text: newPlainText,
                     type: 'text'
                 });
+
                 pushToken(kit[i]);
             }
         }

@@ -70,12 +70,12 @@
 
         // if (!node || typeof N == 'undefined') return;
 
-        var input = this.inputNode,
-            range = document.createRange(),
+        var range = document.createRange(),
             selection = window.getSelection(),
             targetNode = this.inputNode;
         
         n = n || this.cursorPos;
+        console.log('n', n);
         
         // Цикл вниз по детям для поиска текстовой ноды куда надо выставить курсор
         while (targetNode && targetNode.nodeType == 1) {
@@ -91,6 +91,6 @@
             selection.addRange(range); // A range object that will be added to the selection.
         }
         
-        input.focus();
+        this.inputNode.focus();
     };
 })(this);

@@ -10,9 +10,11 @@ $(document).ready(function() {
             // Изменение текста
             // console.log('query', e.query);
 
-            console.log(data);
+            //console.log(data);
 
-            suggest.set( backend(data) );
+            var setData = backend(data);
+
+            suggest.set(setData);
         }
     });
 
@@ -50,7 +52,7 @@ $(document).ready(function() {
 
         data = newData;
 
-        console.log(data);
+        //console.log(data);
 
         return data;
     }

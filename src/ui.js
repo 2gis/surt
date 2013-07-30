@@ -33,12 +33,14 @@
             
             if ($(params.root).attr('data-surt-inited') == 'true') {
                 throw new Error('Surt: already initialized');
+
                 return;
             }
 
             ret = new surt.fn.constructor(params, $);
         } catch (e) {
             console.warn(e.name + ': ', e.message);
+
             return;
         }
 
@@ -57,11 +59,6 @@
             this.root = $(params.root)[0];
             this.suggestNode = $(params.suggest)[0];
 
-            if (!(this.inputNode && this.inputNode.nodeType == 1)) {
-                throw new Error('Surt: input not found or it has wrong nodeType');
-                return;
-            }
-
             this.kit = [];
 
             // К этому месту считаем, что инициализация прошла успешно
@@ -73,14 +70,17 @@
                     var key = e.keyCode;
 
                     // Пропускаем клавиши Left, Right, Shift, Left Ctrl, Right Ctrl, Cmd, End, Home без колбека
-                    if (key==37 || key==39 || key==16 || key==17 || key==18 || key==91 || key==35 || key==36 ) return true;
+                    if (key == 37 || key == 39 || key == 16 || key == 17 || key == 18 || key == 91 || key == 35 || key == 36 ) return true;
 
-                    if (key==40 && $('.surt').hasClass('surt_dropdown_true') ) {
+                    if (key == 40 && $('.surt').hasClass('surt_dropdown_true') ) {
                         // var currentItem = 0; стрелка вниз
                     }
 
+                    // var text = self.inputNode.innerHTML;
+                    //     console.log('=|' + text + '|');
+
                     self.parse();
-                    params.change( e, self.args() );
+                    params.change && params.change(e, self.args());
                 })
                 .on('keydown input paste', function(e) {
                     if (e.keyCode == 13) return false; // Enter
@@ -88,7 +88,7 @@
                 .on('paste', function(e) {
                     setTimeout(function(){
                         self.parse();
-                        params.change( e, self.args() );
+                        //params.change && params.change( e, self.args() );
                     }, 0);
                 })
                 .on('focus', function() {
@@ -114,11 +114,6 @@
             this.kit = data.kit || [];
             this.suggest = data.suggest || [];
             this.update();
-
-            // Событие change
-            // if (this.change) {
-            //     this.change();
-            // }
         },
 
         // Обновляет UI
@@ -180,8 +175,10 @@
 
         // Вычисляем новый кит
         parse: function() {
-            var text = $(this.inputNode).text();
-            var newKit = this.parser( this.kit, $(this.inputNode).text() );
+            var text = $(this.inputNode).text(),
+                newKit = this.parser( this.kit, text );
+
+            // console.log('text' + text + 'text', newKit);
             
             this.kit = newKit;
         }
