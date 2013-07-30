@@ -33,9 +33,23 @@
 
     <script>
         
-        describe("Успешная инициализация сарта по-умолчанию", function() {
-            it(function() {
-                assert(true);
+        describe('Инициализация. ', function() {
+            it('По-умолчанию', function() {
+                var suggest = surt();
+
+                assert(suggest);
+            });
+
+            it('С пустым объектом параметров', function() {
+                var suggest = surt();
+                
+                assert(suggest);
+            });
+
+            it('Только с инпутом в параметрах', function() {
+                var suggest = surt();
+                
+                assert(suggest);
             });
         });
     </script>

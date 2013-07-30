@@ -2,9 +2,16 @@
     var $;
 
     var surt = function(params) {
+        params = params || {};
+
         $ = window.jQuery || params.$;
 
         if (!$) return;
+
+        // Обработка режима плагина jQuery
+        if (!(params && params.input) && this && this[0] && this[0].nodeType == 1) {
+            params.input = this[0];
+        }
 
         return new surt.fn.constructor(params, $);
     };
@@ -12,9 +19,15 @@
     surt.fn = {
         // Создает объект surt
         constructor: function(params, $) {
+            params = params || {};
             this.params = params;
             this.parser = surt.parser;
             this.input = $(params.input)[0];
+
+            if (!(this.input && this.input.nodeType == 1)) {
+                console.warn('Surt: input not found or it has wrong nodeType');
+                return;
+            }
 
             this.kit = [];
             // this.query = '';

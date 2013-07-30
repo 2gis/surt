@@ -33,6 +33,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mocha-cli');
 
     grunt.registerTask('default', ['uglify:def']);
-    grunt.registerTask('dom', ['mocha-phantomjs']);
+    grunt.registerTask('dom', ['mocha_phantomjs']);
     grunt.registerTask('test', ['mochacli']);
 };
