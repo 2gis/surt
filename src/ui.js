@@ -110,6 +110,7 @@
 
         // Устанавливает новые данные (set - единственная точка входа на новые данные)
         set: function(data) {
+
             data = data || {};
             this.kit = data.kit || [];
             this.suggest = data.suggest || [];
@@ -125,7 +126,11 @@
                 suggestHTML = [];
 
             for (var i = 0 ; i < this.kit.length ; i++) {
-                inputHTML.push('<div class="surt__par surt__par_type_' + this.kit[i].type + '">' + this.kit[i].text + '</div>');
+                // inputHTML.push('<div class="surt__par surt__par_type_' + this.kit[i].type + '">' + this.kit[i].text + '</div>');
+                if ( this.kit[i].type != "text" )
+                    inputHTML.push('<div class="surt__par surt__par_type_' + this.kit[i].type + '">' + this.kit[i].text + '</div>');
+                else 
+                    inputHTML.push('<span class="surt__text">' + this.kit[i].text + '</span>');
             }
 
             inputHTML = inputHTML.join(' ');
@@ -135,7 +140,10 @@
                 var kit = [];
 
                 for (var j = 0 ; j < this.suggest[i].length ; j++) {
-                    kit.push('<div class="surt__par surt__par_type_' + this.suggest[i][j].type + '">' + this.suggest[i][j].text + '</div>');
+                    if ( this.suggest[i][j].type != "text" )
+                        kit.push('<div class="surt__par surt__par_type_' + this.suggest[i][j].type + '">' + this.suggest[i][j].text + '</div>');
+                    else 
+                        kit.push('<span class="surt__text">' + this.suggest[i][j].text + '</span>');
                 }
 
                 kit = kit.join(' ');
@@ -143,6 +151,8 @@
             }
             suggestHTML = suggestHTML.join('');
             if (this.suggestNode) {
+                if (suggestHTML) $(this.root).addClass('surt_dropdown_true');
+                else $(this.root).removeClass('surt_dropdown_true');
                 this.suggestNode.innerHTML = suggestHTML;
             }
 

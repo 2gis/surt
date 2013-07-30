@@ -75,7 +75,6 @@
             targetNode = this.inputNode;
         
         n = n || this.cursorPos;
-        console.log('n', n);
         
         // Цикл вниз по детям для поиска текстовой ноды куда надо выставить курсор
         while (targetNode && targetNode.nodeType == 1) {
