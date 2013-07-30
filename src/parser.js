@@ -33,7 +33,11 @@
          * text.indexOf(token.text) === 0!!!
          */
         function pushToken(token) {
-            newSet.push(token);
+            if (token.type == 'text' && newSet.length && newSet[newSet.length - 1].type == 'text') { // Объединение соседних текстовых токенов
+                newSet[newSet.length - 1].text += ' ' + token.text;
+            } else {
+                newSet.push(token);
+            }
             text = text.replace(token.text, '').trim();
         }
 

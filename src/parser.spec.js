@@ -149,4 +149,30 @@ describe('Парсер текста.', function() {
             type: 'text'
         }]);
     });
+
+    it('Объединяет текстовые токены', function() {
+        var kit = [{
+                text: 'Ресторан',
+                type: 'rubric'
+            }, {
+                text: 'лыжи',
+                type: 'text'
+            }, {
+                text: 'Wi-Fi',
+                type: 'filter'
+            }, {
+                text: 'gprs',
+                type: 'text'
+            }],
+            text = 'Ресторан лыжи gprs',
+            result = parser(kit, text);
+
+        assert.deepEqual(result, [{
+            text: 'Ресторан',
+            type: 'rubric'
+        }, {
+            text: 'лыжи gprs',
+            type: 'text'
+        }]);
+    });
 });
