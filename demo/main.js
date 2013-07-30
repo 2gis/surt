@@ -6,9 +6,11 @@ $(document).ready(function() {
         suggestItem: '.surt__suggests-item',
         clone: '.surt__clone-main',
         autocomplete: '.surt__clone-hint',
-        change: function(e) {
+        change: function(e, data) {
             // Изменение текста
-            console.log('query', e.query);
+            // console.log('query', e.query);
+
+            console.log(data);
 
             suggest.set( backend(data) );
         }
@@ -48,10 +50,12 @@ $(document).ready(function() {
 
         data = newData;
 
+        console.log(data);
+
         return data;
     }
 
-    var data = {
+    var mock = {
         kit: [{
             text: "Wadsworth",
             type: "rubric"

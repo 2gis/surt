@@ -48,6 +48,8 @@
     surt.fn = {
         // Создает объект surt
         constructor: function(params, $) {
+            var self = this;
+
             params = params || {};
             this.params = params;
             this.parser = surt.parser;
@@ -61,7 +63,6 @@
             }
 
             this.kit = [];
-            // this.query = '';
 
             // К этому месту считаем, что инициализация прошла успешно
             $(this.root).attr('data-surt-inited', true);
@@ -78,14 +79,16 @@
                         // var currentItem = 0; стрелка вниз
                     }
 
-                    // this.set(data);
+                    self.parse();
+                    params.change( e, self.args() );
                 })
                 .on('keydown input paste', function(e) {
                     if (e.keyCode == 13) return false; // Enter
                 })
-                .on('input paste', function(e) {
+                .on('paste', function(e) {
                     setTimeout(function(){
-                        
+                        self.parse();
+                        params.change( e, self.args() );
                     }, 0);
                 })
                 .on('focus', function() {
@@ -113,15 +116,16 @@
             this.update();
 
             // Событие change
-            if (this.change) {
-                this.change();
-            }
+            // if (this.change) {
+            //     this.change();
+            // }
         },
 
         // Обновляет UI
         update: function() {
             // Здесь все манипуляции с дом-деревом
-            this.saveCursor();
+            var curpos = this.saveCursor();
+            console.log(curpos);
 
             var inputHTML = [],
                 suggestHTML = [];
@@ -147,6 +151,7 @@
             if (this.suggestNode) {
                 this.suggestNode.innerHTML = suggestHTML;
             }
+
             this.restoreCursor();
         },
 
@@ -161,6 +166,27 @@
             }
 
             return text;
+        },
+
+        // Возвращает текущую версию с данными
+        args: function() {
+            var data = {};
+
+            console.log(this.kit);
+            data.kit = this.kit;
+            data.suggest = {};
+            data.text = this.query();
+
+            return data;
+        },
+
+        // Вычисляем новый кит
+        parse: function() {
+            var text = $(this.inputNode).text();
+            var newKit = this.parser( this.kit, $(this.inputNode).text() );
+            console.log('newKit = ', newKit);
+            console.log('text = ', text);
+            this.kit = newKit;
         }
     };
 
