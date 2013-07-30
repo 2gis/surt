@@ -28,7 +28,7 @@ describe('Позиция курсора.', function() {
         ]
     };
 
-    before(function() {
+    beforeEach(function() {
         $('.wrapper').html(originalHTML);
         suggest = surt({
             root: '.surt',
@@ -45,4 +45,22 @@ describe('Позиция курсора.', function() {
         var N = suggest.saveCursor();
         assert(N == 2, 'Курсор выставляется в позицию');
     });
+
+    it('Выставляет кастомную позицию курсора в конец', function() {
+        suggest.set(data);
+
+        suggest.restoreCursor(99999);
+
+        var N = suggest.saveCursor();
+        assert(N == 8, 'Курсор выставляется в крайнюю позицию если индекс слишком высокий');
+    });
+
+    // it('Выставляет кастомную позицию курсора в начало', function() {
+    //     suggest.set(data);
+
+    //     suggest.restoreCursor(-1);
+
+    //     var N = suggest.saveCursor();
+    //     assert(N == 0, 'Курсор выставляется в крайнюю позицию если индекс слишком высокий');
+    // });
 });

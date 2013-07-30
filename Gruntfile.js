@@ -36,4 +36,5 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['uglify:def']);
     //grunt.registerTask('dom', ['mocha-phantomjs']);
     grunt.registerTask('test', ['mochacli', 'mocha-phantomjs']);
+    grunt.registerTask('unit', ['mochacli']);
 };

@@ -1,5 +1,12 @@
 (function(window, undefined) {
-    var $;
+    var $,
+        space = String.fromCharCode(160);
+
+    function spaces(text) {
+        var re = new RegExp(space, "g"); // Заменяем неразрывные пробелы на пробел
+        
+        return text.replace(re, " ");
+    };
 
     var surt = function(params) {
         params = params || {};
@@ -76,9 +83,6 @@
                         // var currentItem = 0; стрелка вниз
                     }
 
-                    // var text = self.inputNode.innerHTML;
-                    //     console.log('=|' + text + '|');
-
                     self.parse();
                     params.change && params.change(e, self.args());
                 })
@@ -110,7 +114,6 @@
 
         // Устанавливает новые данные (set - единственная точка входа на новые данные)
         set: function(data) {
-
             data = data || {};
             this.kit = data.kit || [];
             this.suggest = data.suggest || [];
@@ -134,6 +137,7 @@
             }
 
             inputHTML = inputHTML.join(' ');
+            if (this.trailingSpace) inputHTML += space;
             this.inputNode.innerHTML = inputHTML;
 
             for (var i = 0 ; i < this.suggest.length ; i++) {
@@ -169,7 +173,7 @@
                 text += kit[i].text;
             }
 
-            return text;
+            return spaces(text);
         },
 
         // Возвращает текущую версию с данными
@@ -185,11 +189,9 @@
 
         // Вычисляем новый кит
         parse: function() {
-            var text = $(this.inputNode).text(),
-                newKit = this.parser( this.kit, text );
-
-            // console.log('text' + text + 'text', newKit);
-            
+            this.text = spaces($(this.inputNode).text()),
+            this.trailingSpace = this.text[this.text.length - 1] === ' ';
+            newKit = this.parser( this.kit, this.text );
             this.kit = newKit;
         }
     };

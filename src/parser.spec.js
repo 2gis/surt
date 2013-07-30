@@ -189,4 +189,46 @@ describe('Парсер текста.', function() {
             type: 'text'
         }]);
     });
+
+    it('Trailing space', function() {
+        var kit = [{
+                text: 'а',
+                type: 'text'
+            }],
+            text = 'а ',
+            result = parser(kit, text);
+
+        assert.deepEqual(result, [{
+            text: 'а',
+            type: 'text'
+        }]);
+    });
+
+    it('Trailing space для сложных типов токенов', function() {
+        var kit = [{
+                text: 'Warren',
+                type: 'rubric'
+            }],
+            text = 'Warren ',
+            result = parser(kit, text);
+
+        assert.deepEqual(result, [{
+            text: 'Warren',
+            type: 'rubric'
+        }]);
+    });
+
+    // it('Trailing nbsp space для сложных типов токенов', function() {
+    //     var kit = [{
+    //             text: 'Warren',
+    //             type: 'rubric'
+    //         }],
+    //         text = 'Warren' + String.fromCharCode(160),
+    //         result = parser(kit, text);
+
+    //     assert.deepEqual(result, [{
+    //         text: 'Warren',
+    //         type: 'rubric'
+    //     }]);
+    // });
 });

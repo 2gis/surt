@@ -10,11 +10,11 @@ $(document).ready(function() {
             // Изменение текста
             // console.log('query', e.query);
 
-            console.log('data', data);
+            // console.log('data', data);
 
             var setData = backend(data);
 
-            console.log('setData', setData);
+            // console.log('setData', setData);
 
             suggest.set(setData);
         }
@@ -34,11 +34,10 @@ $(document).ready(function() {
             kit = data.kit;
 
         // Ищем ли саггесты?
-        if ( data.kit.length > 0 && data.kit[ data.kit.length - 1 ].type == "text" ) {
+        if ( data.kit[ data.kit.length - 1 ] && data.kit[ data.kit.length - 1 ].type == "text" ) {
             var q = data.kit[ data.kit.length - 1 ]["text"],
                 isSuggests = true;
         }
-
 
         // Строим актуальный кит
         for (var j = 0; j < kit.length; j++) {

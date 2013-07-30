@@ -26,17 +26,17 @@
      * @return - new kit based on old kit tokens and new text 
      */
     var parser = function(kit, text) {
-        var newSet = [];
+        var newKit = [];
 
         /*
-         * Pushing token to newSet and remove text of token from text
+         * Pushing token to newKit and remove text of token from text
          * text.indexOf(token.text) === 0!!!
          */
         function pushToken(token) {
-            if (token.type == 'text' && newSet.length && newSet[newSet.length - 1].type == 'text') { // Объединение соседних текстовых токенов
-                newSet[newSet.length - 1].text += ' ' + token.text;
+            if (token.type == 'text' && newKit.length && newKit[newKit.length - 1].type == 'text') { // Объединение соседних текстовых токенов
+                newKit[newKit.length - 1].text += ' ' + token.text;
             } else {
-                newSet.push(token);
+                newKit.push(token);
             }
             text = text.replace(token.text, '').trim();
         }
@@ -45,10 +45,12 @@
 
         // Cycle by kit (each token)
         for (var i = 0 ; i < kit.length ; i++) {
-            var index = text.indexOf(kit[i].text);
+            var index = text.indexOf(kit[i].text),
+                beforeChar = text[index - 1],
+                afterChar = text[index + kit[i].text.length];
 
-            if ((text[index + kit[i].text.length] !== ' ' && text[index + kit[i].text.length] !== undefined) || // После найденной подстрокой не пробел и не конец строки - это не токен
-                (text[index - 1] !== ' ' && text[index - 1] !== undefined)) { // Или перед найденной подстрокой
+            if ((afterChar !== ' ' && afterChar !== undefined) || // После найденной подстрокой не пробел и не конец строки - это не токен
+                (beforeChar !== ' ' && beforeChar !== undefined)) { // Или перед найденной подстрокой
                 index = -1;
             }
 
@@ -73,8 +75,8 @@
                 type: 'text'
             })
         }
-        
-        return newSet;
+
+        return newKit;
     };
 
     surt.parser = parser;

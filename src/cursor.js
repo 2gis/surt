@@ -28,7 +28,14 @@
             }
         }
 
-        return {};
+        if (N < 0) { // При отрицательной позиции ставим курсор в начало
+            sum = 0;
+        }
+        
+        return {
+            child: node.childNodes[node.childNodes.length - 1],
+            n: sum
+        };
     }
 
     // Сохраняет позицию курсора
