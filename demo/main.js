@@ -10,11 +10,7 @@ $(document).ready(function() {
             // Изменение текста
             // console.log('query', e.query);
 
-            // console.log('data', data);
-
             var setData = backend(data);
-
-            // console.log('setData', setData);
 
             suggest.set(setData);
         }
@@ -43,7 +39,7 @@ $(document).ready(function() {
         for (var j = 0; j < kit.length; j++) {
             for (var i = 0; i < mock.length; i++) {
 
-                if ( kit[j].text == mock[i].text ) {
+                if ( kit[j].text.toLowerCase() === mock[i].text.toLowerCase() ) {
                     newData.kit[j] = mock[i];
                     break;
                 } else {
@@ -57,7 +53,7 @@ $(document).ready(function() {
 
             // Текстовые совпадения для саггестов
             if ( isSuggests ) {
-                var matchPosition = mock[i].text.indexOf(q);
+                var matchPosition = mock[i].text.toLowerCase().indexOf( q.toLowerCase() );
 
                 if (matchPosition + 1) {
                     var suggestRow = [];
