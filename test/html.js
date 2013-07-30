@@ -54,7 +54,7 @@ describe('HTML.', function() {
         });
 
         var html = getHTML();
-        assert(html == '<div class="surt__par surt__par_type_text">Ресторан</div> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">кухня</div>', 'Генерирует html по киту из поисковой строки, в конце нет пробела');
+        assert(html == '<span class="surt__text">Ресторан</span> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">кухня</div>', 'Генерирует html по киту из поисковой строки, в конце нет пробела');
     });
 
     it('Кит undefined, в сагесте один кит', function() {
@@ -72,7 +72,7 @@ describe('HTML.', function() {
         });
 
         var html = getHTML();
-        assert.ok(html == '<div class="surt__suggests-item"><div class="surt__par surt__par_type_text">Ресторан</div> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">кухня</div></div>');
+        assert.ok(html == '<li class="surt__suggests-item"><span class="surt__text">Ресторан</span> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">кухня</div></li>');
     });
 
     it('Кит + 2 сагеста', function() {
@@ -106,6 +106,6 @@ describe('HTML.', function() {
         });
 
         var html = getHTML();
-        assert.ok(html == '<div class="surt__par surt__par_type_text">Ресторан</div><div class="surt__suggests-item"><div class="surt__par surt__par_type_text">Ресторан</div> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">кухня</div></div><div class="surt__suggests-item"><div class="surt__par surt__par_type_text">Ресторан</div> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">Абра ка дабра</div></div>');
+        assert.ok(html == '<span class="surt__text">Ресторан</span><li class="surt__suggests-item"><span class="surt__text">Ресторан</span> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">кухня</div></li><li class="surt__suggests-item"><span class="surt__text">Ресторан</span> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">Абра ка дабра</div></li>');
     });
 });

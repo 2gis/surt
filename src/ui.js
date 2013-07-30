@@ -147,7 +147,7 @@
                 }
 
                 kit = kit.join(' ');
-                suggestHTML.push('<div class="surt__suggests-item">' + kit + '</div>');
+                suggestHTML.push('<li class="surt__suggests-item">' + kit + '</li>');
             }
             suggestHTML = suggestHTML.join('');
             if (this.suggestNode) {

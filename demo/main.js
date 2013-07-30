@@ -27,16 +27,14 @@ $(document).ready(function() {
 
     function backend(data) {
         var newData = {
-            kit: [],
-            suggest: []
-            };
-        var suggests = [],
+                kit: [],
+                suggest: []
+            },
+            suggests = [],
             kit = data.kit;
 
-        // newData.kit = data.kit; // Добавлять выбранные в кит
-
         // Ищем ли саггесты?
-        if ( data.kit[ data.kit.length - 1 ].type == "text" ) {
+        if ( data.kit.length > 0 && data.kit[ data.kit.length - 1 ].type == "text" ) {
             var q = data.kit[ data.kit.length - 1 ]["text"],
                 isSuggests = true;
         }
@@ -45,10 +43,14 @@ $(document).ready(function() {
         // Строим актуальный кит
         for (var j = 0; j < kit.length; j++) {
             for (var i = 0; i < mock.length; i++) {
+
                 if ( kit[j].text == mock[i].text ) {
                     newData.kit[j] = mock[i];
                     break;
-                } else newData.kit[j] = kit[j];
+                } else {
+                    newData.kit[j] = kit[j];
+                }
+
             }
         }
 
@@ -56,7 +58,7 @@ $(document).ready(function() {
 
             // Текстовые совпадения для саггестов
             if ( isSuggests ) {
-                var matchPosition = mock[i]["text"].indexOf(q);
+                var matchPosition = mock[i].text.indexOf(q);
 
                 if (matchPosition + 1) {
                     var suggestRow = [];
@@ -68,7 +70,6 @@ $(document).ready(function() {
                         };
                     }
                     suggestRow[kit.length] = mock[i];
-
 
                     if (matchPosition == 0) newData.suggest.unshift(suggestRow);
                     else newData.suggest.push(suggestRow);
