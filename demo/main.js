@@ -6,6 +6,7 @@ $(document).ready(function() {
         suggestItemCls: 'surt__suggests-item',
         suggestCls: 'surt_dropdown_true',
         kitCls: 'surt__par',
+        textCls: 'surt__text',
         clone: '.surt__clone-main',
         autocomplete: '.surt__clone-hint',
         change: function(e, data) {
