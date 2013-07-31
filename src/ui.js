@@ -76,16 +76,24 @@
             // К этому месту считаем, что инициализация прошла успешно
             $(this.root).attr('data-surt-inited', true);
 
+            function resetTimer() {
+                clearTimeout(self._upTimer);
+                self._upTimer = setTimeout(function() {
+                    self._pressedKeys = 0;
+                }, 300);
+            };
+
             // Навешиваем все необходимые события
             $(this.inputNode)
                 .on('keydown', function() {
                     self._pressedKeys++;
+                    resetTimer();
                 })
                 .on('keyup', function(e){
                     var key = e.keyCode;
 
                     self._pressedKeys--;
-                    if (self._pressedKeys < 0) self._pressedKeys = 0;
+                    //if (self._pressedKeys < 0) self._pressedKeys = 0;
 
                     // Пропускаем клавиши Left, Right, Shift, Left Ctrl, Right Ctrl, Cmd, End, Home без колбека
                     if (key == 37 || key == 39 || key == 16 || key == 17 || key == 18 || key == 91 || key == 35 || key == 36 ) return true;
@@ -160,6 +168,7 @@
 
         dispose: function() {
             $(this.root).attr('data-surt-inited', 'disposed');
+            clearTimeout(this._upTimer);
         },
 
         // Возвращает текущий кит
@@ -170,7 +179,7 @@
         // Устанавливает новые данные (set - единственная точка входа на новые данные)
         set: function(data) {
             if (this._pressedKeys) return; // Если на момент входа в функцию пользователь уже нажал новую клавишу - сетить бессмысленно
-            
+
             data = data || {};
             this.kit = data.kit || [];
             this.suggest = data.suggest || [];
