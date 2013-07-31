@@ -4,6 +4,7 @@ $(document).ready(function() {
         input: '.surt__input',
         suggest: '.surt__suggests',
         suggestItemCls: 'surt__suggests-item',
+        suggestItemCurrentCls: 'surt__suggests-item_state_current',
         suggestCls: 'surt_dropdown_true',
         kitCls: 'surt__par',
         textCls: 'surt__text',
@@ -62,13 +63,13 @@ $(document).ready(function() {
                 if (matchPosition + 1) {
                     var suggestRow = [];
 
-                    for (var j = 0; j < kit.length; j++) {
+                    for (var j = 0; j < kit.length-1; j++) {
                         suggestRow[j] = {
                             text: kit[j].text,
                             type: kit[j].type
                         };
                     }
-                    suggestRow[kit.length] = mock[i];
+                    suggestRow[kit.length-1] = mock[i];
 
                     if (matchPosition == 0) newData.suggest.unshift(suggestRow);
                     else newData.suggest.push(suggestRow);

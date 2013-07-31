@@ -71,6 +71,8 @@
 
             this.kit = [];
 
+            this._activeSuggest = -1;
+
             // К этому месту считаем, что инициализация прошла успешно
             $(this.root).attr('data-surt-inited', true);
 
@@ -92,16 +94,53 @@
                         // var currentItem = 0; стрелка вниз
                     }
 
+                    if (key == 38 || key == 40) return false;
+
                     self.parse();
                     params.change && params.change(e, self.args());
                 })
                 .on('keydown input paste', function(e) {
-                    if (e.keyCode == 13) return false; // Enter
+                    var key = e.keyCode;
+
+                    // Enter
+                    if (key == 13) {
+                        if ( $(self.root).hasClass(params.suggestCls) && $('.' + params.suggestItemCurrentCls).length ) {
+                            var data = self.args();
+                            data.kit = self.suggest[ self._activeSuggest ]; 
+                            self.set( data );
+                        } else {
+                            // Здесь сабмит
+                        }
+                            
+                        return false;
+                    }
+
+                    // Стрелка вниз
+                    if (key == 40) {
+                        var index = 0;
+                        if (self._activeSuggest >= 0)
+                            index = self._activeSuggest < self.suggest.length - 1 ? self._activeSuggest + 1 : 0;
+            
+                        self.markSuggest(index);
+
+                        return false;
+                    }
+
+                    // Стрелка вверх
+                    if (key == 38) {
+                        var index = self.suggest.length - 1;
+                        if (self._activeSuggest >= 0)
+                            index = self._activeSuggest > 0 ? self._activeSuggest - 1 : self.suggest.length - 1;
+            
+                        self.markSuggest(index);
+
+                        return false;
+                    }
+
                 })
                 .on('paste', function(e) {
                     setTimeout(function(){
                         self.parse();
-                        //params.change && params.change( e, self.args() );
                     }, 0);
                 })
                 .on('focus', function() {
@@ -110,6 +149,13 @@
                 .on('blur', function() {
                     $('.surt').removeClass('surt_state_focus');
                 });
+
+            // Если был сделан клик вне плагина, закрываем выпадающий список, прячем подсказку
+            $(document).on('click', function(e) {
+                if ( !$(event.target).closest(self.root).length ) 
+                    $(self.root).removeClass( self.params.suggestCls + ' ' + self.params.autocompleteCls );
+                event.stopPropagation();
+            });
         },
 
         dispose: function() {
@@ -187,6 +233,7 @@
 
                 kit = kit.join(' ');
                 suggestHTML.push('<li class="' + this.params.suggestItemCls + '">' + kit + '</li>');
+                this._activeSuggest = -1;
             }
             suggestHTML = suggestHTML.join('');
             if (this.suggestNode) {
@@ -251,7 +298,20 @@
             this.trailingSpace = text[text.length - 1] === ' ';
             newKit = this.parser( this.kit, text );
             this.kit = newKit;
+        },
+
+        markSuggest: function(index) {
+            var suggestsItems = $('.' + this.params.suggestItemCls),
+                currentCls = this.params.suggestItemCurrentCls;
+
+            suggestsItems
+                .removeClass(currentCls)
+                .eq(index)
+                .addClass(currentCls);
+
+            this._activeSuggest = index;
         }
+
     };
 
     surt.fn.constructor.prototype = surt.fn;
@@ -262,7 +322,7 @@
         module.exports = surt;
     }
 
-    surt.version = '0.1.0';
+    surt.version = '0.1.1';
 
     // if ($ && $.fn) {
     //     $.fn.surt = surt;
