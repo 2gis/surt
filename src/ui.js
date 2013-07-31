@@ -131,20 +131,17 @@
                 textCls = this.params.textCls || cls;
 
             for (var i = 0 ; i < this.kit.length ; i++) {
-                // inputHTML.push('<div class="surt__par surt__par_type_' + this.kit[i].type + '">' + this.kit[i].text + '</div>');
-                if ( this.kit[i].type != "text" ) {
-                    var html = this.kit[i].text;
+                var html = this.kit[i].text.trim();
 
+                if ( this.kit[i].type != "text" ) {
                     if (cls) {
-                        html = '<div class="' + cls + ' ' + cls + '_type_' + this.kit[i].type + '">' + this.kit[i].text + '</div>';
+                        html = '<div class="' + cls + ' ' + cls + '_type_' + this.kit[i].type + '">' + html + '</div>';
                     }
 
                     inputHTML.push(html);
                 } else {
-                    var html = this.kit[i].text;
-
                     if (textCls) {
-                        html = '<div class="' + textCls + '">' + this.kit[i].text + '</div>';
+                        html = '<div class="' + textCls + '">' + html + '</div>';
                     }
 
                     inputHTML.push(html);
@@ -159,19 +156,17 @@
                 var kit = [];
 
                 for (var j = 0 ; j < this.suggest[i].length ; j++) {
-                    if ( this.suggest[i][j].type != "text" ) {
-                        var html = this.suggest[i][j].text;
+                    var html = this.suggest[i][j].text.trim();
 
+                    if ( this.suggest[i][j].type != "text" ) {
                         if (cls) {
-                            html = '<div class="' + cls + ' ' + cls + '_type_' + this.suggest[i][j].type + '">' + this.suggest[i][j].text + '</div>';
+                            html = '<div class="' + cls + ' ' + cls + '_type_' + this.suggest[i][j].type + '">' + html + '</div>';
                         }
 
                         kit.push(html);
                     } else {
-                        var html = this.suggest[i][j].text;
-
                         if (textCls) {
-                            html = '<div class="' + textCls + '">' + this.suggest[i][j].text + '</div>';
+                            html = '<div class="' + textCls + '">' + html + '</div>';
                         }
 
                         kit.push(html);
@@ -205,22 +200,27 @@
             return spaces(text);
         },
 
+        text: function() {
+            return spaces($(this.inputNode).text());
+        },
+
         // Возвращает текущую версию с данными
         args: function() {
             var data = {};
 
             data.kit = this.kit;
             data.suggest = {};
-            data.text = this.query();
+            data.text = this.text();
 
             return data;
         },
 
         // Вычисляем новый кит
         parse: function() {
-            this.text = spaces($(this.inputNode).text()),
-            this.trailingSpace = this.text[this.text.length - 1] === ' ';
-            newKit = this.parser( this.kit, this.text );
+            var text = this.text();
+
+            this.trailingSpace = text[text.length - 1] === ' ';
+            newKit = this.parser( this.kit, text );
             this.kit = newKit;
         }
     };

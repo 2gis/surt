@@ -112,4 +112,6 @@ describe('HTML.', function() {
         var html = getHTML();
         assert.ok(html == '<div class="surt__text">Ресторан</div><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">кухня</div></li><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">Абра ка дабра</div></li>');
     });
+
+    // Трим токенов в ПС, в сагесте, текст, не текст
 });
