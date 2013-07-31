@@ -80,7 +80,15 @@
                 self._upTimer = setTimeout(function() {
                     self._pressedKeys = 0;
                 }, 300);
-            };
+            }
+
+            function pickSuggest() {
+                var data = self.args();
+
+                data.kit = self.suggest[self._activeSuggest];
+                self.set(data);
+                self.restoreCursor(self.text().length);
+            }
 
             // Навешиваем все необходимые события
             $(this.inputNode)
@@ -116,11 +124,7 @@
                     // Enter
                     if (key == 13) {
                         if ( $(self.root).hasClass(params.suggestCls) && $('.' + params.suggestItemCurrentCls).length ) {
-                            var data = self.args();
-
-                            data.kit = self.suggest[ self._activeSuggest ];
-                            self.set(data);
-                            self.restoreCursor(self.text().length);
+                            pickSuggest();
                         } else {
                             // Здесь сабмит
                         }
