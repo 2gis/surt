@@ -79,7 +79,7 @@
                     // Пропускаем клавиши Left, Right, Shift, Left Ctrl, Right Ctrl, Cmd, End, Home без колбека
                     if (key == 37 || key == 39 || key == 16 || key == 17 || key == 18 || key == 91 || key == 35 || key == 36 ) return true;
 
-                    if (key == 40 && $('.surt').hasClass('surt_dropdown_true') ) {
+                    if (key == 40 && $('.surt').hasClass(params.suggestCls) ) {
                         // var currentItem = 0; стрелка вниз
                     }
 
@@ -126,14 +126,29 @@
             this.saveCursor();
 
             var inputHTML = [],
-                suggestHTML = [];
+                suggestHTML = [],
+                cls = this.params.kitCls,
+                textCls = this.params.textCls || cls;
 
             for (var i = 0 ; i < this.kit.length ; i++) {
                 // inputHTML.push('<div class="surt__par surt__par_type_' + this.kit[i].type + '">' + this.kit[i].text + '</div>');
-                if ( this.kit[i].type != "text" )
-                    inputHTML.push('<div class="surt__par surt__par_type_' + this.kit[i].type + '">' + this.kit[i].text + '</div>');
-                else 
-                    inputHTML.push('<span class="surt__text">' + this.kit[i].text + '</span>');
+                if ( this.kit[i].type != "text" ) {
+                    var html = this.kit[i].text;
+
+                    if (cls) {
+                        html = '<div class="' + cls + ' ' + cls + '_type_' + this.kit[i].type + '">' + this.kit[i].text + '</div>';
+                    }
+
+                    inputHTML.push(html);
+                } else {
+                    var html = this.kit[i].text;
+
+                    if (textCls) {
+                        html = '<div class="' + textCls + '">' + this.kit[i].text + '</div>';
+                    }
+
+                    inputHTML.push(html);
+                }
             }
 
             inputHTML = inputHTML.join(' ');
@@ -144,19 +159,33 @@
                 var kit = [];
 
                 for (var j = 0 ; j < this.suggest[i].length ; j++) {
-                    if ( this.suggest[i][j].type != "text" )
-                        kit.push('<div class="surt__par surt__par_type_' + this.suggest[i][j].type + '">' + this.suggest[i][j].text + '</div>');
-                    else 
-                        kit.push('<span class="surt__text">' + this.suggest[i][j].text + '</span>');
+                    if ( this.suggest[i][j].type != "text" ) {
+                        var html = this.suggest[i][j].text;
+
+                        if (cls) {
+                            html = '<div class="' + cls + ' ' + cls + '_type_' + this.suggest[i][j].type + '">' + this.suggest[i][j].text + '</div>';
+                        }
+
+                        kit.push(html);
+                    } else {
+                        var html = this.suggest[i][j].text;
+
+                        if (textCls) {
+                            html = '<div class="' + textCls + '">' + this.suggest[i][j].text + '</div>';
+                        }
+
+                        kit.push(html);
+                    }
+                        
                 }
 
                 kit = kit.join(' ');
-                suggestHTML.push('<li class="surt__suggests-item">' + kit + '</li>');
+                suggestHTML.push('<li class="' + this.params.suggestItemCls + '">' + kit + '</li>');
             }
             suggestHTML = suggestHTML.join('');
             if (this.suggestNode) {
-                if (suggestHTML) $(this.root).addClass('surt_dropdown_true');
-                else $(this.root).removeClass('surt_dropdown_true');
+                if (suggestHTML) $(this.root).addClass(this.params.suggestCls);
+                else $(this.root).removeClass(this.params.suggestCls);
                 this.suggestNode.innerHTML = suggestHTML;
             }
 

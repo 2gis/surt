@@ -33,7 +33,11 @@ describe('Позиция курсора.', function() {
         suggest = surt({
             root: '.surt',
             input: '.surt__input',
-            suggest: '.surt__suggests'
+            suggest: '.surt__suggests',
+            suggestItemCls: 'surt__suggests-item',
+            suggestCls: 'surt_dropdown_true',
+            kitCls: 'surt__par',
+            textCls: 'surt__text'
         });
     });
 

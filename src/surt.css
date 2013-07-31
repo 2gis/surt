@@ -162,3 +162,6 @@ body {
             color:#fff;
             cursor: pointer;
             }
+        .surt__text {
+            display: inline-block;
+        }

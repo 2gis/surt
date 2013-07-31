@@ -4,7 +4,11 @@ describe('HTML.', function() {
         suggest = surt({
             root: '.surt',
             input: '.surt__input',
-            suggest: '.surt__suggests'
+            suggest: '.surt__suggests',
+            suggestItemCls: 'surt__suggests-item',
+            suggestCls: 'surt_dropdown_true',
+            kitCls: 'surt__par',
+            textCls: 'surt__text'
         });
     });
 
@@ -54,7 +58,7 @@ describe('HTML.', function() {
         });
 
         var html = getHTML();
-        assert(html == '<span class="surt__text">Ресторан</span> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">кухня</div>', 'Генерирует html по киту из поисковой строки, в конце нет пробела');
+        assert(html == '<div class="surt__text">Ресторан</div> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">кухня</div>', 'Генерирует html по киту из поисковой строки, в конце нет пробела');
     });
 
     it('Кит undefined, в сагесте один кит', function() {
@@ -72,7 +76,7 @@ describe('HTML.', function() {
         });
 
         var html = getHTML();
-        assert.ok(html == '<li class="surt__suggests-item"><span class="surt__text">Ресторан</span> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">кухня</div></li>');
+        assert.ok(html == '<li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">кухня</div></li>');
     });
 
     it('Кит + 2 сагеста', function() {
@@ -106,6 +110,6 @@ describe('HTML.', function() {
         });
 
         var html = getHTML();
-        assert.ok(html == '<span class="surt__text">Ресторан</span><li class="surt__suggests-item"><span class="surt__text">Ресторан</span> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">кухня</div></li><li class="surt__suggests-item"><span class="surt__text">Ресторан</span> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">Абра ка дабра</div></li>');
+        assert.ok(html == '<div class="surt__text">Ресторан</div><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">кухня</div></li><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">Абра ка дабра</div></li>');
     });
 });

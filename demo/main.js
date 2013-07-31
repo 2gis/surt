@@ -3,7 +3,9 @@ $(document).ready(function() {
         root: '.surt',
         input: '.surt__input',
         suggest: '.surt__suggests',
-        suggestItem: '.surt__suggests-item',
+        suggestItemCls: 'surt__suggests-item',
+        suggestCls: 'surt_dropdown_true',
+        kitCls: 'surt__par',
         clone: '.surt__clone-main',
         autocomplete: '.surt__clone-hint',
         change: function(e, data) {
