@@ -65,7 +65,8 @@
             this.inputNode = $(params.input)[0];
             this.root = $(params.root)[0];
             this.suggestNode = $(params.suggest)[0];
-            this._pressedKeys = 0; // Количество нажатых клавиш (решает проблему асинхронного сеттинга)
+            this.cloneNode = $(params.clone)[0];
+            this.autocompleteNode = $(params.autocomplete)[0];
 
             this.kit = [];
 
@@ -74,14 +75,8 @@
 
             // Навешиваем все необходимые события
             $(this.inputNode)
-                .on('keydown', function() {
-                    self._pressedKeys++;
-                })
                 .on('keyup', function(e){
                     var key = e.keyCode;
-
-                    self._pressedKeys--;
-                    if (self._pressedKeys < 0) self._pressedKeys = 0;
 
                     // Пропускаем клавиши Left, Right, Shift, Left Ctrl, Right Ctrl, Cmd, End, Home без колбека
                     if (key == 37 || key == 39 || key == 16 || key == 17 || key == 18 || key == 91 || key == 35 || key == 36 ) return true;
@@ -121,8 +116,6 @@
 
         // Устанавливает новые данные (set - единственная точка входа на новые данные)
         set: function(data) {
-            if (this._pressedKeys) return; // Если на момент входа в функцию пользователь уже нажал новую клавишу - сетить бессмысленно
-            
             data = data || {};
             this.kit = data.kit || [];
             this.suggest = data.suggest || [];
@@ -191,6 +184,24 @@
                 if (suggestHTML) $(this.root).addClass(this.params.suggestCls);
                 else $(this.root).removeClass(this.params.suggestCls);
                 this.suggestNode.innerHTML = suggestHTML;
+            }
+
+            if (this.suggest.length && this.suggest[0].length && this.kit.length) {
+
+                var lastNodeText = this.kit[this.kit.length - 1].text,
+                    firstSuggestText = this.suggest[0][this.suggest[0].length - 1].text;
+                var isAutocomplete = !firstSuggestText.toLowerCase().indexOf( lastNodeText.toLowerCase() );
+
+                if ($(this.root).hasClass(this.params.suggestCls) && isAutocomplete) {
+                    this.cloneNode.innerHTML = this.inputNode.innerHTML;
+                    this.autocompleteNode.innerHTML = firstSuggestText.slice( lastNodeText.length );
+                    $(this.root).addClass( this.params.autocompleteCls );
+                } else {
+                    $(this.root).removeClass( this.params.autocompleteCls );
+                }
+
+            } else {
+                $(this.root).removeClass( this.params.autocompleteCls );
             }
 
             this.restoreCursor();
