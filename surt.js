@@ -108,7 +108,7 @@
                 .on('keydown input paste', function(e) {
                     var key = e.keyCode;
 
-                    if ( e.type == 'keydown' && key != 13 && key != 39 ) {
+                    if ( e.type == 'keydown' && key != 13 && key != 39 ) { // При нажатии на символ
                         self._pressedKeys++;
                         resetTimer();
                     }
@@ -117,9 +117,10 @@
                     if (key == 13) {
                         if ( $(self.root).hasClass(params.suggestCls) && $('.' + params.suggestItemCurrentCls).length ) {
                             var data = self.args();
+
                             data.kit = self.suggest[ self._activeSuggest ];
-                            
                             self.set(data);
+                            self.restoreCursor(self.text().length);
                         } else {
                             // Здесь сабмит
                         }
@@ -141,8 +142,10 @@
                     // Стрелка вверх
                     if (key == 38) {
                         var index = self.suggest.length - 1;
-                        if (self._activeSuggest >= 0)
+
+                        if (self._activeSuggest >= 0) {
                             index = self._activeSuggest > 0 ? self._activeSuggest - 1 : self.suggest.length - 1;
+                        }
             
                         self.markSuggest(index);
 
@@ -154,13 +157,11 @@
                         // Если выставлены модификаторы делаем сет с новыми данными
                         if ( $(self.root).hasClass( params.suggestCls ) && $(self.root).hasClass( params.autocompleteCls ) ) {
                             var data = self.args();
+
                             data.kit = self.suggest[0];
-                            
                             self.set(data);
                         }
-
                     }
-
                 })
                 .on('paste', function(e) {
                     setTimeout(function(){
@@ -172,14 +173,24 @@
                 })
                 .on('blur', function() {
                     $('.surt').removeClass('surt_state_focus');
-                });
+                })
 
             // Если был сделан клик вне плагина, закрываем выпадающий список, прячем подсказку
-            $(document).on('click', function(e) {
-                if ( !$(event.target).closest(self.root).length ) 
-                    $(self.root).removeClass( self.params.suggestCls + ' ' + self.params.autocompleteCls );
-                event.stopPropagation();
-            });
+            $(document)
+                .on('click', function(e) {
+                    if ( !$(event.target).closest(self.root).length ) 
+                        $(self.root).removeClass( self.params.suggestCls + ' ' + self.params.autocompleteCls );
+                    event.stopPropagation();
+                })
+                .on('click', '.' + self.params.suggestItemCls, function(e) {
+                    var suggestsItems = $('.' + params.suggestItemCls);
+                    var index = suggestsItems.index( $(this) );
+
+                    var data = self.args();
+                    data.kit = self.suggest[ index ];
+                    
+                    self.set(data);
+                });
         },
 
         dispose: function() {

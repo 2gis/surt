@@ -174,7 +174,6 @@
                 .on('blur', function() {
                     $('.surt').removeClass('surt_state_focus');
                 })
-            console.log('.' + self.params.suggestItemCls);
 
             // Если был сделан клик вне плагина, закрываем выпадающий список, прячем подсказку
             $(document)
