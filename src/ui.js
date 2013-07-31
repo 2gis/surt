@@ -108,7 +108,7 @@
                 .on('keydown input paste', function(e) {
                     var key = e.keyCode;
 
-                    if ( e.type == 'keydown' && key != 13 && key != 39 ) {
+                    if ( e.type == 'keydown' && key != 13 && key != 39 ) { // При нажатии на символ
                         self._pressedKeys++;
                         resetTimer();
                     }
@@ -117,9 +117,10 @@
                     if (key == 13) {
                         if ( $(self.root).hasClass(params.suggestCls) && $('.' + params.suggestItemCurrentCls).length ) {
                             var data = self.args();
+
                             data.kit = self.suggest[ self._activeSuggest ];
-                            
                             self.set(data);
+                            self.restoreCursor(self.text().length);
                         } else {
                             // Здесь сабмит
                         }
@@ -141,8 +142,10 @@
                     // Стрелка вверх
                     if (key == 38) {
                         var index = self.suggest.length - 1;
-                        if (self._activeSuggest >= 0)
+
+                        if (self._activeSuggest >= 0) {
                             index = self._activeSuggest > 0 ? self._activeSuggest - 1 : self.suggest.length - 1;
+                        }
             
                         self.markSuggest(index);
 
@@ -154,13 +157,11 @@
                         // Если выставлены модификаторы делаем сет с новыми данными
                         if ( $(self.root).hasClass( params.suggestCls ) && $(self.root).hasClass( params.autocompleteCls ) ) {
                             var data = self.args();
+
                             data.kit = self.suggest[0];
-                            
                             self.set(data);
                         }
-
                     }
-
                 })
                 .on('paste', function(e) {
                     setTimeout(function(){
