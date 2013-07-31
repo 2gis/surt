@@ -67,7 +67,6 @@
             this.suggestNode = $(params.suggest)[0];
             this.cloneNode = $(params.clone)[0];
             this.autocompleteNode = $(params.autocomplete)[0];
-            this._pressedKeys = 0; // Количество нажатых клавиш (решает проблему асинхронного сеттинга)
 
             this.kit = [];
 
@@ -85,10 +84,9 @@
 
             // Навешиваем все необходимые события
             $(this.inputNode)
-                .on('keydown', function() {
-                    self._pressedKeys++;
-                    resetTimer();
-                })
+                // .on('keydown', function() {
+                    
+                // })
                 .on('keyup', function(e){
                     var key = e.keyCode;
 
@@ -110,12 +108,18 @@
                 .on('keydown input paste', function(e) {
                     var key = e.keyCode;
 
+                    if ( e.type == 'keydown' && key != 13 && key != 39 ) {
+                        self._pressedKeys++;
+                        resetTimer();
+                    }
+
                     // Enter
                     if (key == 13) {
                         if ( $(self.root).hasClass(params.suggestCls) && $('.' + params.suggestItemCurrentCls).length ) {
                             var data = self.args();
-                            data.kit = self.suggest[ self._activeSuggest ]; 
-                            self.set( data );
+                            data.kit = self.suggest[ self._activeSuggest ];
+                            
+                            self.set(data);
                         } else {
                             // Здесь сабмит
                         }
@@ -143,6 +147,18 @@
                         self.markSuggest(index);
 
                         return false;
+                    }
+
+                    // Стрелка вправо
+                    if (key == 39) {
+                        // Если выставлены модификаторы делаем сет с новыми данными
+                        if ( $(self.root).hasClass( params.suggestCls ) && $(self.root).hasClass( params.autocompleteCls ) ) {
+                            var data = self.args();
+                            data.kit = self.suggest[0];
+                            
+                            self.set(data);
+                        }
+
                     }
 
                 })
@@ -178,6 +194,7 @@
 
         // Устанавливает новые данные (set - единственная точка входа на новые данные)
         set: function(data) {
+
             if (this._pressedKeys) return; // Если на момент входа в функцию пользователь уже нажал новую клавишу - сетить бессмысленно
 
             data = data || {};

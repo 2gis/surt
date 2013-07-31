@@ -78,6 +78,20 @@ $(document).ready(function() {
 
         }
 
+        // Если подсказка одна и совпадает с содержимым инпута, не показываем подсказку
+        if (newData.suggest.length == 1 && data.kit.length == newData.suggest[0].length ) {
+            var isEqual = true;
+
+            for (var i = 0; i < newData.suggest[0].length; i++) {
+                if ( data.kit[i].text != newData.suggest[0][i].text || data.kit[i].type != newData.suggest[0][i].type ) {
+                    isEqual = false;
+                    break;
+                }
+            }
+
+            if (isEqual) newData.suggest = {};
+        }
+
         return newData;
     }
 
