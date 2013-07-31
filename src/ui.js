@@ -319,8 +319,11 @@
                 .addClass(currentCls);
 
             this._activeSuggest = index;
-        }
+        },
 
+        minimize: function() {
+            $(this.root).removeClass(this.params.suggestCls);
+        }
     };
 
     surt.fn.constructor.prototype = surt.fn;
