@@ -9,6 +9,7 @@ $(document).ready(function() {
         textCls: 'surt__text',
         clone: '.surt__clone-main',
         autocomplete: '.surt__clone-hint',
+        autocompleteCls: 'surt_autocomplete_true',
         change: function(e, data) {
             // Изменение текста
             // console.log('query', e.query);
