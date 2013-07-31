@@ -173,14 +173,25 @@
                 })
                 .on('blur', function() {
                     $('.surt').removeClass('surt_state_focus');
-                });
+                })
+            console.log('.' + self.params.suggestItemCls);
 
             // Если был сделан клик вне плагина, закрываем выпадающий список, прячем подсказку
-            $(document).on('click', function(e) {
-                if ( !$(event.target).closest(self.root).length ) 
-                    $(self.root).removeClass( self.params.suggestCls + ' ' + self.params.autocompleteCls );
-                event.stopPropagation();
-            });
+            $(document)
+                .on('click', function(e) {
+                    if ( !$(event.target).closest(self.root).length ) 
+                        $(self.root).removeClass( self.params.suggestCls + ' ' + self.params.autocompleteCls );
+                    event.stopPropagation();
+                })
+                .on('click', '.' + self.params.suggestItemCls, function(e) {
+                    var suggestsItems = $('.' + params.suggestItemCls);
+                    var index = suggestsItems.index( $(this) );
+
+                    var data = self.args();
+                    data.kit = self.suggest[ index ];
+                    
+                    self.set(data);
+                });
         },
 
         dispose: function() {
