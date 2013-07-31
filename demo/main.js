@@ -80,19 +80,19 @@ $(document).ready(function() {
 
     var mock = [{
         text: "Wadsworth",
-        type: "rubric"
+        type: "attr"
     }, {
         text: "Marshall",
-        type: "rubric"
+        type: "attr"
     }, {
         text: "Breinigsville",
-        type: "rubric"
+        type: "attr"
     }, {
         text: "Kirk",
         type: "text"
     }, {
         text: "Maury",
-        type: "rubric"
+        type: "attr"
     }, {
         text: "Oberlin",
         type: "text"
@@ -104,7 +104,7 @@ $(document).ready(function() {
         type: "text"
     }, {
         text: "Thermal",
-        type: "rubric"
+        type: "attr"
     }, {
         text: "Delshire",
         type: "text"
@@ -206,7 +206,7 @@ $(document).ready(function() {
         type: "text"
     }, {
         text: "Caberfae",
-        type: "filter"
+        type: "book"
     }, {
         text: "Shepardsville",
         type: "rubric"
@@ -227,7 +227,7 @@ $(document).ready(function() {
         type: "rubric"
     }, {
         text: "Callaghan",
-        type: "filter"
+        type: "book"
     }, {
         text: "Brownsville",
         type: "rubric"
@@ -236,7 +236,7 @@ $(document).ready(function() {
         type: "rubric"
     }, {
         text: "Finderne",
-        type: "filter"
+        type: "book"
     }, {
         text: "Fredericktown",
         type: "text"
@@ -254,19 +254,19 @@ $(document).ready(function() {
         type: "rubric"
     }, {
         text: "Fidelis",
-        type: "filter"
+        type: "book"
     }, {
         text: "Logan",
-        type: "filter"
+        type: "book"
     }, {
         text: "Yorklyn",
-        type: "filter"
+        type: "book"
     }, {
         text: "Rote",
         type: "text"
     }, {
         text: "Chase",
-        type: "filter"
+        type: "book"
     }, {
         text: "Goochland",
         type: "text"
@@ -275,7 +275,7 @@ $(document).ready(function() {
         type: "text"
     }, {
         text: "Colton",
-        type: "filter"
+        type: "book"
     }, {
         text: "Kilbourne",
         type: "text"

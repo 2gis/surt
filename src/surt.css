@@ -163,5 +163,36 @@ body {
             cursor: pointer;
             }
         .surt__text {
-            display: inline-block;
+            display: inline;
         }
+/*        .surt__par_type_rubric {
+            background: red;
+            font-size: 15px;
+            padding: 0 20px;
+            }
+        .surt__par_type_filter {
+            background: green;
+            box-shadow:0 0 10px 0 #000;
+            margin:0 0 0 3em;
+            -webkit-animation: blink .5s infinite;
+            }
+        .surt__par_type_attr {
+            background: yellow;
+            color:#000;
+            font-size: 15px;
+            font-weight:bold;
+            }
+        .surt__par_type_book {
+            background: blue;
+            float: left;
+            }
+
+@-webkit-keyframes blink {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}*/
+>>>>>>> Code style
