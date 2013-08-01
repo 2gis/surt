@@ -168,7 +168,7 @@
 
                             data.kit = self.suggest[0];
                             self.set(data);
-                            self.restoreCursor(length);
+                            self.restoreCursor(self.text().length); // != length
                         }
                     }
                 })
@@ -199,7 +199,7 @@
                     data.kit = self.suggest[ index ];
                     self.set(data);
                 })
-                .on('click', '.' + self.params.kitCloseCls, function() {
+                .on('click', '.' + self.params.tokenCloseCls, function() {
                     $(this).parent().remove();
                     self.parse();
                 });
@@ -233,7 +233,7 @@
 
             var inputHTML = [],
                 suggestHTML = [],
-                cls = this.params.kitCls,
+                cls = this.params.tokenCls,
                 textCls = this.params.textCls || cls;
 
             for (var i = 0 ; i < this.kit.length ; i++) {
@@ -241,7 +241,7 @@
 
                 if ( this.kit[i].type != "text" ) {
                     if (cls) {
-                        var kitClose = this.params.kitCloseCls;
+                        var kitClose = this.params.tokenCloseCls;
                         var kitCloseHTML = !!kitClose ? '<div class="' + kitClose + '"></div>' : '';
 
                         html = '<div class="' + cls + ' ' + cls + '_type_' + this.kit[i].type + '">' + html + kitCloseHTML + '</div>';

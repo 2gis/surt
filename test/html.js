@@ -7,7 +7,7 @@ describe('HTML.', function() {
             suggest: '.surt__suggests',
             suggestItemCls: 'surt__suggests-item',
             suggestCls: 'surt_dropdown_true',
-            kitCls: 'surt__par',
+            tokenCls: 'surt__token',
             textCls: 'surt__text'
         });
     });
@@ -58,7 +58,7 @@ describe('HTML.', function() {
         });
 
         var html = getHTML();
-        assert(html == '<div class="surt__text">Ресторан</div> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">кухня</div>', 'Генерирует html по киту из поисковой строки, в конце нет пробела');
+        assert(html == '<div class="surt__text">Ресторан</div> <div class="surt__token surt__token_type_filter">Wi-Fi</div> <div class="surt__token surt__token_type_attr">кухня</div>', 'Генерирует html по киту из поисковой строки, в конце нет пробела');
     });
 
     it('Кит undefined, в сагесте один кит', function() {
@@ -76,7 +76,7 @@ describe('HTML.', function() {
         });
 
         var html = getHTML();
-        assert.ok(html == '<li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">кухня</div></li>');
+        assert.ok(html == '<li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__token surt__token_type_filter">Wi-Fi</div> <div class="surt__token surt__token_type_attr">кухня</div></li>');
     });
 
     it('Кит + 2 сагеста', function() {
@@ -110,7 +110,7 @@ describe('HTML.', function() {
         });
 
         var html = getHTML();
-        assert.ok(html == '<div class="surt__text">Ресторан</div><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">кухня</div></li><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__par surt__par_type_filter">Wi-Fi</div> <div class="surt__par surt__par_type_attr">Абра ка дабра</div></li>');
+        assert.ok(html == '<div class="surt__text">Ресторан</div><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__token surt__token_type_filter">Wi-Fi</div> <div class="surt__token surt__token_type_attr">кухня</div></li><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__token surt__token_type_filter">Wi-Fi</div> <div class="surt__token surt__token_type_attr">Абра ка дабра</div></li>');
     });
 
     // Трим токенов в ПС, в сагесте, текст, не текст

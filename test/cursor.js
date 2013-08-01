@@ -36,7 +36,7 @@ describe('Позиция курсора.', function() {
             suggest: '.surt__suggests',
             suggestItemCls: 'surt__suggests-item',
             suggestCls: 'surt_dropdown_true',
-            kitCls: 'surt__par',
+            tokenCls: 'surt__token',
             textCls: 'surt__text'
         });
     });
