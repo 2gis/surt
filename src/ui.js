@@ -4,7 +4,7 @@
 
     function spaces(text) {
         var re = new RegExp(space, "g"); // Заменяем неразрывные пробелы на пробел
-        
+
         return text.replace(re, " ");
     };
 
@@ -37,7 +37,7 @@
                 params.input = $('[contenteditable="true"]', params.root);
             }
             validateNode(params.input, 'params.input');
-            
+
             if ($(params.root).attr('data-surt-inited') == 'true') {
                 throw new Error('Surt: already initialized');
 
@@ -92,9 +92,6 @@
 
             // Навешиваем все необходимые события
             $(this.inputNode)
-                // .on('keydown', function() {
-                    
-                // })
                 .on('keyup', function(e){
                     var key = e.keyCode;
 
@@ -128,7 +125,7 @@
                         } else {
                             // Здесь сабмит
                         }
-                            
+
                         return false;
                     }
 
@@ -137,7 +134,7 @@
                         var index = 0;
                         if (self._activeSuggest >= 0)
                             index = self._activeSuggest < self.suggest.length - 1 ? self._activeSuggest + 1 : 0;
-            
+
                         self.markSuggest(index);
 
                         return false;
@@ -150,7 +147,7 @@
                         if (self._activeSuggest >= 0) {
                             index = self._activeSuggest > 0 ? self._activeSuggest - 1 : self.suggest.length - 1;
                         }
-            
+
                         self.markSuggest(index);
 
                         return false;
@@ -179,10 +176,9 @@
                     $('.surt').removeClass('surt_state_focus');
                 })
 
-            // Если был сделан клик вне плагина, закрываем выпадающий список, прячем подсказку
             $(document)
                 .on('click', function(e) {
-                    if ( !$(event.target).closest(self.root).length ) 
+                    if ( !$(event.target).closest(self.root).length )
                         $(self.root).removeClass( self.params.suggestCls + ' ' + self.params.autocompleteCls );
                     event.stopPropagation();
                 })
@@ -192,8 +188,12 @@
 
                     var data = self.args();
                     data.kit = self.suggest[ index ];
-                    
+
                     self.set(data);
+                })
+                .on('click', '.' + self.params.kitCloseCls, function() {
+                    $(this).parent().remove();
+                    self.parse();
                 });
         },
 
@@ -233,7 +233,10 @@
 
                 if ( this.kit[i].type != "text" ) {
                     if (cls) {
-                        html = '<div class="' + cls + ' ' + cls + '_type_' + this.kit[i].type + '">' + html + '</div>';
+                        var kitClose = this.params.kitCloseCls;
+                        var kitCloseHTML = !!kitClose ? '<div class="' + kitClose + '"></div>' : '';
+
+                        html = '<div class="' + cls + ' ' + cls + '_type_' + this.kit[i].type + '">' + html + kitCloseHTML + '</div>';
                     }
 
                     inputHTML.push(html);
@@ -269,7 +272,7 @@
 
                         kit.push(html);
                     }
-                        
+
                 }
 
                 kit = kit.join(' ');

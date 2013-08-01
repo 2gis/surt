@@ -63,8 +63,7 @@ body {
             top: 0;
             left: 0;
             }
-            .surt__input .surt__par:before {
-                content:'×';
+            .surt__input .surt__par-close {
                 position: absolute;
                 right: 0;
                 padding: 0 .3em;
@@ -73,6 +72,9 @@ body {
                 height: 22px;
                 color:#fff;
                 cursor: pointer;
+                }
+            .surt__input .surt__par-close:after {
+                content:'×';
                 }
         .surt__clone {
             z-index: 0;
@@ -91,7 +93,7 @@ body {
                 }
             .surt__clone-hint:after {
                 content: '';
-                background: url('surt-autocomplete.png');
+                background: url('../demo/surt-autocomplete.png');
                 width: 16px;
                 height: 12px;
                 display: inline-block;
@@ -164,7 +166,7 @@ body {
             }
         .surt__text {
             display: inline;
-        }
+            }
         .surt__par_type_rubric {
             background: red;
             font-size: 15px;
