@@ -12,6 +12,7 @@ $(document).ready(function() {
         autocomplete: '.surt__clone-hint',
         autocompleteCls: 'surt_autocomplete_true',
         kitCloseCls: 'surt__par-close',
+        stateFocusCls: 'surt_state_focus',
         change: function(e, data) {
             // Изменение текста
             // console.log('query', e.query);

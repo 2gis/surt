@@ -155,7 +155,6 @@ body {
         .surt__par {
             position: relative;
             display: inline-block;
-            /*vertical-align: top; Зачем? Вроде же логичнее текст выравнивать по базовой линии независимо от оформления*/
             background: #00789c;
             color: #fff;
             font: 13px/16px Arial;

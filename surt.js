@@ -170,10 +170,10 @@
                     }, 0);
                 })
                 .on('focus', function() {
-                    $('.surt').addClass('surt_state_focus');
+                    $(self.root).addClass(self.params.stateFocusCls);
                 })
                 .on('blur', function() {
-                    $('.surt').removeClass('surt_state_focus');
+                    $(self.root).removeClass(self.params.stateFocusCls);
                 })
 
             $(document)
