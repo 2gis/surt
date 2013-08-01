@@ -68,6 +68,7 @@
             this.suggestNode = $(params.suggest)[0];
             this.cloneNode = $(params.clone)[0];
             this.autocompleteNode = $(params.autocomplete)[0];
+            this._pressedKeys = 0;
 
             this.kit = [];
 
@@ -87,13 +88,15 @@
                 var data = self.args();
 
                 data.kit = self.suggest[self._activeSuggest];
+
                 self.set(data);
                 self.restoreCursor(self.text().length); // Крайне правое положение
             }
 
             // Если нажата не буква - возвращает true
             function isControlKey(key) {
-                return key == 37 || key == 39 || key == 16 || key == 17 || key == 18 || key == 91 || key == 35 || key == 36;
+                // Left, Right, Shift, Left Ctrl, Right Ctrl, Cmd, End, Home, Enter
+                return key == 37 || key == 39 || key == 16 || key == 17 || key == 18 || key == 91 || key == 35 || key == 36 || key == 13;
             }
 
             // Навешиваем все необходимые события
@@ -103,25 +106,43 @@
 
                     self._pressedKeys--;
                     //if (self._pressedKeys < 0) self._pressedKeys = 0;
-
-                    // Пропускаем клавиши Left, Right, Shift, Left Ctrl, Right Ctrl, Cmd, End, Home без колбека
+                    
                     if (isControlKey(key)) return true;
 
                     if (key == 40 && $('.surt').hasClass(params.suggestCls) ) {
                         // var currentItem = 0; стрелка вниз
                     }
 
-                    if (key == 38 || key == 40) return false;
+                    if (key == 38 || key == 40 || (key == 32 && self.getCursor() >= self.text().length)) return false;
 
                     self.parse();
                     params.change && params.change(e, self.args());
                 })
-                .on('keydown input paste', function(e) {
+                .on('keydown input paste', function(e) { // input paste
                     var key = e.keyCode;
 
+                    // Пробел
+                    if (key == 32 && self.getCursor() >= self.text().length) {
+                        if (!self.trailingSpace && self.kit.length) {
+                            $(self.inputNode).append(' ');
+                            self.parse();
+                            //self.setKit();
+                            params.change && params.change(e, self.args());
+                            self.restoreCursor(self.getCursor() + 1);
+                        }
+
+                        return false;
+                    }
+
+                    // Прочие буквы
                     if ( e.type == 'keydown' && !isControlKey(key) ) { // При нажатии на символ
                         self._pressedKeys++;
                         resetTimer();
+                    }
+
+                    // Для контрол-клавиш блокировки быть не должно
+                    if (isControlKey(key)) {
+                        self._pressedKeys = 0;
                     }
 
                     // Enter
@@ -138,8 +159,10 @@
                     // Стрелка вниз
                     if (key == 40) {
                         var index = 0;
-                        if (self._activeSuggest >= 0)
+
+                        if (self._activeSuggest >= 0) {
                             index = self._activeSuggest < self.suggest.length - 1 ? self._activeSuggest + 1 : 0;
+                        }
 
                         self.markSuggest(index);
 
@@ -162,6 +185,7 @@
                     // Стрелка вправо
                     if (key == 39) {
                         var length = self.text().length;
+
                         // Если выставлены модификаторы, и если курсор в крайне правом положении, делаем сет с новыми данными (довершаем автокомплит)
                         if ( $(self.root).hasClass( params.suggestCls ) && $(self.root).hasClass( params.autocompleteCls ) && self.getCursor() >= length ) {
                             var data = self.args();
@@ -217,12 +241,17 @@
 
         // Устанавливает новые данные (set - единственная точка входа на новые данные)
         set: function(data) {
-
-            if (this._pressedKeys) return; // Если на момент входа в функцию пользователь уже нажал новую клавишу - сетить бессмысленно
+            if (this._pressedKeys > 0) return; // Если на момент входа в функцию пользователь уже нажал новую клавишу - сетить бессмысленно
 
             data = data || {};
             this.kit = data.kit || [];
             this.suggest = data.suggest || [];
+            this.update();
+        },
+
+        // Устанавливает только данные поисоковй строки
+        setKit: function(kit) {
+            this.kit = this.kit || kit;
             this.update();
         },
 
@@ -239,22 +268,20 @@
             for (var i = 0 ; i < this.kit.length ; i++) {
                 var html = this.kit[i].text.trim();
 
-                if ( this.kit[i].type != "text" ) {
+                if ( this.kit[i].type == "text" ) {
+                    if (textCls) {
+                        html = '<div class="' + textCls + '">' + html + '</div>';
+                    }
+                } else {
                     if (cls) {
                         var kitClose = this.params.tokenCloseCls;
                         var kitCloseHTML = !!kitClose ? '<div class="' + kitClose + '"></div>' : '';
 
                         html = '<div class="' + cls + ' ' + cls + '_type_' + this.kit[i].type + '">' + html + kitCloseHTML + '</div>';
                     }
-
-                    inputHTML.push(html);
-                } else {
-                    if (textCls) {
-                        html = '<div class="' + textCls + '">' + html + '</div>';
-                    }
-
-                    inputHTML.push(html);
                 }
+
+                inputHTML.push(html);
             }
 
             inputHTML = inputHTML.join(' ');
@@ -355,7 +382,7 @@
             var text = this.text();
 
             this.trailingSpace = text[text.length - 1] === ' ';
-            newKit = this.parser( this.kit, text );
+            newKit = this.parser(this.kit, text);
             this.kit = newKit;
         },
 

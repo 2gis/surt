@@ -72,6 +72,8 @@ body {
                 height: 22px;
                 color:#fff;
                 cursor: pointer;
+                -webkit-user-select: none;
+                user-select: none;
                 }
             .surt__input .surt__token-close:after {
                 content:'×';
@@ -159,7 +161,7 @@ body {
             color: #fff;
             font: 13px/16px Arial;
             border-radius: 3px;
-            padding: .2em 1.1em .2em .4em;
+            padding: .2em .4em .2em .4em;
             /*margin: -.2em -.1em -.2em 0;*/
             box-shadow: inset 0 -1px 0 0 rgba(0,0,0,.4);
             }

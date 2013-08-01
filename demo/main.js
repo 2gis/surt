@@ -7,7 +7,7 @@ $(document).ready(function() {
         suggestItemCurrentCls: 'surt__suggests-item_state_current',
         suggestCls: 'surt_dropdown_true',
         tokenCls: 'surt__token',
-        tokenCloseCls: 'surt__token-close',
+        // tokenCloseCls: 'surt__token-close',
         textCls: 'surt__text',
         clone: '.surt__clone-main',
         autocomplete: '.surt__clone-hint',
