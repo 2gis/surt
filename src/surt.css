@@ -63,7 +63,7 @@ body {
             top: 0;
             left: 0;
             }
-            .surt__input .surt__par-close {
+            .surt__input .surt__kit-close {
                 position: absolute;
                 right: 0;
                 padding: 0 .3em;
@@ -73,7 +73,7 @@ body {
                 color:#fff;
                 cursor: pointer;
                 }
-            .surt__input .surt__par-close:after {
+            .surt__input .surt__kit-close:after {
                 content:'×';
                 }
         .surt__clone {
@@ -152,7 +152,7 @@ body {
                 .surt__suggests-item:active .surt__suggests-item-highlight {
                     color: #046;
                     }
-        .surt__par {
+        .surt__kit {
             position: relative;
             display: inline-block;
             background: #00789c;
@@ -166,17 +166,17 @@ body {
         .surt__text {
             display: inline;
             }
-        .surt__par_type_rubric {
+        .surt__kit_type_rubric {
             background: red;
             font-size: 15px;
             padding: 0 20px;
             }
-        .surt__par_type_filter {
+        .surt__kit_type_filter {
             background: green;
             /*box-shadow: 0 0 10px 0 #000;*/
             /*margin: 0 0 0 3em;*/
             }
-        .surt__par_type_attr {
+        .surt__kit_type_attr {
             margin: 4px 10px;
             box-shadow: 0px 1px 0px 0px #fff6af;
             background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffec64), color-stop(1, #ffab23));
@@ -195,16 +195,16 @@ body {
             -webkit-animation: blink 9s infinite;
             animation: blink 9s infinite;
             }
-        .surt__par_type_attr:hover {
+        .surt__kit_type_attr:hover {
             background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffab23), color-stop(1, #ffec64));
             background: linear-gradient(to bottom, #ffab23 5%, #ffec64 100%);
             background-color: #ffab23;
         }
-        .surt__par_type_attr:active {
+        .surt__kit_type_attr:active {
             position: relative;
             top: 1px;
         }
-        .surt__par_type_book {
+        .surt__kit_type_book {
             padding: 4px 6px;
             background: #fdfdfd;
             border: 1px solid #eee;

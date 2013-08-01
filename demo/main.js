@@ -6,12 +6,12 @@ $(document).ready(function() {
         suggestItemCls: 'surt__suggests-item',
         suggestItemCurrentCls: 'surt__suggests-item_state_current',
         suggestCls: 'surt_dropdown_true',
-        kitCls: 'surt__par',
+        kitCls: 'surt__kit',
+        kitCloseCls: 'surt__kit-close',
         textCls: 'surt__text',
         clone: '.surt__clone-main',
         autocomplete: '.surt__clone-hint',
         autocompleteCls: 'surt_autocomplete_true',
-        kitCloseCls: 'surt__par-close',
         stateFocusCls: 'surt_state_focus',
         change: function(e, data) {
             // Изменение текста
