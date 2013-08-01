@@ -60,6 +60,7 @@
             var self = this;
 
             params = params || {};
+            this.$ = $;
             this.params = params;
             this.parser = surt.parser;
             this.inputNode = $(params.input)[0];
@@ -87,7 +88,12 @@
 
                 data.kit = self.suggest[self._activeSuggest];
                 self.set(data);
-                self.restoreCursor(self.text().length);
+                self.restoreCursor(self.text().length); // Крайне правое положение
+            }
+
+            // Если нажата не буква - возвращает true
+            function isControlKey(key) {
+                return key == 37 || key == 39 || key == 16 || key == 17 || key == 18 || key == 91 || key == 35 || key == 36;
             }
 
             // Навешиваем все необходимые события
@@ -99,7 +105,7 @@
                     //if (self._pressedKeys < 0) self._pressedKeys = 0;
 
                     // Пропускаем клавиши Left, Right, Shift, Left Ctrl, Right Ctrl, Cmd, End, Home без колбека
-                    if (key == 37 || key == 39 || key == 16 || key == 17 || key == 18 || key == 91 || key == 35 || key == 36 ) return true;
+                    if (isControlKey(key)) return true;
 
                     if (key == 40 && $('.surt').hasClass(params.suggestCls) ) {
                         // var currentItem = 0; стрелка вниз
@@ -113,7 +119,7 @@
                 .on('keydown input paste', function(e) {
                     var key = e.keyCode;
 
-                    if ( e.type == 'keydown' && key != 13 && key != 39 ) { // При нажатии на символ
+                    if ( e.type == 'keydown' && !isControlKey(key) ) { // При нажатии на символ
                         self._pressedKeys++;
                         resetTimer();
                     }
@@ -155,12 +161,14 @@
 
                     // Стрелка вправо
                     if (key == 39) {
-                        // Если выставлены модификаторы делаем сет с новыми данными
-                        if ( $(self.root).hasClass( params.suggestCls ) && $(self.root).hasClass( params.autocompleteCls ) ) {
+                        var length = self.text().length;
+                        // Если выставлены модификаторы, и если курсор в крайне правом положении, делаем сет с новыми данными (довершаем автокомплит)
+                        if ( $(self.root).hasClass( params.suggestCls ) && $(self.root).hasClass( params.autocompleteCls ) && self.getCursor() >= length ) {
                             var data = self.args();
 
                             data.kit = self.suggest[0];
                             self.set(data);
+                            self.restoreCursor(length);
                         }
                     }
                 })
@@ -178,17 +186,17 @@
 
             $(document)
                 .on('click', function(e) {
-                    if ( !$(event.target).closest(self.root).length )
-                        $(self.root).removeClass( self.params.suggestCls + ' ' + self.params.autocompleteCls );
-                    event.stopPropagation();
+                    if ( !$(e.target).closest(self.root).length ) 
+                        $(self.root).removeClass( self.params.suggestCls ).removeClass( self.params.autocompleteCls );
+
+                    e.stopPropagation();
                 })
                 .on('click', '.' + self.params.suggestItemCls, function(e) {
-                    var suggestsItems = $('.' + params.suggestItemCls);
-                    var index = suggestsItems.index( $(this) );
+                    var suggestsItems = $('.' + params.suggestItemCls),
+                        index = suggestsItems.index( $(this) ),
+                        data = self.args();
 
-                    var data = self.args();
                     data.kit = self.suggest[ index ];
-
                     self.set(data);
                 })
                 .on('click', '.' + self.params.kitCloseCls, function() {
@@ -286,15 +294,22 @@
                 this.suggestNode.innerHTML = suggestHTML;
             }
 
-            if (this.suggest.length && this.suggest[0].length && this.kit.length) {
+            // Автокомплит
+            if (this.suggest.length && this.suggest[0].length && this.kit.length && this.cloneNode) {
+                var lastKitText = this.kit[this.kit.length - 1].text, // Неполный токен, который надо сагестировать
+                    kitPos = this.kit.length - 1, // Номер крайнего токена, который будет при вводе следующего символа
+                    suggestText, // Текст сагеста для крайнего текстового токена
+                    isAutocomplete; // Текст сагеста являеся автокомплитом
 
-                var lastNodeText = this.kit[this.kit.length - 1].text,
-                    firstSuggestText = this.suggest[0][this.suggest[0].length - 1].text;
-                var isAutocomplete = !firstSuggestText.toLowerCase().indexOf( lastNodeText.toLowerCase() );
+                if (this.trailingSpace) { // На левой границе второго (нового) токена - то есть первый уже окуклился, и выводить комплит на первый токен сагеста уже не надо
+                    kitPos++;
+                }
+                suggestText = (this.suggest[0].length > kitPos) ? this.suggest[0][kitPos].text : '';
+                isAutocomplete = !suggestText.toLowerCase().indexOf( lastKitText.toLowerCase() );
 
                 if ($(this.root).hasClass(this.params.suggestCls) && isAutocomplete) {
                     this.cloneNode.innerHTML = this.inputNode.innerHTML;
-                    this.autocompleteNode.innerHTML = firstSuggestText.slice( lastNodeText.length );
+                    this.autocompleteNode.innerHTML = suggestText.slice( lastKitText.length );
                     $(this.root).addClass( this.params.autocompleteCls );
                 } else {
                     $(this.root).removeClass( this.params.autocompleteCls );
@@ -329,7 +344,7 @@
             var data = {};
 
             data.kit = this.kit;
-            data.suggest = {};
+            data.suggest = this.suggest; // Почему был пустой объект? Договорились что была ошибка
             data.text = this.text();
 
             return data;
@@ -369,7 +384,7 @@
         module.exports = surt;
     }
 
-    surt.version = '0.1.1';
+    surt.version = '0.2.0';
 
     // if ($ && $.fn) {
     //     $.fn.surt = surt;

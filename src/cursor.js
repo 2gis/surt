@@ -38,8 +38,8 @@
         };
     }
 
-    // Сохраняет позицию курсора
-    surt.fn.saveCursor = function() {
+    // Возвращает позицию курсора
+    surt.fn.getCursor = function() {
         if (!window.getSelection) return; // IE8-
 
         var selection = window.getSelection();
@@ -67,9 +67,14 @@
             child = child.parentNode;
         }
 
-        this.cursorPos = N;
-
         return N;
+    }
+
+    // Сохраняет позицию курсора
+    surt.fn.saveCursor = function() {
+        this.cursorPos = this.getCursor();
+
+        return this.cursorPos;
     };
 
     surt.fn.restoreCursor = function(n) {
@@ -91,6 +96,8 @@
         }
         
         if (targetNode && targetNode.nodeType == 3) {
+            n = Math.min(n, this.$(targetNode).text().length);
+            n = Math.max(n, 0);
             range.setStart(targetNode, n); // Sets the start position of a Range.
             range.collapse(true); // Collapses the Range to one of its boundary points.
             selection.removeAllRanges(); // Removes all ranges from the selection.
