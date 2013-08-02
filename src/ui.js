@@ -222,10 +222,6 @@
 
                     data.kit = self.suggest[ index ];
                     self.set(data);
-                })
-                .on('click', '.' + self.params.tokenCloseCls, function() {
-                    $(this).parent().remove();
-                    self.parse();
                 });
         },
 

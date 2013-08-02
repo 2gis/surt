@@ -63,21 +63,6 @@ body {
             top: 0;
             left: 0;
             }
-            .surt__input .surt__token-close {
-                position: absolute;
-                right: 0;
-                padding: 0 .3em;
-                top: 0;
-                font: 13px/24px Arial;
-                height: 22px;
-                color:#fff;
-                cursor: pointer;
-                -webkit-user-select: none;
-                user-select: none;
-                }
-            .surt__input .surt__token-close:after {
-                content:'×';
-                }
         .surt__clone {
             z-index: 0;
             height: 32px;
