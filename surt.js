@@ -240,7 +240,7 @@
             if (this._pressedKeys > 0) return; // Если на момент входа в функцию пользователь уже нажал новую клавишу - сетить бессмысленно
 
             data = data || {};
-            this.kit = data.kit || [];
+            this.kit = data.kit || this.kit || [];
             this.suggest = data.suggest || [];
             this.update();
         },

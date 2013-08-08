@@ -1,5 +1,5 @@
 describe('HTML.', function() {
-    before(function() {
+    function reinit() {
         $('.wrapper').html(originalHTML);
         suggest = surt({
             root: '.surt',
@@ -10,6 +10,9 @@ describe('HTML.', function() {
             tokenCls: 'surt__token',
             textCls: 'surt__text'
         });
+    }
+    before(function() {
+        reinit();
     });
 
     var suggest;
@@ -62,6 +65,7 @@ describe('HTML.', function() {
     });
 
     it('Кит undefined, в сагесте один кит', function() {
+        reinit();
         suggest.set({
             suggest: [[{
                 text: 'Ресторан',
@@ -111,6 +115,47 @@ describe('HTML.', function() {
 
         var html = getHTML();
         assert.ok(html == '<div class="surt__text">Ресторан</div><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__token surt__token_type_filter">Wi-Fi</div> <div class="surt__token surt__token_type_attr">кухня</div></li><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__token surt__token_type_filter">Wi-Fi</div> <div class="surt__token surt__token_type_attr">Абра ка дабра</div></li>');
+    });
+
+    it('Кит не передается в set - должен остаться старый кит', function() {
+        suggest.set({
+            kit: [{
+                text: 'Ресторан',
+                type: 'text'
+            }],
+            suggest: [
+                [{
+                    text: 'Ресторан',
+                    type: 'text'
+                }], [{
+                    text: 'Ресторан',
+                    type: 'text'
+                }]
+            ]
+        });
+
+        var oldHtml = $('.surt__input').html(),
+            oldPos = 3;
+
+        suggest.restoreCursor(oldPos);
+
+        suggest.set({
+            suggest: [
+                [{
+                    text: 'Ресторан',
+                    type: 'text'
+                }], [{
+                    text: 'Ресторан',
+                    type: 'text'
+                }]
+            ]
+        });
+
+        var newHtml = $('.surt__input').html(),
+            newPos = suggest.getCursor();
+
+        assert(oldHtml == newHtml, 'HTML код в инпуте не изменился');
+        assert(oldPos == newPos, 'Позиция курсора в инпуте не изменилась');
     });
 
     // Трим токенов в ПС, в сагесте, текст, не текст
