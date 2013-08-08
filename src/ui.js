@@ -1,12 +1,28 @@
 (function(window, undefined) {
-    var $,
-        space = String.fromCharCode(160);
+var
+    $,
+    space = String.fromCharCode(160);
 
     function spaces(text) {
         var re = new RegExp(space, "g"); // Заменяем неразрывные пробелы на пробел
 
         return text.replace(re, " ");
-    };
+    }
+
+    function kitsAreEqual(kit1, kit2) {
+        var result = true;
+
+        kit1 = kit1 || [];
+        kit2 = kit2 || [];
+
+        if (!kit1.length || !kit2.length) return !(kit1.length || kit2.length);
+
+        for (var i = 0 ; i < kit1.length ; i++) {
+            result = result && (kit1[i].text == kit2[i].text) && (kit1[i].type == kit2[i].type);
+        }
+
+        return result && (kit1.length == kit2.length);
+    }
 
     var surt = function(params) {
         params = params || {};
@@ -123,8 +139,8 @@
 
                     // Пробел
                     if (key == 32 && self.getCursor() >= self.text().length) {
-                        if (!self.trailingSpace && self.kit.length) {
-                            $(self.inputNode).append(' ');
+                        if (!self.trailingSpace/* && self.kit.length*/) {
+                            $(self.inputNode).append('&nbsp;');
                             self.parse();
                             //self.setKit();
                             params.change && params.change(e, self.args());
@@ -237,88 +253,126 @@
 
         // Устанавливает новые данные (set - единственная точка входа на новые данные)
         set: function(data) {
+            data = data || {};
+
             if (this._pressedKeys > 0) return; // Если на момент входа в функцию пользователь уже нажал новую клавишу - сетить бессмысленно
 
+            if (data.kit && data.kit.length === undefined) { // not an array
+                data.kit = [data.kit];
+            }
+
+            var same = kitsAreEqual(data.kit, this.kit);
+
             data = data || {};
-            this.kit = data.kit || this.kit || [];
+            this.kit = data.kit;
             this.suggest = data.suggest || [];
-            this.update();
+
+            this.saveCursor();
+            this.updateSuggest();
+            this.updateAutocomplete();
+
+            if (!same) this.updateKit();
+
+            this.restoreCursor();
         },
 
         // Устанавливает только данные поисоковй строки
-        setKit: function(kit) {
-            this.kit = this.kit || kit;
-            this.update();
-        },
+        // setKit: function(kit) {
+        //     if (kitsAreEqual(kit, this.kit)) return;
+
+        //     this.kit = kit;
+        //     this.updateKit();
+        // },
 
         // Обновляет UI
         update: function() {
             // Здесь все манипуляции с дом-деревом
             this.saveCursor();
 
+            this.updateKit();
+            this.updateSuggest();
+            this.updateAutocomplete();
+
+            this.restoreCursor();
+        },
+
+        // Обновляет html в инпуте
+        updateKit: function() {
             var inputHTML = [],
-                suggestHTML = [],
-                cls = this.params.tokenCls,
-                textCls = this.params.textCls || cls;
+                tokenCls = this.params.tokenCls,
+                textCls = this.params.textCls || tokenCls;
 
-            for (var i = 0 ; i < this.kit.length ; i++) {
-                var html = this.kit[i].text.trim();
+            if (this.kit) {
+                for (var i = 0 ; i < this.kit.length ; i++) {
+                    var html = this.kit[i].text.trim();
 
-                if ( this.kit[i].type == "text" ) {
-                    if (textCls) {
-                        html = '<div class="' + textCls + '">' + html + '</div>';
-                    }
-                } else {
-                    if (cls) {
-                        var kitClose = this.params.tokenCloseCls;
-                        var kitCloseHTML = !!kitClose ? '<div class="' + kitClose + '"></div>' : '';
-
-                        html = '<div class="' + cls + ' ' + cls + '_type_' + this.kit[i].type + '">' + html + kitCloseHTML + '</div>';
-                    }
-                }
-
-                inputHTML.push(html);
-            }
-
-            inputHTML = inputHTML.join(' ');
-            if (this.trailingSpace) inputHTML += space;
-            this.inputNode.innerHTML = inputHTML;
-
-            for (var i = 0 ; i < this.suggest.length ; i++) {
-                var kit = [];
-
-                for (var j = 0 ; j < this.suggest[i].length ; j++) {
-                    var html = this.suggest[i][j].text.trim();
-
-                    if ( this.suggest[i][j].type != "text" ) {
-                        if (cls) {
-                            html = '<div class="' + cls + ' ' + cls + '_type_' + this.suggest[i][j].type + '">' + html + '</div>';
-                        }
-
-                        kit.push(html);
-                    } else {
+                    if ( this.kit[i].type == "text" ) {
                         if (textCls) {
                             html = '<div class="' + textCls + '">' + html + '</div>';
                         }
+                    } else {
+                        if (tokenCls) {
+                            var kitClose = this.params.tokenCloseCls;
+                            var kitCloseHTML = !!kitClose ? '<div class="' + kitClose + '"></div>' : '';
 
-                        kit.push(html);
+                            html = '<div class="' + tokenCls + ' ' + tokenCls + '_type_' + this.kit[i].type + '">' + html + kitCloseHTML + '</div>';
+                        }
                     }
 
+                    inputHTML.push(html);
                 }
 
-                kit = kit.join(' ');
-                suggestHTML.push('<li class="' + this.params.suggestItemCls + '">' + kit + '</li>');
-                this._activeSuggest = -1;
+                inputHTML = inputHTML.join(' ');
+                if (this.trailingSpace) inputHTML += space;
+                this.inputNode.innerHTML = inputHTML;
             }
-            suggestHTML = suggestHTML.join('');
-            if (this.suggestNode) {
-                if (suggestHTML) $(this.root).addClass(this.params.suggestCls);
-                else $(this.root).removeClass(this.params.suggestCls);
-                this.suggestNode.innerHTML = suggestHTML;
-            }
+        },
 
+        // Обновляет HTML в выпадашке сагестов
+        updateSuggest: function() {
+            var suggestHTML = [],
+                tokenCls = this.params.tokenCls,
+                textCls = this.params.textCls || tokenCls;
+
+            if (this.suggest) {
+                for (var i = 0 ; i < this.suggest.length ; i++) {
+                    var kit = [];
+
+                    for (var j = 0 ; j < this.suggest[i].length ; j++) {
+                        var html = this.suggest[i][j].text.trim();
+
+                        if ( this.suggest[i][j].type != "text" ) {
+                            if (tokenCls) {
+                                html = '<div class="' + tokenCls + ' ' + tokenCls + '_type_' + this.suggest[i][j].type + '">' + html + '</div>';
+                            }
+
+                            kit.push(html);
+                        } else {
+                            if (textCls) {
+                                html = '<div class="' + textCls + '">' + html + '</div>';
+                            }
+
+                            kit.push(html);
+                        }
+                    }
+
+                    kit = kit.join(' ');
+                    suggestHTML.push('<li class="' + this.params.suggestItemCls + '">' + kit + '</li>');
+                    this._activeSuggest = -1;
+                }
+                suggestHTML = suggestHTML.join('');
+                if (this.suggestNode) {
+                    if (suggestHTML) $(this.root).addClass(this.params.suggestCls);
+                    else $(this.root).removeClass(this.params.suggestCls);
+                    this.suggestNode.innerHTML = suggestHTML;
+                }
+            }
+        },
+
+        // Обновляет html в автокомплите
+        updateAutocomplete: function() {
             // Автокомплит
-            if (this.suggest.length && this.suggest[0].length && this.kit.length && this.cloneNode) {
+            if (this.suggest && this.suggest.length && this.suggest[0].length && this.kit && this.kit.length && this.cloneNode) {
                 var lastKitText = this.kit[this.kit.length - 1].text, // Неполный токен, который надо сагестировать
                     kitPos = this.kit.length - 1, // Номер крайнего токена, который будет при вводе следующего символа
                     suggestText, // Текст сагеста для крайнего текстового токена
@@ -341,8 +395,6 @@
             } else {
                 $(this.root).removeClass( this.params.autocompleteCls );
             }
-
-            this.restoreCursor();
         },
 
         // Возвращает текст из поисковой строки

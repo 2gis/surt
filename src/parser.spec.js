@@ -231,4 +231,14 @@ describe('Парсер текста.', function() {
     //         type: 'rubric'
     //     }]);
     // });
+
+    it('Токен undefined', function() {
+        var text = 'Warren ',
+            result = parser(undefined, text);
+
+        assert.deepEqual(result, [{
+            text: 'Warren ',
+            type: 'text'
+        }]);
+    });
 });

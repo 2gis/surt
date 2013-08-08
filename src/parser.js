@@ -9,12 +9,14 @@
     function kit2text(kit) {
         var text = '';
 
-        for (var i = 0 ; i < kit.length ; i++) {
-            if (i > 0) {
-                text += ' ';
-            }
+        if (kit) {
+            for (var i = 0 ; i < kit.length ; i++) {
+                if (i > 0) {
+                    text += ' ';
+                }
 
-            text += kit[i].text;
+                text += kit[i].text;
+            }
         }
 
         return text;
@@ -44,27 +46,29 @@
         if (kit2text(kit) === text) return kit;
 
         // Cycle by kit (each token)
-        for (var i = 0 ; i < kit.length ; i++) {
-            var index = text.indexOf(kit[i].text),
-                beforeChar = text[index - 1],
-                afterChar = text[index + kit[i].text.length];
+        if (kit) {
+            for (var i = 0 ; i < kit.length ; i++) {
+                var index = text.indexOf(kit[i].text),
+                    beforeChar = text[index - 1],
+                    afterChar = text[index + kit[i].text.length];
 
-            if ((afterChar !== ' ' && afterChar !== undefined) || // После найденной подстрокой не пробел и не конец строки - это не токен
-                (beforeChar !== ' ' && beforeChar !== undefined)) { // Или перед найденной подстрокой
-                index = -1;
-            }
+                if ((afterChar !== ' ' && afterChar !== undefined) || // После найденной подстрокой не пробел и не конец строки - это не токен
+                    (beforeChar !== ' ' && beforeChar !== undefined)) { // Или перед найденной подстрокой
+                    index = -1;
+                }
 
-            if (index == 0) {
-                pushToken(kit[i]);
-            } else if (index > 0) {
-                var newPlainText = text.substring(0, index).trim();
+                if (index == 0) {
+                    pushToken(kit[i]);
+                } else if (index > 0) {
+                    var newPlainText = text.substring(0, index).trim();
 
-                pushToken({
-                    text: newPlainText,
-                    type: 'text'
-                });
+                    pushToken({
+                        text: newPlainText,
+                        type: 'text'
+                    });
 
-                pushToken(kit[i]);
+                    pushToken(kit[i]);
+                }
             }
         }
 

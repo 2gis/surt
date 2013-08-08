@@ -457,4 +457,38 @@ describe('События.', function() {
             assert($('.surt__input').html() == '<div class="surt__token surt__token_type_filter">wifi</div>');
         });
     });
+
+    describe('Набор текста.', function() {
+        it('Нажатие пробела после слова в режиме незаполнения кита', function() {
+            var suggest = surt({
+                root: '.surt',
+                input: '.surt__input',
+                suggest: '.surt__suggests',
+                suggestItemCls: 'surt__suggests-item',
+                suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                suggestCls: 'surt_dropdown_true',
+                tokenCls: 'surt__token',
+                textCls: 'surt__text',
+                clone: '.surt__clone-main',
+                autocomplete: '.surt__clone-hint',
+                autocompleteCls: 'surt_autocomplete_true'
+            });
+
+            var e = jQuery.Event('keydown');
+
+            $('.surt__input').html('Ресторан');
+            suggest.restoreCursor(8);
+
+            e.keyCode = 32;
+            $('.surt__input').trigger(e); // Down
+
+            e = jQuery.Event('keydown');
+            e.keyCode = 32;
+            $('.surt__input').trigger(e); // Enter
+
+            var text = $('.surt__input').html();
+
+            assert(text == 'Ресторан&nbsp;', 'Пробел добавился в текст: ' +  '|Ресторан&nbsp;| == |' + text + '|');
+        });
+    });
 });
