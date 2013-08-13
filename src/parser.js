@@ -77,7 +77,7 @@
             pushToken({
                 text: text,
                 type: 'text'
-            })
+            });
         }
 
         return newKit;

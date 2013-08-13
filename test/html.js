@@ -11,6 +11,7 @@ describe('HTML.', function() {
             textCls: 'surt__text'
         });
     }
+    
     before(function() {
         reinit();
     });
@@ -196,6 +197,92 @@ describe('HTML.', function() {
 
             var html = getHTML();
             assert.ok(html == '<div class="surt__text">Ресторан</div><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__token surt__token_type_filter">Wi-Fi</div> <div class="surt__token surt__token_type_attr">кухня</div></li><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__token surt__token_type_filter">Wi-Fi</div> <div class="surt__token surt__token_type_attr">Абра ка дабра</div></li>');
+        });
+
+        it('Изменение крайнего кита -> сброс его в тип text', function() {
+            var e;
+
+            $('.wrapper').html(originalHTML);
+            suggest = surt({
+                root: '.surt',
+                input: '.surt__input',
+                suggest: '.surt__suggests',
+                suggestItemCls: 'surt__suggests-item',
+                suggestCls: 'surt_dropdown_true',
+                tokenCls: 'surt__token',
+                textCls: 'surt__text',
+                change: function(e, data) {
+                    suggest.set({
+                        kit: data.kit
+                    });
+                }
+            });
+
+            suggest.set({
+                kit: [{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }, {
+                    text: 'wifi',
+                    type: 'filter'
+                }]
+            });
+
+            suggest.restoreCursor(8);
+
+            // Backspace
+            $('.surt__input').html('<div class="surt__token surt__token_type_rubric">Ресторан</div> <div class="surt__token surt__token_type_filter">wif</div>');
+            e = jQuery.Event('keydown');
+            e.keyCode = 8;
+            $('.surt__input').trigger(e); // Down
+            e = jQuery.Event('keyup');
+            e.keyCode = 8;
+            $('.surt__input').trigger(e); // Up
+
+            var html = $('.surt__input').html();
+            assert.ok(html == '<div class="surt__token surt__token_type_rubric">Ресторан</div> <div class="surt__text">wif</div>');
+        });
+
+        it('В ките был 1 токен, сетим 2 токена', function() {
+            reinit();
+
+            suggest.set({
+                kit: [{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }]
+            });
+
+            suggest.set({
+                kit: [{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }, {
+                    text: 'wifi',
+                    type: 'filter'
+                }]
+            });
+        });
+
+        it('В ките было 2 токена, сетим 1 токен', function() {
+            reinit();
+
+            suggest.set({
+                kit: [{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }, {
+                    text: 'wifi',
+                    type: 'filter'
+                }]
+            });
+
+            suggest.set({
+                kit: [{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }]
+            });
         });
     });
 

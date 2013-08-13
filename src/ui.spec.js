@@ -1,5 +1,4 @@
-var assert = require('assert'),
-    _ = require('underscore');
+var assert = require('assert');
 
 describe('Парсер текста.', function() {
     var ui = require('./ui');
@@ -8,9 +7,9 @@ describe('Парсер текста.', function() {
         assert(ui && typeof ui == 'function');
     });
 
-    it('В прототипе есть методы set и get', function() {
-        var surt = ui({});
+    // it('В прототипе есть методы set и get', function() {
+    //     var surt = ui({});
 
-        //assert(surt);
-    });
+    //     assert(!surt);
+    // });
 });

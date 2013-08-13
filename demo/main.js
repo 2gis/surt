@@ -1,13 +1,12 @@
 $(document).ready(function() {
-    var suggest = surt({
-        root: '.surt',
+    var standart = surt({
+        root: '.surt_standart',
         input: '.surt__input',
         suggest: '.surt__suggests',
         suggestItemCls: 'surt__suggests-item',
         suggestItemCurrentCls: 'surt__suggests-item_state_current',
         suggestCls: 'surt_dropdown_true',
         tokenCls: 'surt__token',
-        // tokenCloseCls: 'surt__token-close',
         textCls: 'surt__text',
         clone: '.surt__clone-main',
         autocomplete: '.surt__clone-hint',
@@ -15,17 +14,32 @@ $(document).ready(function() {
         stateFocusCls: 'surt_state_focus',
         change: function(e, data) {
             // Изменение текста
-            // console.log('query', e.query);
-
             var setData = backend(data);
 
-            suggest.set(setData);
+            standart.set(setData);
         }
     });
 
-    suggest.set({
-        kit: [],
-        suggest: []
+    var simple = surt({
+        root: '.surt_simple',
+        input: '.surt__input',
+        inputMode: 'text',
+        suggest: '.surt__suggests',
+        suggestItemCls: 'surt__suggests-item',
+        suggestItemCurrentCls: 'surt__suggests-item_state_current',
+        suggestCls: 'surt_dropdown_true',
+        tokenCls: 'surt__token',
+        textCls: 'surt__text',
+        clone: '.surt__clone-main',
+        autocomplete: '.surt__clone-hint',
+        autocompleteCls: 'surt_autocomplete_true',
+        stateFocusCls: 'surt_state_focus',
+        change: function(e, data) {
+            // Изменение текста
+            var setData = backend(data);
+
+            simple.set(setData);
+        }
     });
 
     function backend(data) {
@@ -33,18 +47,21 @@ $(document).ready(function() {
                 kit: [],
                 suggest: []
             },
-            suggests = [],
-            kit = data.kit;
+            // suggests = [],
+            kit = data.kit,
+            q,
+            isSuggests,
+            i, j;
 
         // Ищем ли саггесты?
         if ( data.kit[ data.kit.length - 1 ] && data.kit[ data.kit.length - 1 ].type == "text" ) {
-            var q = data.kit[ data.kit.length - 1 ]["text"],
-                isSuggests = true;
+            q = data.kit[ data.kit.length - 1 ].text;
+            isSuggests = true;
         }
 
         // Строим актуальный кит
-        for (var j = 0; j < kit.length; j++) {
-            for (var i = 0; i < mock.length; i++) {
+        for (j = 0; j < kit.length; j++) {
+            for (i = 0; i < mock.length; i++) {
 
                 if ( kit[j].text.toLowerCase() === mock[i].text.toLowerCase() ) {
                     newData.kit[j] = mock[i];
@@ -56,7 +73,7 @@ $(document).ready(function() {
             }
         }
 
-        for (var i = 0; i < mock.length; i++) {
+        for (i = 0; i < mock.length; i++) {
 
             // Текстовые совпадения для саггестов
             if ( isSuggests ) {
@@ -65,7 +82,7 @@ $(document).ready(function() {
                 if (matchPosition + 1) {
                     var suggestRow = [];
 
-                    for (var j = 0; j < kit.length-1; j++) {
+                    for (j = 0; j < kit.length-1; j++) {
                         suggestRow[j] = {
                             text: kit[j].text,
                             type: kit[j].type
@@ -84,7 +101,7 @@ $(document).ready(function() {
         if (newData.suggest.length == 1 && data.kit.length == newData.suggest[0].length ) {
             var isEqual = true;
 
-            for (var i = 0; i < newData.suggest[0].length; i++) {
+            for (i = 0; i < newData.suggest[0].length; i++) {
                 if ( data.kit[i].text != newData.suggest[0][i].text || data.kit[i].type != newData.suggest[0][i].type ) {
                     isEqual = false;
                     break;

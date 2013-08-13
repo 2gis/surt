@@ -54,21 +54,20 @@
         // Цикл вверх по родителям, вплоть до node
         var N = offset;
         while (child && child != this.inputNode) {
-            var i = 0,
-                sibling = child.previousSibling,
+            var sibling = child.previousSibling,
                 text;
             
             while (sibling) {
                 text = $(sibling).text();
                 N += text.length; // К позиции курсора внутри child прибавляем позицию самого child
                 sibling = sibling.previousSibling;
-            };
+            }
 
             child = child.parentNode;
         }
 
         return N;
-    }
+    };
 
     // Сохраняет позицию курсора
     surt.fn.saveCursor = function() {

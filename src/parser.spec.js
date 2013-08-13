@@ -1,5 +1,4 @@
-var assert = require('assert'),
-    _ = require('underscore');
+var assert = require('assert');
 
 describe('Парсер текста.', function() {
     var parser = require('./parser');

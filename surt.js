@@ -1,7 +1,12 @@
 (function(window, undefined) {
 var
     $,
-    space = String.fromCharCode(160);
+    space = String.fromCharCode(160),
+    defaultParams = {
+        input: '.surt__input',
+        suggest: '.surt__suggests',
+        suggestItemCls: 'surt__suggests-item'
+    };
 
     function spaces(text) {
         var re = new RegExp(space, "g"); // Заменяем неразрывные пробелы на пробел
@@ -17,6 +22,8 @@ var
 
         if (!kit1.length || !kit2.length) return !(kit1.length || kit2.length);
 
+        if (kit1.length != kit2.length) return;
+
         for (var i = 0 ; i < kit1.length ; i++) {
             result = result && (kit1[i].text == kit2[i].text) && (kit1[i].type == kit2[i].type);
         }
@@ -26,6 +33,12 @@ var
 
     var surt = function(params) {
         params = params || {};
+
+        for (var key in defaultParams) {
+            if (!params[key]) {
+                params[key] = defaultParams[key];
+            }
+        }
 
         $ = window.jQuery || params.$;
 
@@ -47,7 +60,7 @@ var
 
             validateNode(params.root, 'params.root');
             if (params.input) {
-                params.input = $(params.input)[0];
+                params.input = $(params.input, params.root)[0];
             }
             if (!params.input) {
                 params.input = $('[contenteditable="true"]', params.root);
@@ -56,8 +69,6 @@ var
 
             if ($(params.root).attr('data-surt-inited') == 'true') {
                 throw new Error('Surt: already initialized');
-
-                return;
             }
 
             ret = new surt.fn.constructor(params, $);
@@ -73,18 +84,21 @@ var
     surt.fn = {
         // Создает объект surt
         constructor: function(params, $) {
-            var self = this;
+            var self = this,
+                root = params.root;
 
             params = params || {};
             this.$ = $;
             this.params = params;
             this.parser = surt.parser;
-            this.inputNode = $(params.input)[0];
-            this.root = $(params.root)[0];
-            this.suggestNode = $(params.suggest)[0];
-            this.cloneNode = $(params.clone)[0];
-            this.autocompleteNode = $(params.autocomplete)[0];
+            this.inputNode = $(params.input, root)[0];
+            this.root = $(params.root, root)[0];
+            this.suggestNode = $(params.suggest, root)[0];
+            this.cloneNode = $(params.clone, root)[0];
+            this.autocompleteNode = $(params.autocomplete, root)[0];
             this._pressedKeys = 0;
+            this._time = new Date().getTime();
+            this._events = {};
 
             this.kit = [];
 
@@ -131,19 +145,31 @@ var
 
                     if (key == 38 || key == 40 || (key == 32 && self.getCursor() >= self.text().length)) return false;
 
-                    self.parse();
-                    params.change && params.change(e, self.args());
+                    var newKit = self.parse(),
+                        data = self.args();
+
+                    data.kit = newKit;
+                    if (params.change) {
+                        params.change(e, data);
+                    }
                 })
                 .on('keydown input paste', function(e) { // input paste
-                    var key = e.keyCode;
+                    var key = e.keyCode,
+                        index,
+                        data;
 
                     // Пробел
                     if (key == 32 && self.getCursor() >= self.text().length) {
                         if (!self.trailingSpace/* && self.kit.length*/) {
                             $(self.inputNode).append('&nbsp;');
-                            self.parse();
-                            //self.setKit();
-                            params.change && params.change(e, self.args());
+
+                            var newKit = self.parse();
+                            
+                            data = self.args();
+                            data.kit = newKit;
+                            if (params.change) {
+                                params.change(e, data);
+                            }
                             self.restoreCursor(self.getCursor() + 1);
                         }
 
@@ -174,7 +200,7 @@ var
 
                     // Стрелка вниз
                     if (key == 40) {
-                        var index = 0;
+                        index = 0;
 
                         if (self._activeSuggest >= 0) {
                             index = self._activeSuggest < self.suggest.length - 1 ? self._activeSuggest + 1 : 0;
@@ -187,7 +213,7 @@ var
 
                     // Стрелка вверх
                     if (key == 38) {
-                        var index = self.suggest.length - 1;
+                        index = self.suggest.length - 1;
 
                         if (self._activeSuggest >= 0) {
                             index = self._activeSuggest > 0 ? self._activeSuggest - 1 : self.suggest.length - 1;
@@ -204,15 +230,14 @@ var
 
                         // Если выставлены модификаторы, и если курсор в крайне правом положении, делаем сет с новыми данными (довершаем автокомплит)
                         if ( $(self.root).hasClass( params.suggestCls ) && $(self.root).hasClass( params.autocompleteCls ) && self.getCursor() >= length ) {
-                            var data = self.args();
-
+                            data = self.args();
                             data.kit = self.suggest[0];
                             self.set(data);
                             self.restoreCursor(self.text().length); // != length
                         }
                     }
                 })
-                .on('paste', function(e) {
+                .on('paste', function() {
                     setTimeout(function(){
                         self.parse();
                     }, 0);
@@ -222,28 +247,26 @@ var
                 })
                 .on('blur', function() {
                     $(self.root).removeClass(self.params.stateFocusCls);
-                })
+                });
 
-            $(document)
+            this._events.click = function() {
+                var suggestsItems = $('.' + params.suggestItemCls),
+                    index = suggestsItems.index( $(this) ),
+                    data = self.args();
+
+                data.kit = self.suggest[ index ];
+                self.set(data);
+            };
+
+            $(this.root)
                 .on('click', function(e) {
-                    if ( !$(e.target).closest(self.root).length ) 
-                        $(self.root).removeClass( self.params.suggestCls ).removeClass( self.params.autocompleteCls );
+                    if (!$(e.target).closest(self.root).length) {
+                        $(self.root).removeClass(self.params.suggestCls).removeClass(self.params.autocompleteCls);
+                    }
 
                     e.stopPropagation();
                 })
-                .on('click', '.' + self.params.suggestItemCls, function(e) {
-                    var suggestsItems = $('.' + params.suggestItemCls),
-                        index = suggestsItems.index( $(this) ),
-                        data = self.args();
-
-                    data.kit = self.suggest[ index ];
-                    self.set(data);
-                });
-        },
-
-        dispose: function() {
-            $(this.root).attr('data-surt-inited', 'disposed');
-            clearTimeout(this._upTimer);
+                .on('click', '.' + self.params.suggestItemCls, self._events.click);
         },
 
         // Возвращает текущий кит
@@ -263,15 +286,14 @@ var
 
             var same = kitsAreEqual(data.kit, this.kit);
 
-            data = data || {};
             this.kit = data.kit;
             this.suggest = data.suggest || [];
 
             this.saveCursor();
             this.updateSuggest();
-            this.updateAutocomplete();
 
             if (!same) this.updateKit();
+            this.updateAutocomplete();
 
             this.restoreCursor();
         },
@@ -306,17 +328,15 @@ var
                 for (var i = 0 ; i < this.kit.length ; i++) {
                     var html = this.kit[i].text.trim();
 
-                    if ( this.kit[i].type == "text" ) {
+                    if (this.kit[i].type == "text" && this.params.inputMode != 'text') {
                         if (textCls) {
                             html = '<div class="' + textCls + '">' + html + '</div>';
                         }
-                    } else {
-                        if (tokenCls) {
-                            var kitClose = this.params.tokenCloseCls;
-                            var kitCloseHTML = !!kitClose ? '<div class="' + kitClose + '"></div>' : '';
+                    } else if (tokenCls && this.params.inputMode != 'text') {
+                        var kitClose = this.params.tokenCloseCls,
+                            kitCloseHTML = !!kitClose ? '<div class="' + kitClose + '"></div>' : '';
 
-                            html = '<div class="' + tokenCls + ' ' + tokenCls + '_type_' + this.kit[i].type + '">' + html + kitCloseHTML + '</div>';
-                        }
+                        html = '<div class="' + tokenCls + ' ' + tokenCls + '_type_' + this.kit[i].type + '">' + html + kitCloseHTML + '</div>';
                     }
 
                     inputHTML.push(html);
@@ -431,7 +451,9 @@ var
 
             this.trailingSpace = text[text.length - 1] === ' ';
             newKit = this.parser(this.kit, text);
-            this.kit = newKit;
+            // this.kit = newKit; // ?
+
+            return newKit;
         },
 
         markSuggest: function(index) {
@@ -448,6 +470,12 @@ var
 
         minimize: function() {
             $(this.root).removeClass(this.params.suggestCls);
+        },
+
+        dispose: function() {
+            $(this.root).attr('data-surt-inited', 'disposed');
+            $(this.root).off('click', '.' + this.params.suggestItemCls, this._events.click);
+            clearTimeout(this._upTimer);
         }
     };
 
@@ -459,7 +487,7 @@ var
         module.exports = surt;
     }
 
-    surt.version = '0.2.0';
+    surt.version = '0.2.2';
 
     // if ($ && $.fn) {
     //     $.fn.surt = surt;
@@ -544,7 +572,7 @@ var
             pushToken({
                 text: text,
                 type: 'text'
-            })
+            });
         }
 
         return newKit;
@@ -612,21 +640,20 @@ var
         // Цикл вверх по родителям, вплоть до node
         var N = offset;
         while (child && child != this.inputNode) {
-            var i = 0,
-                sibling = child.previousSibling,
+            var sibling = child.previousSibling,
                 text;
             
             while (sibling) {
                 text = $(sibling).text();
                 N += text.length; // К позиции курсора внутри child прибавляем позицию самого child
                 sibling = sibling.previousSibling;
-            };
+            }
 
             child = child.parentNode;
         }
 
         return N;
-    }
+    };
 
     // Сохраняет позицию курсора
     surt.fn.saveCursor = function() {
