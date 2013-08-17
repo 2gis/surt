@@ -29,7 +29,7 @@ describe('Позиция курсора.', function() {
     };
 
     beforeEach(function() {
-        $('.wrapper').html(originalHTML);
+        $('.wrapper_common').html(originalHTML);
         suggest = surt({
             root: '.surt',
             input: '.surt__input',

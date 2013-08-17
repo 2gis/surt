@@ -231,13 +231,13 @@ describe('Парсер текста.', function() {
     //     }]);
     // });
 
-    it('Токен undefined', function() {
-        var text = 'Warren ',
-            result = parser(undefined, text);
+    // it('Токен undefined', function() {
+    //     var text = 'Warren ',
+    //         result = parser(undefined, text);
 
-        assert.deepEqual(result, [{
-            text: 'Warren ',
-            type: 'text'
-        }]);
-    });
+    //     assert.deepEqual(result, [{
+    //         text: 'Warren ',
+    //         type: 'text'
+    //     }]);
+    // });
 });

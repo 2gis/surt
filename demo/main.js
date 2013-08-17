@@ -23,7 +23,7 @@ $(document).ready(function() {
     var simple = surt({
         root: '.surt_simple',
         input: '.surt__input',
-        inputMode: 'text',
+        // inputMode: 'text',
         suggest: '.surt__suggests',
         suggestItemCls: 'surt__suggests-item',
         suggestItemCurrentCls: 'surt__suggests-item_state_current',
@@ -34,11 +34,15 @@ $(document).ready(function() {
         autocomplete: '.surt__clone-hint',
         autocompleteCls: 'surt_autocomplete_true',
         stateFocusCls: 'surt_state_focus',
+        delimiter: ',',
         change: function(e, data) {
             // Изменение текста
             var setData = backend(data);
 
             simple.set(setData);
+        },
+        submit: function() {
+            console.log('qwe');
         }
     });
 
@@ -54,7 +58,7 @@ $(document).ready(function() {
             i, j;
 
         // Ищем ли саггесты?
-        if ( data.kit[ data.kit.length - 1 ] && data.kit[ data.kit.length - 1 ].type == "text" ) {
+        if ( data.kit[ data.kit.length - 1 ]/* && data.kit[ data.kit.length - 1 ].type == "text" */) {
             q = data.kit[ data.kit.length - 1 ].text;
             isSuggests = true;
         }
@@ -63,7 +67,7 @@ $(document).ready(function() {
         for (j = 0; j < kit.length; j++) {
             for (i = 0; i < mock.length; i++) {
 
-                if ( kit[j].text.toLowerCase() === mock[i].text.toLowerCase() ) {
+                if ( kit[j].text.toLowerCase() === mock[i].text.toLowerCase() && data.text[data.text.length - 1] == ' ' ) {
                     newData.kit[j] = mock[i];
                     break;
                 } else {
@@ -88,7 +92,10 @@ $(document).ready(function() {
                             type: kit[j].type
                         };
                     }
-                    suggestRow[kit.length-1] = mock[i];
+                    suggestRow[kit.length - 1] = mock[i];
+                    if (mock[i + 2]) { // Эмуляция многотокенного сагеста
+                        suggestRow.push(mock[i + 2]);
+                    }
 
                     if (matchPosition == 0) newData.suggest.unshift(suggestRow);
                     else newData.suggest.push(suggestRow);

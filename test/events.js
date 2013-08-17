@@ -1,6 +1,6 @@
 describe('События.', function() {
     beforeEach(function() {
-        $('.wrapper').html(originalHTML);
+        $('.wrapper_common').html(originalHTML);
     });
 
     it('Параметр change', function() {
@@ -123,46 +123,43 @@ describe('События.', function() {
             suggest.dispose();
         });
 
-        it('Если в ПС уже есть токен (идет набор второго токена), а в первом сагесте только 1 токен, автокомплита не будет', function() {
-            var suggest = surt({
-                    root: '.surt',
-                    input: '.surt__input',
-                    suggest: '.surt__suggests',
-                    suggestItemCls: 'surt__suggests-item',
-                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
-                    tokenCls: 'surt__token',
-                    textCls: 'surt__text',
-                    clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true'
-                }),
-                sugg = [[{
-                        text: 'Ресторан крона',
-                        type: 'text'
-                }]];
+        // it('Если в ПС уже есть токен (идет набор второго токена), а в первом сагесте только 1 токен, автокомплита не будет', function() {
+        //     var suggest = surt({
+        //             root: '.surt',
+        //             input: '.surt__input',
+        //             suggest: '.surt__suggests',
+        //             suggestItemCls: 'surt__suggests-item',
+        //             suggestItemCurrentCls: 'surt__suggests-item_state_current',
+        //             suggestCls: 'surt_dropdown_true',
+        //             tokenCls: 'surt__token',
+        //             textCls: 'surt__text',
+        //             clone: '.surt__clone-main',
+        //             autocomplete: '.surt__clone-hint',
+        //             autocompleteCls: 'surt_autocomplete_true'
+        //         }),
+        //         sugg = [[{
+        //                 text: 'Ресторан крона',
+        //                 type: 'text'
+        //         }]];
 
-            suggest.set({
-                kit: [{
-                    text: 'Ресторан',
-                    type: 'rubric'
-                }],
-                suggest: sugg
-            });
-            // Эмулируем ввод пробела
-            $('.surt__input').append(' ');
-            suggest.parse();
-            suggest.set({
-                kit: suggest.kit,
-                suggest: sugg
-            });
-            suggest.restoreCursor(9);
-            // var e = jQuery.Event('paste');
-            // e.keyCode = 32; // Space
-            // $('.surt__input').trigger(e);
-            assert(!$('.surt').hasClass('surt_autocomplete_true'));
-            suggest.dispose();
-        });
+        //     suggest.set({
+        //         kit: [{
+        //             text: 'Ресторан',
+        //             type: 'rubric'
+        //         }],
+        //         suggest: sugg
+        //     });
+        //     // Эмулируем ввод пробела
+        //     $('.surt__input').append(' ');
+        //     suggest.parse();
+        //     suggest.set({
+        //         kit: suggest.kit,
+        //         suggest: sugg
+        //     });
+        //     suggest.restoreCursor(9);
+        //     assert(!$('.surt').hasClass('surt_autocomplete_true'));
+        //     suggest.dispose();
+        // });
 
         it('При нажатии вправо автокомплит подставляется а курсор уходит в крайне правое положение', function() {
             var suggest = surt({
@@ -200,7 +197,6 @@ describe('События.', function() {
                 complete = $('.surt__clone-main').html();
 
             assert(pos == $('.surt__input').text().length);
-            console.log('complete', complete);
             assert(html == '<div class="surt__token surt__token_type_rubric">Ресторан</div>', 'В инпут попадает первый сагест');
             assert(complete == html, 'В комплите выставляется строго содержимое инпута');
             suggest.dispose();
@@ -475,7 +471,7 @@ describe('События.', function() {
 
         it('Клик по первому сагесту, когда текст в инпуте совпадает с ним, приводит к его выбору', function() {
             var suggest = surt({
-                root: '.surt',
+                root: '.wrapper_common .surt',
                 input: '.surt__input',
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
@@ -499,15 +495,18 @@ describe('События.', function() {
                 }]
             ]});
 
+            assert($('.wrapper_common .surt').hasClass('surt_dropdown_true'), 'Выпадашка открылась');
+            assert(!$('.wrapper_delimiter .surt').hasClass('surt_dropdown_true'), 'Выпадашка на соседнем инпуте не открылась');
+
             var e;
 
             e = jQuery.Event('click');
-            $('.surt__suggests-item').eq(0).trigger(e); // Click
+            $('.wrapper_common .surt__suggests-item').eq(0).trigger(e); // Click
 
             var html = $('.surt__input').html();
 
             assert(html == '<div class="surt__token surt__token_type_rubric">Ресторан</div>', 'В инпуте html = ' + html);
-            assert(!$('.surt').hasClass('surt_dropdown_true'), 'Выпадашка закрылась');
+            assert(!$('.wrapper_common .surt').hasClass('surt_dropdown_true'), 'Выпадашка закрылась');
             suggest.dispose();
         });
 
@@ -551,37 +550,38 @@ describe('События.', function() {
     });
 
     describe('Набор текста.', function() {
-        it('Нажатие пробела после слова в режиме незаполнения кита', function() {
-            var suggest = surt({
-                root: '.surt',
-                input: '.surt__input',
-                suggest: '.surt__suggests',
-                suggestItemCls: 'surt__suggests-item',
-                suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
-                tokenCls: 'surt__token',
-                textCls: 'surt__text',
-                clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true'
-            });
+        // Событие 32 теперь не перехватываем, тест не актуален
+        // it('Нажатие пробела после слова в режиме незаполнения кита', function() {
+        //     var suggest = surt({
+        //         root: '.surt',
+        //         input: '.surt__input',
+        //         suggest: '.surt__suggests',
+        //         suggestItemCls: 'surt__suggests-item',
+        //         suggestItemCurrentCls: 'surt__suggests-item_state_current',
+        //         suggestCls: 'surt_dropdown_true',
+        //         tokenCls: 'surt__token',
+        //         textCls: 'surt__text',
+        //         clone: '.surt__clone-main',
+        //         autocomplete: '.surt__clone-hint',
+        //         autocompleteCls: 'surt_autocomplete_true'
+        //     });
 
-            var e = jQuery.Event('keydown');
+        //     var e = jQuery.Event('keydown');
 
-            $('.surt__input').html('Ресторан');
-            suggest.restoreCursor(8);
+        //     $('.surt__input').html('Ресторан');
+        //     suggest.restoreCursor(8);
 
-            e.keyCode = 32;
-            $('.surt__input').trigger(e); // Down
+        //     e.keyCode = 32;
+        //     $('.surt__input').trigger(e); // Down
 
-            e = jQuery.Event('keydown');
-            e.keyCode = 32;
-            $('.surt__input').trigger(e); // Enter
+        //     e = jQuery.Event('keydown');
+        //     e.keyCode = 32;
+        //     $('.surt__input').trigger(e); // Enter
 
-            var text = $('.surt__input').html();
+        //     var text = $('.surt__input').html();
 
-            assert(text == 'Ресторан&nbsp;', 'Пробел добавился в текст: ' +  '|Ресторан&nbsp;| == |' + text + '|');
-            suggest.dispose();
-        });
+        //     assert(text == 'Ресторан&nbsp;', 'Пробел добавился в текст: ' +  '|Ресторан&nbsp;| == |' + text + '|');
+        //     suggest.dispose();
+        // });
     });
 });

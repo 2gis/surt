@@ -73,6 +73,8 @@
     surt.fn.saveCursor = function() {
         this.cursorPos = this.getCursor();
 
+        this._lastPos = this.cursorPos == this.text().length;
+
         return this.cursorPos;
     };
 
@@ -83,9 +85,11 @@
 
         var range = document.createRange(),
             selection = window.getSelection(),
-            targetNode = this.inputNode;
+            targetNode = this.inputNode,
+            pos;
         
-        n = n || this.cursorPos;
+        pos = this._lastPos ? this.text().length : this.cursorPos;
+        n = n || pos;
         
         // Цикл вниз по детям для поиска текстовой ноды куда надо выставить курсор
         while (targetNode && targetNode.nodeType == 1) {

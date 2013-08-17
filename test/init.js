@@ -1,6 +1,6 @@
 describe('Инициализация.', function() { // При кривой инициализации конструктор должен возвращать undefined
     beforeEach(function() {
-        $('.wrapper').html(originalHTML);
+        $('.wrapper_common').html(originalHTML);
     });
 
     it('По-умолчанию', function() {

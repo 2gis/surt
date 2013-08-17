@@ -1,11 +1,12 @@
 body {
     font-size: normal;
-    /*background: rgba(0,0,0,.6);*/
+    background: rgba(0,0,0,.1);
     }
 
 /* Search bar */
 .surt {
     position: relative;
+    z-index: 1;
     height: 32px;
     font: 16px/16px Arial, Helvetica, sans-serif;
     width: 500px;
@@ -62,6 +63,7 @@ body {
             position: absolute;
             top: 0;
             left: 0;
+            z-index: 10;
             }
         .surt__clone {
             z-index: 0;
@@ -87,6 +89,12 @@ body {
                 margin: 0 0 0 8px;
                 vertical-align: -2px;
                 }
+            .surt_ready_true .surt__clone-hint {
+                opacity: 1;
+            }
+            .surt_ready_true .surt__clone-hint:after {
+                background: url('../demo/surt-ready.png');
+            }
         .surt__suggests {
             list-style: none;
             margin:0;
@@ -96,9 +104,6 @@ body {
             -webkit-user-select: none;
             user-select: none;
             }
-        .surt_dropdown_true {
-            z-index: 1;
-        }
         .surt_dropdown_true .surt__suggests {
             display: block;
             }
@@ -230,4 +235,14 @@ body {
     90% {
         opacity: 1;
     }
+}
+
+/* Когда курсор внутри инпута */
+.surt_state_focus {
+    z-index: 2;
+}
+
+/* Когда показана выпадашка сагестов (обычно скрыта) */
+.surt_dropdown_true {
+    z-index: 2;
 }

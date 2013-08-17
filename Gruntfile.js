@@ -16,8 +16,7 @@ module.exports = function(grunt) {
                     "trailing": true,
                     "loopfunc": true,
                     "-W041": true,
-                    "-W015": true,
-                    "unused": true
+                    "-W015": true
                 },
                 src: ['src/*.js', 'demo/main.js', 'test/*.js']
             }

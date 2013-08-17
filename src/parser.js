@@ -27,7 +27,7 @@
      * @text - new user query
      * @return - new kit based on old kit tokens and new text 
      */
-    var parser = function(kit, text) {
+    var parser = function(kit, oriText) {
         var newKit = [];
 
         /*
@@ -42,6 +42,12 @@
             }
             text = text.replace(token.text, '').trim();
         }
+
+        var text = oriText;
+        if (this.delimiter) {
+            text = text.replace(new RegExp(this.delimiter, 'g'), ' ');
+        }
+        text = text.replace(new RegExp('  ', 'g'), ' '); // ', ' -> '  ' -> ' '
 
         if (kit2text(kit) === text) return kit;
 
@@ -73,6 +79,7 @@
         }
 
         // Last undefined token
+        text = text.trim();
         if (text) {
             pushToken({
                 text: text,
