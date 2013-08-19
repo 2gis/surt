@@ -11,6 +11,7 @@ $(document).ready(function() {
         clone: '.surt__clone-main',
         autocomplete: '.surt__clone-hint',
         autocompleteCls: 'surt_autocomplete_true',
+        readyCls: 'surt_ready_true',
         stateFocusCls: 'surt_state_focus',
         change: function(e, data) {
             // Изменение текста
@@ -23,7 +24,7 @@ $(document).ready(function() {
     var simple = surt({
         root: '.surt_simple',
         input: '.surt__input',
-        // inputMode: 'text',
+        inputMode: 'text',
         suggest: '.surt__suggests',
         suggestItemCls: 'surt__suggests-item',
         suggestItemCurrentCls: 'surt__suggests-item_state_current',
@@ -33,6 +34,7 @@ $(document).ready(function() {
         clone: '.surt__clone-main',
         autocomplete: '.surt__clone-hint',
         autocompleteCls: 'surt_autocomplete_true',
+        readyCls: 'surt_ready_true',
         stateFocusCls: 'surt_state_focus',
         delimiter: ',',
         change: function(e, data) {

@@ -162,10 +162,13 @@ describe('HTML.', function() {
 
         // Трим токенов в ПС, в сагесте, текст, не текст
 
-
         it('Кит передан объектом', function() {
             $('.surt__input').html('');
 
+            suggest.set({
+                kit: [],
+                suggest: []
+            });
             suggest.set({
                 kit: {
                     text: 'Ресторан',

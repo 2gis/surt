@@ -201,6 +201,48 @@ describe('События.', function() {
             assert(complete == html, 'В комплите выставляется строго содержимое инпута');
             suggest.dispose();
         });
+
+        it('При вызове метода submit автокомплит изчезает', function() {
+            var suggest = surt({
+                    root: '.surt',
+                    input: '.surt__input',
+                    suggest: '.surt__suggests',
+                    suggestItemCls: 'surt__suggests-item',
+                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                    suggestCls: 'surt_dropdown_true',
+                    tokenCls: 'surt__token',
+                    textCls: 'surt__text',
+                    clone: '.surt__clone-main',
+                    autocomplete: '.surt__clone-hint',
+                    autocompleteCls: 'surt_autocomplete_true'
+                });
+
+            suggest.set({
+                kit: [{
+                    text: 'Ре',
+                    type: 'text'
+                }],
+                suggest: [[{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }]]
+            });
+
+            var e = jQuery.Event('keydown');
+
+            e.keyCode = 13;
+            $('.surt__input').trigger(e);
+
+            var pos = suggest.getCursor(),
+                text = $('.surt__input').text(),
+                complete = $('.surt__clone-hint').html();
+
+            assert(pos == $('.surt__input').text().length);
+            assert(text == 'Ре', 'В инпуте остался текст');
+
+            assert(complete == '', 'Комплит пустой');
+            suggest.dispose();
+        });
     });
 
     describe('Выбор сагестов.', function() {
@@ -470,7 +512,51 @@ describe('События.', function() {
         });
 
         it('Клик по первому сагесту, когда текст в инпуте совпадает с ним, приводит к его выбору', function() {
-            var suggest = surt({
+            function test(params) {
+                var suggest = surt(params);
+
+                suggest.set({
+                    kit: [{
+                        text: 'Рестора',
+                        type: 'text'
+                    }],
+                    suggest: [[{
+                        text: 'Ресторан',
+                        type: 'rubric'
+                    }]
+                ]}, true);
+                var text = $('.surt__input').text();
+
+                assert($('.wrapper_common .surt').hasClass('surt_dropdown_true'), 'Выпадашка открылась');
+                assert(!$('.wrapper_delimiter .surt').hasClass('surt_dropdown_true'), 'Выпадашка на соседнем инпуте не открылась');
+
+                var e;
+
+                e = jQuery.Event('click');
+                $('.wrapper_common .surt__suggests-item').eq(0).trigger(e); // Click
+
+                text = $('.surt__input').text();
+
+                assert(text == 'Ресторан', 'after: В инпуте text = ' + text);
+                assert(!$('.wrapper_common .surt').hasClass('surt_dropdown_true'), 'Выпадашка закрылась');
+                suggest.dispose();
+            }
+
+            test({
+                root: '.wrapper_common .surt',
+                input: '.surt__input',
+                suggest: '.surt__suggests',
+                suggestItemCls: 'surt__suggests-item',
+                suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                suggestCls: 'surt_dropdown_true',
+                tokenCls: 'surt__token',
+                textCls: 'surt__text',
+                clone: '.surt__clone-main',
+                autocomplete: '.surt__clone-hint'
+            });
+
+            // В текстовом режиме
+            test({
                 root: '.wrapper_common .surt',
                 input: '.surt__input',
                 suggest: '.surt__suggests',
@@ -481,33 +567,8 @@ describe('События.', function() {
                 textCls: 'surt__text',
                 clone: '.surt__clone-main',
                 autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true'
+                inputMode: 'text'
             });
-
-            suggest.set({
-                kit: [{
-                    text: 'Ресторан',
-                    type: 'text'
-                }],
-                suggest: [[{
-                    text: 'Ресторан',
-                    type: 'rubric'
-                }]
-            ]});
-
-            assert($('.wrapper_common .surt').hasClass('surt_dropdown_true'), 'Выпадашка открылась');
-            assert(!$('.wrapper_delimiter .surt').hasClass('surt_dropdown_true'), 'Выпадашка на соседнем инпуте не открылась');
-
-            var e;
-
-            e = jQuery.Event('click');
-            $('.wrapper_common .surt__suggests-item').eq(0).trigger(e); // Click
-
-            var html = $('.surt__input').html();
-
-            assert(html == '<div class="surt__token surt__token_type_rubric">Ресторан</div>', 'В инпуте html = ' + html);
-            assert(!$('.wrapper_common .surt').hasClass('surt_dropdown_true'), 'Выпадашка закрылась');
-            suggest.dispose();
         });
 
         it('Клик по первому сагесту, когда токен в инпуте совпадает с ним, приводит к его выбору', function() {

@@ -115,12 +115,13 @@ var
                 }, 300);
             }
 
+            // Выбрать сагест и принудительно затолкать его в инпут
             function pickSuggest() {
                 var data = self.args();
 
                 data.kit = self.suggest[self._activeSuggest];
 
-                self.set(data);
+                self.set(data, true);
                 self.restoreCursor(self.text().length); // Крайне правое положение
             }
 
@@ -143,6 +144,7 @@ var
 
                     if (key == 40 && $(self.root).hasClass(params.suggestCls) ) {
                         // var currentItem = 0; стрелка вниз
+                        return;
                     }
 
                     // И это не нравится
@@ -163,25 +165,6 @@ var
                         index,
                         data;
 
-                    // Категорически не нравится
-                    // Пробел
-                    // if (key == 32 && self.getCursor() >= self.text().length) {
-                    //     if (!self.trailingSpace/* && self.kit.length*/) {
-                    //         $(self.inputNode).append('&nbsp;');
-
-                    //         var newKit = self.parse();
-                            
-                    //         data = self.args();
-                    //         data.kit = newKit;
-                    //         if (params.change) {
-                    //             params.change(e, data);
-                    //         }
-                    //         self.restoreCursor(self.getCursor() + 1);
-                    //     }
-
-                    //     return false;
-                    // }
-
                     // Прочие буквы
                     if ( e.type == 'keydown' && !isControlKey(key) ) { // При нажатии на символ
                         self._pressedKeys++;
@@ -196,6 +179,7 @@ var
                     // Enter
                     if (key == 13) {
                         e.preventDefault();
+
                         if ( $(self.root).hasClass(params.suggestCls) && $('.' + params.suggestItemCurrentCls).length ) {
                             pickSuggest();
                         } else {
@@ -204,6 +188,9 @@ var
                                 self.params.submit();
                             }
                         }
+                        self.set({ // Удаляем сагесты и автокомплит
+                            suggest: []
+                        });
 
                         return false;
                     }
@@ -242,12 +229,9 @@ var
                         if ( $(self.root).hasClass(params.suggestCls) && $(self.root).hasClass(params.autocompleteCls) && self.getCursor() >= length ) {
                             data = self.args();
                             data.kit = self.suggest[0];
-                            self.set(data);
+                            self.set(data, true);
                             self.restoreCursor(self.text().length); // != length
                         }
-
-                        // debugger
-                        // self.updateAutocomplete();
                     }
                 })
                 .on('paste', function() {
@@ -260,6 +244,7 @@ var
                 })
                 .on('blur', function() {
                     $(self.root).removeClass(self.params.stateFocusCls);
+                    $(self.root).removeClass(self.params.readyCls);
                 });
 
             this._events.click = function() {
@@ -267,8 +252,8 @@ var
                     index = suggestsItems.index( $(this) ),
                     data = self.args();
 
-                data.kit = self.suggest[ index ];
-                self.set(data);
+                data.kit = self.suggest[index];
+                self.set(data, true);
             };
 
             $(this.root)
@@ -292,8 +277,8 @@ var
             return this.kit;
         },
 
-        // Устанавливает новые данные (set - единственная точка входа на новые данные)
-        set: function(data) {
+        // Устанавливает новые данные (set - единственная точка входа на новые данные ORLY)
+        set: function(data, force) {
             data = data || {};
 
             if (this._pressedKeys > 0) return; // Если на момент входа в функцию пользователь уже нажал новую клавишу - сетить бессмысленно
@@ -304,13 +289,13 @@ var
 
             var same = kitsAreEqual(data.kit, this.kit);
 
-            this.kit = data.kit;
+            if (data.kit) this.kit = data.kit;
             this.suggest = data.suggest || [];
 
             this.saveCursor();
             this.updateSuggest();
 
-            if (!same) this.updateKit();
+            if (!same || force) this.updateKit(force);
             this.updateAutocomplete();
 
             this.restoreCursor();
@@ -340,7 +325,7 @@ var
             if (this.semanticChanged(newKit) || tail) {
                 this.setKit(newKit);
                 
-                if (tail && this.inputMode != 'text') {
+                if (tail && this.params.inputMode != 'text') {
                     $(this.inputNode).append(tail.replace(' ', '&nbsp;'));
                     this.restoreCursor(999);
                 }
@@ -348,23 +333,29 @@ var
         },
 
         // Обновляет html в инпуте
-        updateKit: function() {
+        // force - обновляет код в инпуте в любом случае
+        updateKit: function(force) {
             var inputHTML = [],
                 tokenCls = this.params.tokenCls,
-                textCls = this.params.textCls || tokenCls;
+                textCls = this.params.textCls || tokenCls,
+                left = '',
+                right = '';
 
-            if (this.kit && this.params.inputMode != 'text') {
+            if (this.kit) {
                 this.saveCursor();
 
                 for (var i = 0 ; i < this.kit.length ; i++) {
                     var html = this.kit[i].text.trim();
 
-                    if (this.kit[i].type == "text" && this.params.inputMode != 'text') {
-                        if (textCls) {
-                            html = '<div class="' + textCls + '">' + html + '</div>';
+                    if (this.params.inputMode != 'text') {
+                        if (this.kit[i].type == "text" && textCls) {
+                            left = '<div class="' + textCls + '">';
+                            right = '</div>';
+                        } else if (tokenCls) {
+                            left = '<div class="' + tokenCls + ' ' + tokenCls + '_type_' + this.kit[i].type + '">';
+                            right = '</div>';
                         }
-                    } else if (tokenCls) {
-                        html = '<div class="' + tokenCls + ' ' + tokenCls + '_type_' + this.kit[i].type + '">' + html + '</div>';
+                        html = left + html + right;
                     }
                     // После всех токенов, кроме крайне правого, выставлять разделитель (если он есть)
                     // if (i != this.kit.length - 1) {
@@ -376,9 +367,11 @@ var
 
                 inputHTML = inputHTML.join(this.delimiter + ' ');
                 // if (this.trailingSpace) inputHTML += space;
-                this.inputNode.innerHTML = inputHTML;
-
-                this.restoreCursor();
+                if (this.params.inputMode != 'text' || force) {
+                    this.html(inputHTML);
+                    // this.inputNode.innerHTML = inputHTML;
+                    this.restoreCursor();
+                }
             }
         },
 
@@ -430,40 +423,44 @@ var
                 text = this.text();
 
             // Автокомплит
-            if (su && su.length && this.kit && this.kit.length && this.cloneNode) {
-                var lastKitText = this.kit[this.kit.length - 1].text, // Неполный токен, который надо сагестировать
-                    kitPos = 0, //= this.kit.length - 1, // Номер крайнего токена, который будет при вводе следующего символа
-                    suggestText, // Результат преобразования текущего сагеста в текст, как если бы он был в инпуте и мы взяли бы text()
-                    isAutocomplete; // Текст в строке пока совпадает с сагестом, и имеет смысл его автокомплитить
+            if (this.kit && this.kit.length && this.cloneNode) {
+                if (su && su.length) { // Сагест есть, его надо затолкать в автокомплит
+                    var lastKitText = this.kit[this.kit.length - 1].text, // Неполный токен, который надо сагестировать
+                        kitPos = 0, //= this.kit.length - 1, // Номер крайнего токена, который будет при вводе следующего символа
+                        suggestText, // Результат преобразования текущего сагеста в текст, как если бы он был в инпуте и мы взяли бы text()
+                        isAutocomplete; // Текст в строке пока совпадает с сагестом, и имеет смысл его автокомплитить
 
-                // if (this.trailingSpace) { // На левой границе второго (нового) токена - то есть первый уже окуклился, и выводить комплит на первый токен сагеста уже не надо
-                //     kitPos++;
-                // }
-                // Преобразуем текущий сагест в текст
-                suggestText = [];
-                if (this.suggest[0].length > kitPos) {
-                    for (var i = kitPos ; i < this.suggest[0].length ; i++) {
-                        suggestText.push(this.suggest[0][i].text);
+                    // if (this.trailingSpace) { // На левой границе второго (нового) токена - то есть первый уже окуклился, и выводить комплит на первый токен сагеста уже не надо
+                    //     kitPos++;
+                    // }
+                    // Преобразуем текущий сагест в текст
+                    suggestText = [];
+                    if (this.suggest[0].length > kitPos) {
+                        for (var i = kitPos ; i < this.suggest[0].length ; i++) {
+                            suggestText.push(this.suggest[0][i].text);
+                        }
                     }
-                }
-                suggestText = suggestText.join(this.delimiter + ' ');
-                if (suggestText == text) { // Автокомплит полностью набран, пора нажимать ентер
-                    $(this.root).addClass(this.params.readyCls);
-                } else {
-                    isAutocomplete = suggestText.toLowerCase().indexOf(text.toLowerCase()) == 0;
-                    $(this.root).removeClass(this.params.readyCls);
-                }
+                    suggestText = suggestText.join(this.delimiter + ' ');
+                    if (suggestText == text) { // Автокомплит полностью набран, пора нажимать ентер
+                        $(this.root).addClass(this.params.readyCls);
+                    } else {
+                        isAutocomplete = suggestText.toLowerCase().indexOf(text.toLowerCase()) == 0;
+                        $(this.root).removeClass(this.params.readyCls);
+                    }
 
-                this.autocompleteNode.innerHTML = suggestText.slice(text.length);
-                this.cloneNode.innerHTML = this.inputNode.innerHTML;
-                if ($(this.root).hasClass(this.params.suggestCls) && isAutocomplete) {
-                    $(this.root).addClass(this.params.autocompleteCls);
-                } else {
+                    this.autocompleteNode.innerHTML = suggestText.slice(text.length);
+                    this.cloneNode.innerHTML = this.html();
+                    if ($(this.root).hasClass(this.params.suggestCls) && isAutocomplete) {
+                        $(this.root).addClass(this.params.autocompleteCls);
+                    } else {
+                        $(this.root).removeClass(this.params.autocompleteCls);
+                    }
+                } else { // Сагестов нет, удаляем текст из автокомплита
+                    this.autocompleteNode.innerHTML = '';
                     $(this.root).removeClass(this.params.autocompleteCls);
                 }
-
             } else {
-                $(this.root).removeClass( this.params.autocompleteCls );
+                $(this.root).removeClass(this.params.autocompleteCls);
             }
         },
 
@@ -480,8 +477,26 @@ var
             return spaces(text);
         },
 
-        text: function() {
-            return spaces($(this.inputNode).text());
+        // Возвращает или устанавливает текст в инпут
+        text: function(text) {
+            if (!text) {
+                return spaces($(this.inputNode).text() || $(this.inputNode).val());
+            } else {
+                this.html(text);
+            }
+        },
+
+        // Возвращает или устанавливает html в инпут
+        html: function(html) {
+            if (!html) {
+                return $(this.inputNode).html() || this.text();
+            } else {
+                if (this.inputNode.tagName == 'INPUT') {
+                    $(this.inputNode).val(html);
+                } else {
+                    $(this.inputNode).html(html);
+                }
+            }
         },
 
         // Возвращает текущую версию с данными
@@ -489,7 +504,7 @@ var
             var data = {};
 
             data.kit = this.kit;
-            data.suggest = this.suggest; // Почему был пустой объект? Договорились что была ошибка
+            data.suggest = this.suggest || []; // Почему может быть undefined?
             data.text = this.text();
 
             return data;
@@ -512,10 +527,12 @@ var
                 text = this.text(),
                 newKit = [];
 
-            for (var i = 0 ; i < kit.length ; i++) {
-                var sToken = this.suggest && this.suggest[0] && this.suggest[0][i];
-                sameText = sameText && sToken && kit[i].text.toLowerCase() == sToken.text.toLowerCase();
-                newKit.push(sToken);
+            if (kit) {
+                for (var i = 0 ; i < kit.length ; i++) {
+                    var sToken = this.suggest && this.suggest[0] && this.suggest[0][i];
+                    sameText = sameText && sToken && kit[i].text.toLowerCase() == sToken.text.toLowerCase();
+                    newKit.push(sToken);
+                }
             }
 
             if (sameText && text[text.length - 1] == this.delimiter) {
@@ -545,8 +562,10 @@ var
 
             kit = kit || this.kit;
 
-            for (var i = 0 ; i < kit.length ; i++) {
-                kitText.push(kit[i].text);
+            if (kit) {
+                for (var i = 0 ; i < kit.length ; i++) {
+                    kitText.push(kit[i].text);
+                }
             }
             kitText = kitText.join(this.delimiter + ' ');
 

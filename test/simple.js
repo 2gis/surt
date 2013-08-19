@@ -1,7 +1,7 @@
 // Режим работы сагестера "без кирпичей" (простой текстовый сагестер но с запоминанием типов в коде)
 describe('Текстовый режим.', function() {
     beforeEach(function() {
-        $('.wrapper_common').html(originalHTML);
+        $('.wrapper_common').html(simpleHTML);
     });
 
     function commotIts(params, shtml) {
@@ -33,6 +33,7 @@ describe('Текстовый режим.', function() {
             // Кит мы больше не позволяем выставлять снаружи, тест не актуален
             // assert(inputHTML == 'Рестораны', 'В инпуте только текст ' + inputHTML);
             assert(suggestHTML == shtml || '<li class="surt__suggests-item">Рестораны</li><li class="surt__suggests-item">Кафе Wi-Fi</li>', 'В сагесте текстовые строки ' + suggestHTML);
+            suggest.dispose();
         });
 
         // it('Правильно выставляет текстовый input', function() {});
