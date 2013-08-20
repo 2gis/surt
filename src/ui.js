@@ -246,10 +246,12 @@ var
                 })
                 .on('focus', function() {
                     $(self.root).addClass(self.params.stateFocusCls);
+                    $(self.root).addClass(self.params.suggestCls);
                 })
                 .on('blur', function() {
                     $(self.root).removeClass(self.params.stateFocusCls);
                     $(self.root).removeClass(self.params.readyCls);
+                    $(self.root).removeClass(self.params.suggestCls);
                 });
 
             this._events.click = function() {
