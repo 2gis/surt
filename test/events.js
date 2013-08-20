@@ -123,44 +123,6 @@ describe('События.', function() {
             suggest.dispose();
         });
 
-        // it('Если в ПС уже есть токен (идет набор второго токена), а в первом сагесте только 1 токен, автокомплита не будет', function() {
-        //     var suggest = surt({
-        //             root: '.surt',
-        //             input: '.surt__input',
-        //             suggest: '.surt__suggests',
-        //             suggestItemCls: 'surt__suggests-item',
-        //             suggestItemCurrentCls: 'surt__suggests-item_state_current',
-        //             suggestCls: 'surt_dropdown_true',
-        //             tokenCls: 'surt__token',
-        //             textCls: 'surt__text',
-        //             clone: '.surt__clone-main',
-        //             autocomplete: '.surt__clone-hint',
-        //             autocompleteCls: 'surt_autocomplete_true'
-        //         }),
-        //         sugg = [[{
-        //                 text: 'Ресторан крона',
-        //                 type: 'text'
-        //         }]];
-
-        //     suggest.set({
-        //         kit: [{
-        //             text: 'Ресторан',
-        //             type: 'rubric'
-        //         }],
-        //         suggest: sugg
-        //     });
-        //     // Эмулируем ввод пробела
-        //     $('.surt__input').append(' ');
-        //     suggest.parse();
-        //     suggest.set({
-        //         kit: suggest.kit,
-        //         suggest: sugg
-        //     });
-        //     suggest.restoreCursor(9);
-        //     assert(!$('.surt').hasClass('surt_autocomplete_true'));
-        //     suggest.dispose();
-        // });
-
         it('При нажатии вправо автокомплит подставляется а курсор уходит в крайне правое положение', function() {
             var suggest = surt({
                     root: '.surt',
@@ -241,6 +203,47 @@ describe('События.', function() {
             assert(text == 'Ре', 'В инпуте остался текст');
 
             assert(!$('.wrapper_common .surt').hasClass('surt_autocomplete_true'), 'Комплит спрятан');
+            suggest.dispose();
+        });
+
+        it('Нажатие вниз приводит к заполнению в автокомплите второго сагеста', function() {
+            var suggest = surt({
+                root: '.wrapper_common .surt',
+                input: '.surt__input',
+                suggest: '.surt__suggests',
+                suggestItemCls: 'surt__suggests-item',
+                suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                suggestCls: 'surt_dropdown_true',
+                tokenCls: 'surt__token',
+                textCls: 'surt__text',
+                clone: '.surt__clone-main',
+                autocomplete: '.surt__clone-hint',
+                autocompleteCls: 'surt_autocomplete_true'
+            });
+
+            suggest.set({
+                kit: [{
+                    text: 'Ре',
+                    type: 'text'
+                }],
+                suggest: [[{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }], [{
+                    text: 'Рестораны и кафе',
+                    type: 'filter'
+                }]]
+            });
+
+            // var e = jQuery.Event('keydown');
+
+            e = jQuery.Event('keydown'); e.keyCode = 40; $('.surt__input').trigger(e); // Down
+            e = jQuery.Event('keydown'); e.keyCode = 40; $('.surt__input').trigger(e); // Down
+
+            assert($('.wrapper_common .surt__clone-hint').html() == 'стораны и кафе');
+
+            e = jQuery.Event('keydown'); e.keyCode = 39; $('.surt__input').trigger(e); // Right
+            assert($('.wrapper_common .surt__input').html() == '<div class="surt__token surt__token_type_filter">Рестораны и кафе</div>', 'В инпут выставился именно второй сагест');
             suggest.dispose();
         });
     });

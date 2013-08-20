@@ -230,8 +230,10 @@ var
 
                         // Если выставлены модификаторы, и если курсор в крайне правом положении, делаем сет с новыми данными (довершаем автокомплит)
                         if ( $(self.root).hasClass(params.suggestCls) && $(self.root).hasClass(params.autocompleteCls) && self.getCursor() >= length ) {
+                            var active = (self._activeSuggest == -1) ? 0 : self._activeSuggest;
+
                             data = self.args();
-                            data.kit = self.suggest[0];
+                            data.kit = self.suggest[active];
                             self.set(data, true);
                             self.restoreCursor(self.text().length); // != length
                         }
@@ -421,7 +423,7 @@ var
 
         // Обновляет html в автокомплите
         updateAutocomplete: function() {
-            var active = self._activeSuggest || 0, // Индекс текущего сагеста
+            var active = this._activeSuggest == -1 ? 0 : this._activeSuggest, // Индекс текущего сагеста
                 su = this.suggest && this.suggest.length && this.suggest[active], // Текущий сагест
                 text = this.text();
 
@@ -439,8 +441,8 @@ var
                     // Преобразуем текущий сагест в текст
                     suggestText = [];
                     if (this.suggest[0].length > kitPos) {
-                        for (var i = kitPos ; i < this.suggest[0].length ; i++) {
-                            suggestText.push(this.suggest[0][i].text);
+                        for (var i = kitPos ; i < this.suggest[active].length ; i++) {
+                            suggestText.push(this.suggest[active][i].text);
                         }
                     }
                     suggestText = suggestText.join(this.delimiter + ' ');
@@ -554,6 +556,7 @@ var
             if (index >= 0) {
                 suggestsItems.eq(index).addClass(currentCls); // Если индекс не отрицательный - добавляем класс на текущий кит сагеста
                 this._activeSuggest = index;
+                this.updateAutocomplete();
             }
         },
 
