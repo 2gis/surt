@@ -121,7 +121,9 @@ var
 
                 data.kit = self.suggest[self._activeSuggest];
 
-                self.set(data, true);
+                self.set({
+                    kit: data.kit
+                }, true);
                 self.restoreCursor(self.text().length); // Крайне правое положение
             }
 
@@ -142,19 +144,14 @@ var
                     
                     if (isControlKey(key)) return true;
 
-                    if (key == 40 && $(self.root).hasClass(params.suggestCls) ) {
-                        // var currentItem = 0; стрелка вниз
+                    if ((key == 40 || key == 38) && $(self.root).hasClass(params.suggestCls) ) {
                         return;
                     }
-
-                    // И это не нравится
-                    // if (key == 38 || key == 40 || (key == 32 && self.getCursor() >= self.text().length)) return false;
 
                     self.updateInput();
                     self.updateAutocomplete();
 
                     data = self.args();
-                    // data.kit = newKit;
 
                     if (params.change) {
                         params.change(e, data);
@@ -188,15 +185,20 @@ var
                                 self.params.submit();
                             }
                         }
-                        self.set({ // Удаляем сагесты и автокомплит
-                            suggest: []
-                        });
+                        // Удаляем сагесты и автокомплит
+                        $(self.root).removeClass(params.suggestCls);
+                        $(self.root).removeClass(params.autocompleteCls);
+                        self.markSuggest(-1); // Снятие выделения с сагеста
+                        // self.set({ 
+                        //     suggest: []
+                        // });
 
                         return false;
                     }
 
                     // Стрелка вниз
                     if (key == 40) {
+                        // console.log('down');
                         index = 0;
 
                         if (self._activeSuggest >= 0) {
@@ -210,6 +212,7 @@ var
 
                     // Стрелка вверх
                     if (key == 38) {
+                        // console.log('up');
                         index = self.suggest.length - 1;
 
                         if (self._activeSuggest >= 0) {
@@ -290,7 +293,7 @@ var
             var same = kitsAreEqual(data.kit, this.kit);
 
             if (data.kit) this.kit = data.kit;
-            this.suggest = data.suggest || [];
+            this.suggest = data.suggest;
 
             this.saveCursor();
             this.updateSuggest();
@@ -542,16 +545,16 @@ var
             }
         },
 
+        // Выставляет класс текущности на кит сагеста номер index, и удаляет его с остальных
         markSuggest: function(index) {
             var suggestsItems = $('.' + this.params.suggestItemCls),
                 currentCls = this.params.suggestItemCurrentCls;
 
-            suggestsItems
-                .removeClass(currentCls)
-                .eq(index)
-                .addClass(currentCls);
-
-            this._activeSuggest = index;
+            suggestsItems.removeClass(currentCls); // Удаляем со всех сагестов класс текущности
+            if (index >= 0) {
+                suggestsItems.eq(index).addClass(currentCls); // Если индекс не отрицательный - добавляем класс на текущий кит сагеста
+                this._activeSuggest = index;
+            }
         },
 
         // Возвращает нетокенные ошметки типа ", "

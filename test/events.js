@@ -240,7 +240,7 @@ describe('События.', function() {
             assert(pos == $('.surt__input').text().length);
             assert(text == 'Ре', 'В инпуте остался текст');
 
-            assert(complete == '', 'Комплит пустой');
+            assert(!$('.wrapper_common .surt').hasClass('surt_autocomplete_true'), 'Комплит спрятан');
             suggest.dispose();
         });
     });
@@ -290,7 +290,7 @@ describe('События.', function() {
 
         it('2 нажатия вниз + enter приводит к выбору второго сагеста', function() {
             var suggest = surt({
-                root: '.surt',
+                root: '.wrapper_common .surt',
                 input: '.surt__input',
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
@@ -316,6 +316,7 @@ describe('События.', function() {
                     type: 'filter'
                 }]]
             });
+            $('.wrapper_common .surt .surt__suggests').append('dima');
 
             var e = jQuery.Event('keydown');
 
@@ -325,29 +326,34 @@ describe('События.', function() {
             e = jQuery.Event('keydown');
             e.keyCode = 40;
             $('.surt__input').trigger(e); // Down
-
+            
             e = jQuery.Event('keydown');
             e.keyCode = 13;
             $('.surt__input').trigger(e); // Enter
 
-            assert($('.surt__input').html() == '<div class="surt__token surt__token_type_filter">wifi</div>');
+            assert($('.wrapper_common .surt__input').html() == '<div class="surt__token surt__token_type_filter">wifi</div>', 'В инпут помещен html из второго сагеста');
+            assert($('.wrapper_common .surt__suggests').html() == '<li class="surt__suggests-item"><div class="surt__token surt__token_type_rubric">Ресторан</div></li><li class="surt__suggests-item"><div class="surt__token surt__token_type_filter">wifi</div></li>dima', 'HTML из сагестов не перезаписан');
             suggest.dispose();
         });
 
         it('2 нажатия вниз + нажатие вверх + enter приводит к выбору первого сагеста', function() {
-            var suggest = surt({
-                root: '.surt',
-                input: '.surt__input',
-                suggest: '.surt__suggests',
-                suggestItemCls: 'surt__suggests-item',
-                suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
-                tokenCls: 'surt__token',
-                textCls: 'surt__text',
-                clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true'
-            });
+            var x = 0,
+                suggest = surt({
+                    root: '.surt',
+                    input: '.surt__input',
+                    suggest: '.surt__suggests',
+                    suggestItemCls: 'surt__suggests-item',
+                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                    suggestCls: 'surt_dropdown_true',
+                    tokenCls: 'surt__token',
+                    textCls: 'surt__text',
+                    clone: '.surt__clone-main',
+                    autocomplete: '.surt__clone-hint',
+                    autocompleteCls: 'surt_autocomplete_true',
+                    change: function() {
+                        x++;
+                    }
+                });
 
             suggest.set({
                 kit: [{
@@ -362,24 +368,25 @@ describe('События.', function() {
                     type: 'filter'
                 }]]
             });
+            $('.wrapper_common .surt .surt__suggests').append('dima');
 
             var e = jQuery.Event('keydown');
 
-            e = jQuery.Event('keydown');
-            e.keyCode = 40;
-            $('.surt__input').trigger(e); // Down
-            e = jQuery.Event('keydown');
-            e.keyCode = 40;
-            $('.surt__input').trigger(e); // Down
-            e = jQuery.Event('keydown');
-            e.keyCode = 38;
-            $('.surt__input').trigger(e); // Up
+            e = jQuery.Event('keydown'); e.keyCode = 40; $('.surt__input').trigger(e); // Down
+            e = jQuery.Event('keydown'); e.keyCode = 40; $('.surt__input').trigger(e); // Down keydown
+            e = jQuery.Event('keydown'); e.keyCode = 40; $('.surt__input').trigger(e); // Down
+            e = jQuery.Event('keydown'); e.keyCode = 40; $('.surt__input').trigger(e); // Down keydown
+            e = jQuery.Event('keydown'); e.keyCode = 38; $('.surt__input').trigger(e); // Up keydown
+            e = jQuery.Event('keyup');   e.keyCode = 38; $('.surt__input').trigger(e); // Up keyup
+
+            assert(x === 0, 'change при нажатии вверх-вниз не вызвался');
 
             e = jQuery.Event('keydown');
             e.keyCode = 13;
             $('.surt__input').trigger(e); // Enter
 
             assert($('.surt__input').html() == '<div class="surt__token surt__token_type_rubric">Ресторан</div>');
+            assert($('.wrapper_common .surt__suggests').html() == '<li class="surt__suggests-item"><div class="surt__token surt__token_type_rubric">Ресторан</div></li><li class="surt__suggests-item"><div class="surt__token surt__token_type_filter">wifi</div></li>dima', 'HTML из сагестов не перезаписан');
             suggest.dispose();
         });
 

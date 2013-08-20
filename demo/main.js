@@ -44,7 +44,7 @@ $(document).ready(function() {
             simple.set(setData);
         },
         submit: function() {
-            console.log('qwe');
+            
         }
     });
 
