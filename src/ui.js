@@ -125,6 +125,7 @@ var
                     kit: data.kit
                 }, true);
                 self.restoreCursor(self.text().length); // Крайне правое положение
+                if (params.pick) params.pick(data.kit);
             }
 
             // Если нажата не буква - возвращает true
@@ -251,7 +252,9 @@ var
                 .on('blur', function() {
                     $(self.root).removeClass(self.params.stateFocusCls);
                     $(self.root).removeClass(self.params.readyCls);
-                    $(self.root).removeClass(self.params.suggestCls);
+                    setTimeout(function() {
+                        $(self.root).removeClass(self.params.suggestCls);
+                    }, 100); // !!! Костыль для отработки клика по сагесту
                 });
 
             this._events.click = function() {
