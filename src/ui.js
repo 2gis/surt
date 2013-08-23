@@ -396,7 +396,7 @@ var
                     var kit = [];
 
                     for (var j = 0 ; j < this.suggest[i].length ; j++) {
-                        var html = this.suggest[i][j].text.trim();
+                        var html = typeof this.suggest[i][j]["html"] != "undefined" ? this.suggest[i][j].html.trim() : this.suggest[i][j].text.trim();
 
                         if ( this.suggest[i][j].type != "text" ) {
                             if (tokenCls) {
