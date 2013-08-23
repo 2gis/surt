@@ -396,9 +396,11 @@ var
                     var kit = [];
 
                     for (var j = 0 ; j < this.suggest[i].length ; j++) {
-                        var html = typeof this.suggest[i][j]["html"] != "undefined" ? this.suggest[i][j].html.trim() : this.suggest[i][j].text.trim();
+                        var html = this.suggest[i][j].html || this.suggest[i][j].text;
 
-                        if ( this.suggest[i][j].type != "text" ) {
+                        html = html.trim();
+
+                        if ( this.suggest[i][j].type != 'text' ) {
                             if (tokenCls) {
                                 html = '<div class="' + tokenCls + ' ' + tokenCls + '_type_' + this.suggest[i][j].type + '">' + html + '</div>';
                             }
