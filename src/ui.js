@@ -255,10 +255,15 @@ var
                 .on('focus', function() {
                     $(self.root).addClass(self.params.stateFocusCls);
                     $(self.root).addClass(self.params.suggestCls);
+                    console.log('self.autocompleteNode', self.autocompleteNode);
+                    if ($(self.autocompleteNode).text()) {
+                        $(self.root).addClass(self.params.autocompleteCls);
+                    }
                 })
                 .on('blur', function() {
                     $(self.root).removeClass(self.params.stateFocusCls);
                     $(self.root).removeClass(self.params.readyCls);
+                    $(self.root).removeClass(self.params.autocompleteCls);
                     // setTimeout(function() {
                     $(self.root).removeClass(self.params.suggestCls);
                     // }, 100); // !!! Костыль для отработки клика по сагесту
