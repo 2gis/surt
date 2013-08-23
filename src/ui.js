@@ -141,9 +141,9 @@ var
                         data;
 
                     self._pressedKeys--;
-                    //if (self._pressedKeys < 0) self._pressedKeys = 0;
+                    if (self._pressedKeys < 0) self._pressedKeys = 0;
                     
-                    if (isControlKey(key)) return true;
+                    // if (isControlKey(key)) return true;
 
                     if ((key == 40 || key == 38) && $(self.root).hasClass(params.suggestCls) ) {
                         return;

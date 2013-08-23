@@ -621,38 +621,60 @@ describe('События.', function() {
     });
 
     describe('Набор текста.', function() {
-        // Событие 32 теперь не перехватываем, тест не актуален
-        // it('Нажатие пробела после слова в режиме незаполнения кита', function() {
-        //     var suggest = surt({
-        //         root: '.surt',
-        //         input: '.surt__input',
-        //         suggest: '.surt__suggests',
-        //         suggestItemCls: 'surt__suggests-item',
-        //         suggestItemCurrentCls: 'surt__suggests-item_state_current',
-        //         suggestCls: 'surt_dropdown_true',
-        //         tokenCls: 'surt__token',
-        //         textCls: 'surt__text',
-        //         clone: '.surt__clone-main',
-        //         autocomplete: '.surt__clone-hint',
-        //         autocompleteCls: 'surt_autocomplete_true'
-        //     });
+        it('keyup по cmd должен инициировать обновление кита', function() {
+            var suggest = surt({
+                root: '.surt',
+                input: '.surt__input',
+                suggest: '.surt__suggests',
+                suggestItemCls: 'surt__suggests-item',
+                suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                suggestCls: 'surt_dropdown_true',
+                tokenCls: 'surt__token',
+                textCls: 'surt__text',
+                clone: '.surt__clone-main',
+                autocomplete: '.surt__clone-hint',
+                autocompleteCls: 'surt_autocomplete_true'
+            });
 
-        //     var e = jQuery.Event('keydown');
+            var e;
 
-        //     $('.surt__input').html('Ресторан');
-        //     suggest.restoreCursor(8);
+            // CMD
+            $('.surt__input').text('рестораны');
+            e = jQuery.Event('keyup');
+            e.keyCode = 91;
+            $('.surt__input').eq(0).trigger(e);
+            assert(suggest.kit.length == 1);
+            $('.surt__input').text('');
+            e = jQuery.Event('keyup');
+            e.keyCode = 91;
+            $('.surt__input').eq(0).trigger(e);
+            assert(suggest.kit.length == 0);
 
-        //     e.keyCode = 32;
-        //     $('.surt__input').trigger(e); // Down
+            // L ctrl
+            $('.surt__input').text('рестораны');
+            e = jQuery.Event('keyup');
+            e.keyCode = 17;
+            $('.surt__input').eq(0).trigger(e);
+            assert(suggest.kit.length == 1);
+            $('.surt__input').text('');
+            e = jQuery.Event('keyup');
+            e.keyCode = 17;
+            $('.surt__input').eq(0).trigger(e);
+            assert(suggest.kit.length == 0);
 
-        //     e = jQuery.Event('keydown');
-        //     e.keyCode = 32;
-        //     $('.surt__input').trigger(e); // Enter
+            // R ctrl
+            $('.surt__input').text('рестораны');
+            e = jQuery.Event('keyup');
+            e.keyCode = 18;
+            $('.surt__input').eq(0).trigger(e);
+            assert(suggest.kit.length == 1);
+            $('.surt__input').text('');
+            e = jQuery.Event('keyup');
+            e.keyCode = 18;
+            $('.surt__input').eq(0).trigger(e);
+            assert(suggest.kit.length == 0);
 
-        //     var text = $('.surt__input').html();
-
-        //     assert(text == 'Ресторан&nbsp;', 'Пробел добавился в текст: ' +  '|Ресторан&nbsp;| == |' + text + '|');
-        //     suggest.dispose();
-        // });
+            suggest.dispose();
+        });
     });
 });
