@@ -8,6 +8,7 @@ var
         suggestItemCls: 'surt__suggests-item'
     };
     
+    // Следует вынести в общее место, потому что в parser используется точно такая же функция
     function trim(text) {
         if (typeof String.prototype.trim !== 'undefined') {
             return text.trim();
