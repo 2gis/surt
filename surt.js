@@ -8,6 +8,7 @@ var
         suggestItemCls: 'surt__suggests-item'
     };
     
+    // Следует вынести в общее место, потому что в parser используется точно такая же функция
     function trim(text) {
         if (typeof String.prototype.trim !== 'undefined') {
             return text.trim();
@@ -625,6 +626,15 @@ var
 (function(window, undefined) {
     var surt = window.surt || {};
 
+    // Следует вынести в общее место, потому что в UI используется точно такая же функция
+    function trim(text) {
+        if (typeof String.prototype.trim !== 'undefined') {
+            return text.trim();
+        }
+
+        return text.replace(/^\s+|\s+$/g, '');
+    }
+
     /*
      * Generates text from kit
      * @kit - kit in standart format
@@ -664,7 +674,7 @@ var
             } else {
                 newKit.push(token);
             }
-            text = text.replace(token.text, '').trim();
+            text = trim(text.replace(token.text, ''));
         }
 
         var text = oriText;
@@ -690,7 +700,7 @@ var
                 if (index == 0) {
                     pushToken(kit[i]);
                 } else if (index > 0) {
-                    var newPlainText = text.substring(0, index).trim();
+                    var newPlainText = trim(text.substring(0, index));
 
                     pushToken({
                         text: newPlainText,
@@ -703,7 +713,7 @@ var
         }
 
         // Last undefined token
-        text = text.trim();
+        text = trim(text);
         if (text) {
             pushToken({
                 text: text,
@@ -720,6 +730,7 @@ var
         module.exports = parser;
     }
 })(this);
+
 // Cursor positioning in content editable container
 (function(window, undefined) {
     var surt = window.surt || {};
