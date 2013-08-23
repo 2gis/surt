@@ -7,6 +7,14 @@ var
         suggest: '.surt__suggests',
         suggestItemCls: 'surt__suggests-item'
     };
+    
+    function trim(text) {
+        if (typeof String.prototype.trim !== 'undefined') {
+            return text.trim();
+        }
+
+        return text.replace(/^\s+|\s+$/g, '');
+    }
 
     function spaces(text) {
         var re = new RegExp(space, "g"); // Заменяем неразрывные пробелы на пробел
@@ -355,7 +363,7 @@ var
                 this.saveCursor();
 
                 for (var i = 0 ; i < this.kit.length ; i++) {
-                    var html = this.kit[i].text.trim();
+                    var html = trim(this.kit[i].text);
 
                     if (this.params.inputMode != 'text') {
                         if (this.kit[i].type == "text" && textCls) {
@@ -396,7 +404,7 @@ var
                     var kit = [];
 
                     for (var j = 0 ; j < this.suggest[i].length ; j++) {
-                        var html = typeof this.suggest[i][j]["html"] != "undefined" ? this.suggest[i][j].html.trim() : this.suggest[i][j].text.trim();
+                        var html = typeof this.suggest[i][j]["html"] != "undefined" ? trim(this.suggest[i][j].html) : trim(this.suggest[i][j].text);
 
                         if ( this.suggest[i][j].type != "text" ) {
                             if (tokenCls) {
