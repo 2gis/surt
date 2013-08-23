@@ -140,6 +140,8 @@ var
                     var key = e.keyCode,
                         data;
 
+                    if (key == 27) return; // Esc
+
                     self._pressedKeys--;
                     if (self._pressedKeys < 0) self._pressedKeys = 0;
                     
@@ -230,7 +232,7 @@ var
                         var length = self.text().length;
 
                         // Если выставлены модификаторы, и если курсор в крайне правом положении, делаем сет с новыми данными (довершаем автокомплит)
-                        if ( $(self.root).hasClass(params.suggestCls) && $(self.root).hasClass(params.autocompleteCls) && self.getCursor() >= length ) {
+                        if ( /*$(self.root).hasClass(params.suggestCls) && */$(self.root).hasClass(params.autocompleteCls) && self.getCursor() >= length ) {
                             var active = (self._activeSuggest == -1) ? 0 : self._activeSuggest;
 
                             data = self.args();
@@ -238,6 +240,11 @@ var
                             self.set(data, true);
                             self.restoreCursor(self.text().length); // != length
                         }
+                    }
+
+                    // Esc
+                    if (key == 27) {
+                        $(self.root).removeClass(self.params.suggestCls);
                     }
                 })
                 .on('paste', function() {
@@ -252,9 +259,9 @@ var
                 .on('blur', function() {
                     $(self.root).removeClass(self.params.stateFocusCls);
                     $(self.root).removeClass(self.params.readyCls);
-                    setTimeout(function() {
-                        $(self.root).removeClass(self.params.suggestCls);
-                    }, 100); // !!! Костыль для отработки клика по сагесту
+                    // setTimeout(function() {
+                    $(self.root).removeClass(self.params.suggestCls);
+                    // }, 100); // !!! Костыль для отработки клика по сагесту
                 });
 
             this._events.click = function() {
@@ -267,14 +274,14 @@ var
             };
 
             $(this.root)
-                .on('click', function(e) {
+                .on('mousedown', function(e) {
                     if (!$(e.target).closest(self.root).length) {
                         $(self.root).removeClass(self.params.suggestCls).removeClass(self.params.autocompleteCls);
                     }
 
                     e.stopPropagation();
                 })
-                .on('click', '.' + self.params.suggestItemCls, self._events.click);
+                .on('mousedown', '.' + self.params.suggestItemCls, self._events.click);
         },
 
         // true если новый кит по смыслу отличается от текущего
@@ -596,7 +603,7 @@ var
 
         dispose: function() {
             $(this.root).attr('data-surt-inited', 'disposed');
-            $(this.root).off('click', '.' + this.params.suggestItemCls, this._events.click);
+            $(this.root).off('mousedown', '.' + this.params.suggestItemCls, this._events.click);
             clearTimeout(this._upTimer);
         },
 

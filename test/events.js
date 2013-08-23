@@ -473,7 +473,7 @@ describe('События.', function() {
 
             var e;
 
-            e = jQuery.Event('click');
+            e = jQuery.Event('mousedown');
             $('.surt__suggests-item').eq(0).trigger(e); // Click
 
             assert($('.surt__input').html() == '<div class="surt__token surt__token_type_rubric">Ресторан</div>');
@@ -514,7 +514,7 @@ describe('События.', function() {
 
             var e;
 
-            e = jQuery.Event('click');
+            e = jQuery.Event('mousedown');
             $('.surt__suggests-item').eq(1).trigger(e); // Click
 
             assert($('.surt__input').html() == '<div class="surt__token surt__token_type_filter">wifi</div>');
@@ -542,7 +542,7 @@ describe('События.', function() {
 
                 var e;
 
-                e = jQuery.Event('click');
+                e = jQuery.Event('mousedown');
                 $('.wrapper_common .surt__suggests-item').eq(0).trigger(e); // Click
 
                 text = $('.surt__input').text();
