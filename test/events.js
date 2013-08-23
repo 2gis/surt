@@ -581,41 +581,32 @@ describe('События.', function() {
             });
         });
 
-        it('Клик по первому сагесту, когда токен в инпуте совпадает с ним, приводит к его выбору', function() {
-            var suggest = surt({
-                root: '.surt',
-                input: '.surt__input',
-                suggest: '.surt__suggests',
-                suggestItemCls: 'surt__suggests-item',
-                suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
-                tokenCls: 'surt__token',
-                textCls: 'surt__text',
-                clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true'
-            });
-
-            suggest.set({
-                kit: [{
-                    text: 'Ресторан',
-                    type: 'rubric'
-                }],
-                suggest: [[{
-                    text: 'Ресторан',
-                    type: 'rubric'
-                }]
-            ]});
+        it('Клик по enter не приводит к вызову change', function() {
+            var x,
+                suggest = surt({
+                    root: '.surt',
+                    input: '.surt__input',
+                    suggest: '.surt__suggests',
+                    suggestItemCls: 'surt__suggests-item',
+                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                    suggestCls: 'surt_dropdown_true',
+                    tokenCls: 'surt__token',
+                    textCls: 'surt__text',
+                    clone: '.surt__clone-main',
+                    autocomplete: '.surt__clone-hint',
+                    autocompleteCls: 'surt_autocomplete_true',
+                    change: function() {
+                        x++;
+                    }
+                });
 
             var e;
 
-            e = jQuery.Event('click');
-            $('.surt__suggests-item').eq(0).trigger(e); // Click
-
-            var html = $('.surt__input').html();
-
-            assert(html == '<div class="surt__token surt__token_type_rubric">Ресторан</div>', 'В инпуте html = ' + html);
-            assert(!$('.surt').hasClass('surt_dropdown_true'), 'Выпадашка закрылась');
+            e = jQuery.Event('keyup');
+            e.keyCode = 13; // Enter
+            x = 0;
+            $('.surt__input').trigger(e);
+            assert(x === 0, 'Функция change не выполнилась');
             suggest.dispose();
         });
     });

@@ -154,7 +154,7 @@ var
 
                     data = self.args();
 
-                    if (params.change) {
+                    if (params.change && key != 13) {
                         params.change(e, data);
                     }
                 })
