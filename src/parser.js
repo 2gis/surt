@@ -1,5 +1,5 @@
 (function(window, undefined) {
-    var surt = window.surt || {};
+    // var surt = window.surt || {};
 
     /*
      * Generates text from kit
@@ -28,7 +28,8 @@
      * @return - new kit based on old kit tokens and new text 
      */
     var parser = function(kit, oriText) {
-        var newKit = [];
+        var newKit = [],
+            trim = this.trim;
 
         /*
          * Pushing token to newKit and remove text of token from text
@@ -40,7 +41,7 @@
             } else {
                 newKit.push(token);
             }
-            text = text.replace(token.text, '').trim();
+            text = trim(text.replace(token.text, ''));
         }
 
         var text = oriText;
@@ -66,7 +67,7 @@
                 if (index == 0) {
                     pushToken(kit[i]);
                 } else if (index > 0) {
-                    var newPlainText = text.substring(0, index).trim();
+                    var newPlainText = trim(text.substring(0, index));
 
                     pushToken({
                         text: newPlainText,
@@ -79,7 +80,7 @@
         }
 
         // Last undefined token
-        text = text.trim();
+        text = trim(text);
         if (text) {
             pushToken({
                 text: text,
@@ -90,7 +91,7 @@
         return newKit;
     };
 
-    surt.parser = parser;
+    surt.fn.parser = parser;
 
     if (typeof module != "undefined") {
         module.exports = parser;

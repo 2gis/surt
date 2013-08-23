@@ -90,7 +90,7 @@ var
             params = params || {};
             this.$ = $;
             this.params = params;
-            this.parser = surt.parser;
+            // this.parser = surt.parser;
             this.inputNode = $(params.input, root)[0];
             this.root = $(params.root, root)[0];
             this.suggestNode = $(params.suggest, root)[0];
@@ -355,7 +355,7 @@ var
                 this.saveCursor();
 
                 for (var i = 0 ; i < this.kit.length ; i++) {
-                    var html = this.kit[i].text.trim();
+                    var html = this.trim(this.kit[i].text); /* f ie8 */
 
                     if (this.params.inputMode != 'text') {
                         if (this.kit[i].type == "text" && textCls) {
@@ -398,7 +398,7 @@ var
                     for (var j = 0 ; j < this.suggest[i].length ; j++) {
                         var html = this.suggest[i][j].html || this.suggest[i][j].text;
 
-                        html = html.trim();
+                        html = this.trim(html); /* f ie8 */
 
                         if ( this.suggest[i][j].type != 'text' ) {
                             if (tokenCls) {
@@ -598,6 +598,14 @@ var
             $(this.root).attr('data-surt-inited', 'disposed');
             $(this.root).off('click', '.' + this.params.suggestItemCls, this._events.click);
             clearTimeout(this._upTimer);
+        },
+
+        trim: function(str) {
+            if (String.prototype.trim) {
+                return str.trim();
+            } else {
+                return str.replace(/^\s+|\s+$/g, '');
+            }
         }
     };
 
@@ -609,7 +617,7 @@ var
         module.exports = surt;
     }
 
-    surt.version = '0.2.3';
+    surt.version = '0.2.4';
 
     // if ($ && $.fn) {
     //     $.fn.surt = surt;
@@ -617,7 +625,7 @@ var
 })(this);
 
 (function(window, undefined) {
-    var surt = window.surt || {};
+    // var surt = window.surt || {};
 
     /*
      * Generates text from kit
@@ -646,7 +654,8 @@ var
      * @return - new kit based on old kit tokens and new text 
      */
     var parser = function(kit, oriText) {
-        var newKit = [];
+        var newKit = [],
+            trim = this.trim;
 
         /*
          * Pushing token to newKit and remove text of token from text
@@ -658,7 +667,7 @@ var
             } else {
                 newKit.push(token);
             }
-            text = text.replace(token.text, '').trim();
+            text = trim(text.replace(token.text, ''));
         }
 
         var text = oriText;
@@ -684,7 +693,7 @@ var
                 if (index == 0) {
                     pushToken(kit[i]);
                 } else if (index > 0) {
-                    var newPlainText = text.substring(0, index).trim();
+                    var newPlainText = trim(text.substring(0, index));
 
                     pushToken({
                         text: newPlainText,
@@ -697,7 +706,7 @@ var
         }
 
         // Last undefined token
-        text = text.trim();
+        text = trim(text);
         if (text) {
             pushToken({
                 text: text,
@@ -708,7 +717,7 @@ var
         return newKit;
     };
 
-    surt.parser = parser;
+    surt.fn.parser = parser;
 
     if (typeof module != "undefined") {
         module.exports = parser;

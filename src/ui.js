@@ -90,7 +90,7 @@ var
             params = params || {};
             this.$ = $;
             this.params = params;
-            this.parser = surt.parser;
+            // this.parser = surt.parser;
             this.inputNode = $(params.input, root)[0];
             this.root = $(params.root, root)[0];
             this.suggestNode = $(params.suggest, root)[0];
@@ -355,7 +355,7 @@ var
                 this.saveCursor();
 
                 for (var i = 0 ; i < this.kit.length ; i++) {
-                    var html = this.kit[i].text.trim();
+                    var html = this.trim(this.kit[i].text); /* f ie8 */
 
                     if (this.params.inputMode != 'text') {
                         if (this.kit[i].type == "text" && textCls) {
@@ -398,7 +398,7 @@ var
                     for (var j = 0 ; j < this.suggest[i].length ; j++) {
                         var html = this.suggest[i][j].html || this.suggest[i][j].text;
 
-                        html = html.trim();
+                        html = this.trim(html); /* f ie8 */
 
                         if ( this.suggest[i][j].type != 'text' ) {
                             if (tokenCls) {
@@ -598,6 +598,14 @@ var
             $(this.root).attr('data-surt-inited', 'disposed');
             $(this.root).off('click', '.' + this.params.suggestItemCls, this._events.click);
             clearTimeout(this._upTimer);
+        },
+
+        trim: function(str) {
+            if (String.prototype.trim) {
+                return str.trim();
+            } else {
+                return str.replace(/^\s+|\s+$/g, '');
+            }
         }
     };
 
@@ -609,7 +617,7 @@ var
         module.exports = surt;
     }
 
-    surt.version = '0.2.3';
+    surt.version = '0.2.4';
 
     // if ($ && $.fn) {
     //     $.fn.surt = surt;
