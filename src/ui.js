@@ -201,7 +201,6 @@ var
 
                     // Стрелка вниз
                     if (key == 40) {
-                        // console.log('down');
                         index = 0;
 
                         if (self._activeSuggest >= 0) {
@@ -215,7 +214,6 @@ var
 
                     // Стрелка вверх
                     if (key == 38) {
-                        // console.log('up');
                         index = self.suggest.length - 1;
 
                         if (self._activeSuggest >= 0) {
@@ -255,7 +253,6 @@ var
                 .on('focus', function() {
                     $(self.root).addClass(self.params.stateFocusCls);
                     $(self.root).addClass(self.params.suggestCls);
-                    console.log('self.autocompleteNode', self.autocompleteNode);
                     if ($(self.autocompleteNode).text()) {
                         $(self.root).addClass(self.params.autocompleteCls);
                     }
@@ -597,7 +594,6 @@ var
             if (text.indexOf(kitText) == 0) {
                 tail = text.substr(kitText.length, text.length);
             }
-            // console.log('text', text, kitText, tail);
 
             return tail;
         },
