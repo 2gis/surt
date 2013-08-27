@@ -208,6 +208,10 @@ body {
             box-shadow: 0 0 3px rgba(0, 0, 0, .05) inset;
             }
 
+        .surt__selection {
+            color: red;
+        }
+
 @-webkit-keyframes blink {
     0% {
         opacity: .5;

@@ -335,7 +335,7 @@ describe('События.', function() {
             $('.surt__input').trigger(e); // Enter
 
             assert($('.wrapper_common .surt__input').html() == '<div class="surt__token surt__token_type_filter">wifi</div>', 'В инпут помещен html из второго сагеста');
-            assert($('.wrapper_common .surt__suggests').html() == '<li class="surt__suggests-item"><div class="surt__token surt__token_type_rubric">Ресторан</div></li><li class="surt__suggests-item"><div class="surt__token surt__token_type_filter">wifi</div></li>dima', 'HTML из сагестов не перезаписан');
+            assert($('.wrapper_common .surt__suggests').html() == '<li class="surt__suggests-item"><div class="surt__token surt__token_type_rubric">Ресторан</div></li><li class="surt__suggests-item"><div class="surt__token surt__token_type_filter">wifi</div></li>dima', 'HTML из сагестов не перезаписан (производительность)');
             suggest.dispose();
         });
 
@@ -549,6 +549,7 @@ describe('События.', function() {
 
                 assert(text == 'Ресторан', 'after: В инпуте text = ' + text);
                 assert(!$('.wrapper_common .surt').hasClass('surt_dropdown_true'), 'Выпадашка закрылась');
+                
                 suggest.dispose();
             }
 
@@ -665,6 +666,94 @@ describe('События.', function() {
             $('.surt__input').eq(0).trigger(e);
             assert(suggest.kit.length == 0);
 
+            suggest.dispose();
+        });
+    });
+
+    describe('Параметр selectionCls.', function() {
+        it('Наличие параметра selectionCls приводит к оборачиванию совпадающих с поиском частей токенов в сагестах этим классом', function() {
+            var suggest = surt({
+                    root: '.wrapper_common .surt',
+                    input: '.surt__input',
+                    suggest: '.surt__suggests',
+                    suggestItemCls: 'surt__suggests-item',
+                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                    suggestCls: 'surt_dropdown_true',
+                    tokenCls: 'surt__token',
+                    textCls: 'surt__text',
+                    clone: '.surt__clone-main',
+                    autocomplete: '.surt__clone-hint',
+                    autocompleteCls: 'surt_autocomplete_true',
+                    selectionCls: 'surt__selection'
+                });
+
+            // Выставляем текст в диво-инпут
+            suggest.set({
+                kit: [{
+                    text: 'рес',
+                    type: 'text'
+                }]
+            });
+
+            // Заполняем сагест - должно произойти выделение подстрок 'рес' в токенам
+            suggest.set({
+                suggest: [[{
+                    text: 'КрабоРесторан',
+                    type: 'text'
+                }]]
+            });
+
+            var suggestHTML = $('.wrapper_common .surt__suggests').html();
+
+            assert(suggestHTML == '<li class="surt__suggests-item"><div class="surt__text">Крабо<span class="surt__selection">Рес</span>торан</div></li>');
+            
+            suggest.dispose();
+        });
+
+        it('Выбор сагеста приводит к изменению html сагестов при наличии параметра selectionCls', function() {
+            var suggest = surt({
+                    root: '.wrapper_common .surt',
+                    input: '.surt__input',
+                    suggest: '.surt__suggests',
+                    suggestItemCls: 'surt__suggests-item',
+                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                    suggestCls: 'surt_dropdown_true',
+                    tokenCls: 'surt__token',
+                    textCls: 'surt__text',
+                    clone: '.surt__clone-main',
+                    autocomplete: '.surt__clone-hint',
+                    autocompleteCls: 'surt_autocomplete_true',
+                    selectionCls: 'surt__selection'
+                });
+
+            // Выставляем текст в диво-инпут
+            suggest.set({
+                kit: [{
+                    text: 'рес',
+                    type: 'text'
+                }]
+            });
+
+            // Заполняем сагест - должно произойти выделение подстрок 'рес' в токенам
+            suggest.set({
+                suggest: [[{
+                    text: 'КрабоРесторан',
+                    type: 'text'
+                }], [{
+                    text: 'СуперКрабоРесторан',
+                    type: 'text'
+                }]]
+            });
+
+            var e;
+
+            e = jQuery.Event('mousedown');
+            $('.wrapper_common .surt__suggests-item').eq(0).trigger(e);
+
+            var suggestHTML = $('.wrapper_common .surt__suggests').html();
+            // console.log('suggestHTML', suggestHTML);
+            
+            assert(suggestHTML == '<li class="surt__suggests-item"><div class="surt__text"><span class="surt__selection">КрабоРесторан</span></div></li><li class="surt__suggests-item"><div class="surt__text">Супер<span class="surt__selection">КрабоРесторан</span></div></li>');
             suggest.dispose();
         });
     });

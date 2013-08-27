@@ -117,14 +117,18 @@ var
 
             // Выбрать сагест и принудительно затолкать его в инпут
             function pickSuggest() {
-                var data = self.args();
+                var data = self.args(),
+                    suggest = self.params.selectionCls ? data.suggest : undefined; // Насильно обновляем сагест если могло поменяться выделение selectionCls
 
                 data.kit = self.suggest[self._activeSuggest];
 
                 self.set({
-                    kit: data.kit
+                    kit: data.kit,
+                    suggest: suggest
                 }, true);
-                self.restoreCursor(self.text().length); // Крайне правое положение
+
+                // self.restoreCursor(self.text().length); // Крайне правое положение
+
                 if (params.pick) params.pick(data.kit);
             }
 
@@ -266,22 +270,28 @@ var
                     // }, 100); // !!! Костыль для отработки клика по сагесту
                 });
 
-            this._events.click = function() {
+            this._events.click = function(e) {
                 var suggestsItems = $('.' + params.suggestItemCls),
-                    index = suggestsItems.index( $(this) ),
-                    data = self.args();
+                    index = suggestsItems.index( $(this) );
+                    // data = self.args();
 
-                data.kit = self.suggest[index];
-                self.set(data, true);
+                // data.kit = self.suggest[index];
+                // self.set(data, true);
+
+                self._activeSuggest = index;
+                pickSuggest();
+                if (!$(e.target).closest(self.params.suggestItemCls).length) {
+                    $(self.root).removeClass(self.params.suggestCls).removeClass(self.params.autocompleteCls);
+                }
             };
 
             $(this.root)
                 .on('mousedown', function(e) {
-                    if (!$(e.target).closest(self.root).length) {
-                        $(self.root).removeClass(self.params.suggestCls).removeClass(self.params.autocompleteCls);
-                    }
+                    // if (!$(e.target).closest(self.root).length) {
+                    //     $(self.root).removeClass(self.params.suggestCls).removeClass(self.params.autocompleteCls);
+                    // }
 
-                    e.stopPropagation();
+                    // e.stopPropagation();
                 })
                 .on('mousedown', '.' + self.params.suggestItemCls, self._events.click);
         },
@@ -306,15 +316,18 @@ var
                 data.kit = [data.kit];
             }
 
+            this.saveCursor();
+
             var same = kitsAreEqual(data.kit, this.kit);
 
             if (data.kit) this.kit = data.kit;
-            this.suggest = data.suggest;
-
-            this.saveCursor();
-            this.updateSuggest();
-
             if (!same || force) this.updateKit(force);
+
+            if (data.suggest) {
+                this.suggest = data.suggest;
+                this.updateSuggest();
+            }
+
             this.updateAutocomplete();
 
             this.restoreCursor();
@@ -408,6 +421,10 @@ var
                         var html = this.suggest[i][j].html || this.suggest[i][j].text;
 
                         html = this.trim(html); /* f ie8 */
+
+                        if (this.params.selectionCls) {
+                            html = html.replace(new RegExp(this.text(), "i"), '<span class="' + this.params.selectionCls + '">$&</span>');
+                        }
 
                         if ( this.suggest[i][j].type != 'text' ) {
                             if (tokenCls) {
