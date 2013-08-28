@@ -790,30 +790,37 @@ var
 
     // Возвращает позицию курсора
     surt.fn.getCursor = function() {
-        if (!window.getSelection) return; // IE8-
+        var N;
 
-        var selection = window.getSelection();
-
-        if ( !selection.anchorNode ) return; // No selection at all
-
-        var range = selection.getRangeAt(0),
-            container = range.startContainer, // Returns the Node within which the Range starts.
-            offset = range.startOffset, // Returns a number representing where in the startContainer the Range starts.
-            child = container; // Может быть текстовая нода, наверняка
-        
         // Цикл вверх по родителям, вплоть до node
-        var N = offset;
-        while (child && child != this.inputNode) {
-            var sibling = child.previousSibling,
-                text;
-            
-            while (sibling) {
-                text = $(sibling).text();
-                N += text.length; // К позиции курсора внутри child прибавляем позицию самого child
-                sibling = sibling.previousSibling;
-            }
+        if (this.inputNode.tagName == 'INPUT') {
+            N = this.inputNode.selectionEnd;
+        } else {
+            if (!window.getSelection) return; // IE8-
 
-            child = child.parentNode;
+            var selection = window.getSelection();
+
+            if ( !selection.anchorNode ) return; // No selection at all
+
+            var range = selection.getRangeAt(0),
+                container = range.startContainer, // Returns the Node within which the Range starts.
+                offset = range.startOffset, // Returns a number representing where in the startContainer the Range starts.
+                child = container; // Может быть текстовая нода, наверняка
+
+            N = offset;
+
+            while (child && child != this.inputNode) {
+                var sibling = child.previousSibling,
+                    text;
+                
+                while (sibling) {
+                    text = $(sibling).text();
+                    N += text.length; // К позиции курсора внутри child прибавляем позицию самого child
+                    sibling = sibling.previousSibling;
+                }
+
+                child = child.parentNode;
+            }
         }
 
         return N;
