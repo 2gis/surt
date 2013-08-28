@@ -232,8 +232,8 @@ var
                     if (key == 39) {
                         var length = self.text().length;
 
-                        // Если выставлены модификаторы, и если курсор в крайне правом положении, делаем сет с новыми данными (довершаем автокомплит)
-                        if ( /*$(self.root).hasClass(params.suggestCls) && */$(self.root).hasClass(params.autocompleteCls) && self.getCursor() >= length ) {
+                        // Если курсор в крайне правом положении, делаем сет с новыми данными (довершаем автокомплит)
+                        if (self.getCursor() >= length ) {
                             var active = (self._activeSuggest == -1) ? 0 : self._activeSuggest;
 
                             data = self.args();

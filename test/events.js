@@ -24,32 +24,33 @@ describe('События.', function() {
     });
 
     describe('Автокомплит.', function() {
-        it('В отсутствии автокомплита (во входных параметрах) нажатие стрелки вправо не приводит к автокомплиту', function() {
-            var suggest = surt({
-                root: '.surt',
-                input: '.surt__input'
-            });
+        // Сомнительный кейс - если сагесты не использовать, какого черта их сетим
+        // it.only('В отсутствии автокомплита (во входных параметрах) нажатие стрелки вправо не приводит к автокомплиту', function() {
+        //     var suggest = surt({
+        //         root: '.surt',
+        //         input: '.surt__input'
+        //     });
 
-            suggest.set({
-                kit: [{
-                    text: 'Ре',
-                    type: 'text'
-                }],
-                suggest: [[{
-                    text: 'Ресторан',
-                    type: 'rubric'
-                }]]
-            });
+        //     suggest.set({
+        //         kit: [{
+        //             text: 'Ре',
+        //             type: 'text'
+        //         }],
+        //         suggest: [[{
+        //             text: 'Ресторан',
+        //             type: 'rubric'
+        //         }]]
+        //     });
 
-            var e = jQuery.Event('keydown'),
-                html = $('.surt__input').html();
+        //     // var e = jQuery.Event('keydown'),
+        //     //     html = $('.surt__input').html();
 
-            e.keyCode = 39;
-            $('.surt__input').trigger(e);
+        //     // e.keyCode = 39;
+        //     // $('.surt__input').trigger(e);
 
-            assert(html == $('.surt__input').html());
-            suggest.dispose();
-        });
+        //     // assert(html == $('.surt__input').html());
+        //     // suggest.dispose();
+        // });
 
         it('При не крайне правой позиции курсора нажатие стрелки вправо не приводит к автокомплиту (html mode)', function() {
             function test(params) {
@@ -174,7 +175,7 @@ describe('События.', function() {
             suggest.dispose();
         });
 
-        it('При нажатии вправо автокомплит подставляется а курсор уходит в крайне правое положение', function() {
+        it.only('При нажатии вправо автокомплит подставляется а курсор уходит в крайне правое положение', function() {
             var suggest = surt({
                     root: '.surt',
                     input: '.surt__input',
@@ -294,6 +295,48 @@ describe('События.', function() {
             assert($('.wrapper_common .surt__clone-hint').html() == 'стораны и кафе');
 
             e = jQuery.Event('keydown'); e.keyCode = 39; $('.surt__input').trigger(e); // Right
+            assert($('.wrapper_common .surt__input').html() == '<div class="surt__token surt__token_type_filter">Рестораны и кафе</div>', 'В инпут выставился именно второй сагест');
+            suggest.dispose();
+        });
+
+        it('Выбор сагеста и нажатие вправо приводит к его попаданию в поле даже когда не начинается с текста в инпуте', function() {
+            var suggest = surt({
+                root: '.wrapper_common .surt',
+                input: '.surt__input',
+                suggest: '.surt__suggests',
+                suggestItemCls: 'surt__suggests-item',
+                suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                suggestCls: 'surt_dropdown_true',
+                tokenCls: 'surt__token',
+                textCls: 'surt__text',
+                clone: '.surt__clone-main',
+                autocomplete: '.surt__clone-hint',
+                autocompleteCls: 'surt_autocomplete_true'
+            });
+
+            suggest.set({
+                kit: [{
+                    text: 'ест',
+                    type: 'text'
+                }],
+                suggest: [[{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }], [{
+                    text: 'Рестораны и кафе',
+                    type: 'filter'
+                }]]
+            });
+
+            // var e = jQuery.Event('keydown');
+
+            e = jQuery.Event('keydown'); e.keyCode = 40; $('.surt__input').trigger(e); // Down
+            e = jQuery.Event('keydown'); e.keyCode = 40; $('.surt__input').trigger(e); // Down
+
+            // assert($('.wrapper_common .surt__clone-hint').html() == '', 'В автокомплите нет текста');
+
+            e = jQuery.Event('keydown'); e.keyCode = 39; $('.surt__input').trigger(e); // Right
+            console.log($('.wrapper_common .surt__input').html());
             assert($('.wrapper_common .surt__input').html() == '<div class="surt__token surt__token_type_filter">Рестораны и кафе</div>', 'В инпут выставился именно второй сагест');
             suggest.dispose();
         });
