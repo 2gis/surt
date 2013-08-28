@@ -3,6 +3,10 @@ var assert = require('assert');
 describe('Парсер текста.', function() {
     var parser = require('./parser');
 
+    parser.trim = function(text) {
+        return text.trim();
+    };
+
     it('Парсер есть', function() {
         assert(parser && typeof parser == 'function');
     });
@@ -10,7 +14,7 @@ describe('Парсер текста.', function() {
     it('Пустой сет и текст возвращают пустой сет', function() {
         var kit = [],
             text = '',
-            result = parser(kit, text);
+            result = parser.call(parser, kit, text);
 
         assert.deepEqual(result, []);
     });
@@ -24,7 +28,7 @@ describe('Парсер текста.', function() {
                 type: 'filter'
             }],
             text = 'Ресторан Wi-Fi',
-            result = parser(kit, text);
+            result = parser.call(parser, kit, text);
 
         assert.deepEqual(result, kit);
     });
@@ -38,7 +42,7 @@ describe('Парсер текста.', function() {
                 type: 'filter'
             }],
             text = 'Ресторан Wi-F',
-            result = parser(kit, text);
+            result = parser.call(parser, kit, text);
 
         assert.deepEqual(result, [kit[0], {
             text: 'Wi-F',
@@ -55,7 +59,7 @@ describe('Парсер текста.', function() {
                 type: 'filter'
             }],
             text = 'Рестора Wi-F',
-            result = parser(kit, text);
+            result = parser.call(parser, kit, text);
 
         assert.deepEqual(result, [{
             text: 'Рестора Wi-F',
@@ -75,7 +79,7 @@ describe('Парсер текста.', function() {
                 type: 'attr'
             }],
             text = 'Ресторан W лыжи',
-            result = parser(kit, text);
+            result = parser.call(parser, kit, text);
 
         assert.deepEqual(result, [kit[0], {
             text: 'W',
@@ -95,7 +99,7 @@ describe('Парсер текста.', function() {
                 type: 'attr'
             }],
             text = 'Ресто-Fi лыжи',
-            result = parser(kit, text);
+            result = parser.call(parser, kit, text);
 
         assert.deepEqual(result, [{
             text: 'Ресто-Fi',
@@ -115,7 +119,7 @@ describe('Парсер текста.', function() {
                 type: 'attr'
             }],
             text = 'Ресторан Fiыжи',
-            result = parser(kit, text);
+            result = parser.call(parser, kit, text);
 
         assert.deepEqual(result, [kit[0], {
             text: 'Fiыжи',
@@ -138,7 +142,7 @@ describe('Парсер текста.', function() {
                 type: 'internet'
             }],
             text = 'Ресторан Fi лыжи   gs',
-            result = parser(kit, text);
+            result = parser.call(parser, kit, text);
 
         assert.deepEqual(result, [kit[0], {
             text: 'Fi',
@@ -164,7 +168,7 @@ describe('Парсер текста.', function() {
                 type: 'text'
             }],
             text = 'Ресторан лыжи gprs',
-            result = parser(kit, text);
+            result = parser.call(parser, kit, text);
 
         assert.deepEqual(result, [{
             text: 'Ресторан',
@@ -181,7 +185,7 @@ describe('Парсер текста.', function() {
                 type: 'text'
             }],
             text = 'аб',
-            result = parser(kit, text);
+            result = parser.call(parser, kit, text);
 
         assert.deepEqual(result, [{
             text: 'аб',
@@ -195,7 +199,7 @@ describe('Парсер текста.', function() {
                 type: 'text'
             }],
             text = 'а ',
-            result = parser(kit, text);
+            result = parser.call(parser, kit, text);
 
         assert.deepEqual(result, [{
             text: 'а',
@@ -209,12 +213,45 @@ describe('Парсер текста.', function() {
                 type: 'rubric'
             }],
             text = 'Warren ',
-            result = parser(kit, text);
+            result = parser.call(parser, kit, text);
 
         assert.deepEqual(result, [{
             text: 'Warren',
             type: 'rubric'
         }]);
+    });
+
+    it('regexp', function() {
+        var html = 'рестораны',
+            partial = 'ест',
+            expected;
+
+        obj = {
+            params: {
+                selectionCls: 'cls'
+            },
+            text: function() {
+                return partial;
+            }
+        };
+
+        // Обычный текст
+        var expected = parser.replace.call(obj, html);
+        assert(expected == 'р<span class="cls">ест</span>ораны', 'text');
+
+        // Шаримся внутри html
+        html = '<div class="token">рестораны</div>';
+        expected = parser.replace.call(obj, html);
+        assert(expected == '<div class="token">р<span class="cls">ест</span>ораны</div>', 'html');
+
+        // Когда партиал есть внутри тега
+        html = '<div class="token" data="рестораны">рестораны</div>';
+        expected = parser.replace.call(obj, html);
+        assert(expected == '<div class="token" data="рестораны">р<span class="cls">ест</span>ораны</div>', 'html + tag');
+
+        html = '<span data="рестораны"></span><div class="token" data="рестораны">рестораны</div>';
+        expected = parser.replace.call(obj, html);
+        assert(expected == '<span data="рестораны"></span><div class="token" data="рестораны">р<span class="cls">ест</span>ораны</div>', 'html + tag 2');
     });
 
     // it('Trailing nbsp space для сложных типов токенов', function() {

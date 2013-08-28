@@ -91,6 +91,20 @@
         return newKit;
     };
 
+    // Заменяет подстроки partial в тексте html минуя внутренности тегов html
+    parser.replace = function(html) {
+        function escape(text) {
+            return String(text).replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+        }
+
+        var partial = escape(this.text());
+        partial = '((>[^<]*|^[^<>]*))(' + partial + ')([\w -]*)';
+
+        return html.replace(new RegExp(partial, "i"), '$1<span class="' + this.params.selectionCls + '">$3</span>$4');
+    };
+
+    surt = window.surt || {};
+    surt.fn = surt.fn || {};
     surt.fn.parser = parser;
 
     if (typeof module != "undefined") {

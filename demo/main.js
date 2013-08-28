@@ -37,34 +37,16 @@ $(document).ready(function() {
         readyCls: 'surt_ready_true',
         stateFocusCls: 'surt_state_focus',
         delimiter: ',',
-        // change: function(e, data) {
-        //     // Изменение текста
-        //     var setData = backend(data);
+        change: function(e, data) {
+            // Изменение текста
+            var setData = backend(data);
 
-        //     simple.set(setData);
-        // },
-        // submit: function() {
+            simple.set(setData);
+        },
+        submit: function() {
             
-        // }
+        }
     });
-
-    simple.set({
-        kit: [{
-            text: 'Ре',
-            type: 'text'
-        }],
-        suggest: [[{
-            text: 'Ресторан',
-            type: 'rubric'
-        }]]
-    });
-
-    // simple.set({
-    //     suggest: [[{
-    //         text: 'ресторан',
-    //         type: 'text'
-    //     }]]
-    // });
 
     function backend(data) {
         var newData = {

@@ -417,12 +417,17 @@ var
                     var kit = [];
 
                     for (var j = 0 ; j < this.suggest[i].length ; j++) {
+                        // function espape(text) {
+                        //     return String(text).replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+                        // }
+
                         var html = this.suggest[i][j].html || this.suggest[i][j].text;
 
                         html = this.trim(html); /* f ie8 */
 
                         if (this.params.selectionCls) {
-                            html = html.replace(new RegExp(this.text(), "i"), '<span class="' + this.params.selectionCls + '">$&</span>');
+                            html = this.parser.replace.call(this, html);
+                            // html = html.replace(new RegExp(espape(this.text()), "i"), '<span class="' + this.params.selectionCls + '">$&</span>');
                         }
 
                         if ( this.suggest[i][j].type != 'text' ) {

@@ -417,12 +417,17 @@ var
                     var kit = [];
 
                     for (var j = 0 ; j < this.suggest[i].length ; j++) {
+                        // function espape(text) {
+                        //     return String(text).replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+                        // }
+
                         var html = this.suggest[i][j].html || this.suggest[i][j].text;
 
                         html = this.trim(html); /* f ie8 */
 
                         if (this.params.selectionCls) {
-                            html = html.replace(new RegExp(this.text(), "i"), '<span class="' + this.params.selectionCls + '">$&</span>');
+                            html = this.parser.replace.call(this, html);
+                            // html = html.replace(new RegExp(espape(this.text()), "i"), '<span class="' + this.params.selectionCls + '">$&</span>');
                         }
 
                         if ( this.suggest[i][j].type != 'text' ) {
@@ -741,6 +746,20 @@ var
         return newKit;
     };
 
+    // Заменяет подстроки partial в тексте html минуя внутренности тегов html
+    parser.replace = function(html) {
+        function escape(text) {
+            return String(text).replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+        }
+
+        var partial = escape(this.text());
+        partial = '((>[^<]*|^[^<>]*))(' + partial + ')([\w -]*)';
+
+        return html.replace(new RegExp(partial, "i"), '$1<span class="' + this.params.selectionCls + '">$3</span>$4');
+    };
+
+    surt = window.surt || {};
+    surt.fn = surt.fn || {};
     surt.fn.parser = parser;
 
     if (typeof module != "undefined") {

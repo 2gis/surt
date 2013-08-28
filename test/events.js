@@ -23,7 +23,7 @@ describe('События.', function() {
         suggest.dispose();
     });
 
-    describe.('Автокомплит.', function() {
+    describe('Автокомплит.', function() {
         // Сомнительный кейс - если сагесты не использовать, какого черта их сетим
         // it.only('В отсутствии автокомплита (во входных параметрах) нажатие стрелки вправо не приводит к автокомплиту', function() {
         //     var suggest = surt({
@@ -204,7 +204,7 @@ describe('События.', function() {
             var e = jQuery.Event('keydown');
 
             e.keyCode = 39;
-            $('.surt__input').trigger(e);
+            $('.wrapper_common .surt__input').trigger(e);
 
             var pos = suggest.getCursor(),
                 html = $('.wrapper_common .surt__input').html(),
