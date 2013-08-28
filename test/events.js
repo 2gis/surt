@@ -23,7 +23,7 @@ describe('События.', function() {
         suggest.dispose();
     });
 
-    describe('Автокомплит.', function() {
+    describe.('Автокомплит.', function() {
         // Сомнительный кейс - если сагесты не использовать, какого черта их сетим
         // it.only('В отсутствии автокомплита (во входных параметрах) нажатие стрелки вправо не приводит к автокомплиту', function() {
         //     var suggest = surt({
@@ -137,7 +137,7 @@ describe('События.', function() {
             var text = $('.wrapper_input .surt__input').val();
 
             // assert(html == text);
-            // suggest.dispose();
+            suggest.dispose();
         });
 
         it('При крайне правой позиции курсора нажатие стрелки вправо приводит к автокомплиту', function() {
@@ -175,9 +175,9 @@ describe('События.', function() {
             suggest.dispose();
         });
 
-        it.only('При нажатии вправо автокомплит подставляется а курсор уходит в крайне правое положение', function() {
+        it('При нажатии вправо автокомплит подставляется а курсор уходит в крайне правое положение', function() {
             var suggest = surt({
-                    root: '.surt',
+                    root: '.wrapper_common .surt',
                     input: '.surt__input',
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
@@ -207,10 +207,10 @@ describe('События.', function() {
             $('.surt__input').trigger(e);
 
             var pos = suggest.getCursor(),
-                html = $('.surt__input').html(),
-                complete = $('.surt__clone-main').html();
+                html = $('.wrapper_common .surt__input').html(),
+                complete = $('.wrapper_common .surt__clone-main').html();
 
-            assert(pos == $('.surt__input').text().length);
+            assert(pos == $('.surt__input').text().length, 'Позиция выставилась в крайне правое положение ' + pos + '|' + $('.surt__input').text().length);
             assert(html == '<div class="surt__token surt__token_type_rubric">Ресторан</div>', 'В инпут попадает первый сагест');
             assert(complete == html, 'В комплите выставляется строго содержимое инпута');
             suggest.dispose();
