@@ -186,11 +186,10 @@ var
 
                         if ( $(self.root).hasClass(params.suggestCls) && $('.' + params.suggestItemCurrentCls).length ) {
                             pickSuggest();
-                        } else {
-                            // Здесь сабмит
-                            if (self.params.submit) {
-                                self.params.submit();
-                            }
+                        }
+                        // Здесь сабмит
+                        if (self.params.submit) {
+                            self.params.submit();
                         }
                         // Удаляем сагесты и автокомплит
                         $(self.root).removeClass(params.suggestCls);

@@ -300,20 +300,24 @@ describe('События.', function() {
     });
 
     describe('Выбор сагестов.', function() {
-        it('Нажатие вниз + enter приводит к выбору первого сагеста', function() {
-            var suggest = surt({
-                root: '.surt',
-                input: '.surt__input',
-                suggest: '.surt__suggests',
-                suggestItemCls: 'surt__suggests-item',
-                suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
-                tokenCls: 'surt__token',
-                textCls: 'surt__text',
-                clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true'
-            });
+        it('Нажатие вниз + enter приводит к выбору первого сагеста и сабмиту', function() {
+            var x = 0,
+                suggest = surt({
+                    root: '.surt',
+                    input: '.surt__input',
+                    suggest: '.surt__suggests',
+                    suggestItemCls: 'surt__suggests-item',
+                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                    suggestCls: 'surt_dropdown_true',
+                    tokenCls: 'surt__token',
+                    textCls: 'surt__text',
+                    clone: '.surt__clone-main',
+                    autocomplete: '.surt__clone-hint',
+                    autocompleteCls: 'surt_autocomplete_true',
+                    submit: function() {
+                        x++;
+                    }
+                });
 
             suggest.set({
                 kit: [{
@@ -339,6 +343,7 @@ describe('События.', function() {
             $('.surt__input').trigger(e); // Enter
 
             assert($('.surt__input').html() == '<div class="surt__token surt__token_type_rubric">Ресторан</div>');
+            assert(x == 1, 'Был вызван метод submit');
             suggest.dispose();
         });
 
