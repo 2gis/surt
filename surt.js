@@ -116,7 +116,8 @@ var
             }
 
             // Выбрать сагест и принудительно затолкать его в инпут
-            function pickSuggest() {
+            // submit true если синхронно за выбором следует сабмит
+            function pickSuggest(submit) {
                 var data = self.args(),
                     suggest = self.params.selectionCls ? data.suggest : undefined; // Насильно обновляем сагест если могло поменяться выделение selectionCls
 
@@ -129,7 +130,7 @@ var
 
                 // self.restoreCursor(self.text().length); // Крайне правое положение
 
-                if (params.pick) params.pick(data.kit);
+                if (params.pick) params.pick(data.kit, submit);
             }
 
             // Если нажата не буква - возвращает true
@@ -185,7 +186,7 @@ var
                         e.preventDefault();
 
                         if ( $(self.root).hasClass(params.suggestCls) && $('.' + params.suggestItemCurrentCls).length ) {
-                            pickSuggest();
+                            pickSuggest(true);
                         }
                         // Здесь сабмит
                         if (self.params.submit) {

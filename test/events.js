@@ -344,6 +344,8 @@ describe('События.', function() {
     describe('Выбор сагестов.', function() {
         it('Нажатие вниз + enter приводит к выбору первого сагеста и сабмиту', function() {
             var x = 0,
+                y = 0,
+                submit = false,
                 suggest = surt({
                     root: '.surt',
                     input: '.surt__input',
@@ -357,7 +359,11 @@ describe('События.', function() {
                     autocomplete: '.surt__clone-hint',
                     autocompleteCls: 'surt_autocomplete_true',
                     submit: function() {
-                        x++;
+                        x += y + 1;
+                    },
+                    pick: function(kit, c) {
+                        y += 10;
+                        submit = c;
                     }
                 });
 
@@ -385,7 +391,9 @@ describe('События.', function() {
             $('.surt__input').trigger(e); // Enter
 
             assert($('.surt__input').html() == '<div class="surt__token surt__token_type_rubric">Ресторан</div>');
-            assert(x == 1, 'Был вызван метод submit');
+            assert(y == 10, 'Был вызван метод pick');
+            assert(submit, 'Был вызван метод pick причем второй аргумент был true');
+            assert(x == 11, 'Был вызван метод submit');
             suggest.dispose();
         });
 
