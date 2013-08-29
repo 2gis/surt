@@ -336,7 +336,6 @@ describe('События.', function() {
             // assert($('.wrapper_common .surt__clone-hint').html() == '', 'В автокомплите нет текста');
 
             e = jQuery.Event('keydown'); e.keyCode = 39; $('.surt__input').trigger(e); // Right
-            console.log($('.wrapper_common .surt__input').html());
             assert($('.wrapper_common .surt__input').html() == '<div class="surt__token surt__token_type_filter">Рестораны и кафе</div>', 'В инпут выставился именно второй сагест');
             suggest.dispose();
         });

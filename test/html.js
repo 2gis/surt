@@ -299,4 +299,19 @@ describe('HTML.', function() {
             suggest.parse();
         });
     });
+
+    describe('Метод invalidate', function() {
+        before(function() {
+            reinit();
+        });
+
+        it('Кастомный текст для инвалидации', function() {
+            suggest.invalidate('Рестораны вася');
+
+            assert.deepEqual(suggest.kit, [{
+                text: 'Рестораны вася',
+                type: 'text'
+            }], 'В кит выставился кастомный текст и ничего более');
+        });
+    });
 });

@@ -400,7 +400,6 @@ var
                 // if (this.trailingSpace) inputHTML += space;
                 if (this.params.inputMode != 'text' || force) {
                     this.html(inputHTML);
-                    // this.inputNode.innerHTML = inputHTML;
                     this.restoreCursor();
                 }
             }
@@ -552,15 +551,21 @@ var
             return data;
         },
 
-        // Вычисляем новый кит
-        parse: function() {
-            var text = this.text();
+        // Вычисляем новый кит на основе данных в строке или кастомного текста
+        parse: function(ctext) {
+            var text = ctext || this.text();
 
             this.trailingSpace = text[text.length - 1] === ' ';
             newKit = this.parser(this.kit, text);
-            // this.kit = newKit; // ?
 
             return newKit;
+        },
+
+        // Проверяет соответствие кита текущей строке в инпуте, или кастомной строке
+        invalidate: function(customText) {
+            var kit = this.parse(customText);
+
+            this.kit = kit;
         },
 
         // Окукливает токены если в конце стоит разделитель и они точно совпадают с первым сагестом
