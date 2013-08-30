@@ -257,7 +257,7 @@ var
                 .on('focus', function() {
                     $(self.root).addClass(self.params.stateFocusCls);
                     $(self.root).addClass(self.params.suggestCls);
-                    if ($(self.autocompleteNode).text()) {
+                    if ($(self.autocompleteNode).text() && self.text()) {
                         $(self.root).addClass(self.params.autocompleteCls);
                     }
                 })

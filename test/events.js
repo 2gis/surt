@@ -339,6 +339,47 @@ describe('События.', function() {
             assert($('.wrapper_common .surt__input').html() == '<div class="surt__token surt__token_type_filter">Рестораны и кафе</div>', 'В инпут выставился именно второй сагест');
             suggest.dispose();
         });
+
+        it('При удалении текста модификатор автокомплита не выставляется', function() {
+            var suggest = surt({
+                root: '.wrapper_common .surt',
+                input: '.surt__input',
+                suggest: '.surt__suggests',
+                suggestItemCls: 'surt__suggests-item',
+                suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                suggestCls: 'surt_dropdown_true',
+                tokenCls: 'surt__token',
+                textCls: 'surt__text',
+                clone: '.surt__clone-main',
+                autocomplete: '.surt__clone-hint',
+                autocompleteCls: 'surt_autocomplete_true'
+            });
+
+            suggest.set({
+                kit: [{
+                    text: 'ест',
+                    type: 'text'
+                }],
+                suggest: [[{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }], [{
+                    text: 'Рестораны и кафе',
+                    type: 'filter'
+                }]]
+            });
+
+            $('.surt__input').text('');
+
+            $('.wrapper_simple .surt__input').focus();
+            $('.wrapper_common .surt__input').focus();
+
+            var e;
+            e = jQuery.Event('keyup'); e.keyCode = 40; $('.surt__input').trigger(e);
+
+            assert(!$('.wrapper_common .surt').hasClass('surt_autocomplete_true'), 'Класса автокомплита не должно быть');
+            suggest.dispose();
+        });
     });
 
     describe('Выбор сагестов.', function() {
@@ -548,20 +589,24 @@ describe('События.', function() {
             suggest.dispose();
         });
 
-        it('Клик по первому сагесту приводит к его выбору', function() {
-            var suggest = surt({
-                root: '.surt',
-                input: '.surt__input',
-                suggest: '.surt__suggests',
-                suggestItemCls: 'surt__suggests-item',
-                suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
-                tokenCls: 'surt__token',
-                textCls: 'surt__text',
-                clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true'
-            });
+        it('Клик по первому сагесту приводит к его выбору, а второй аргумент в pick - false', function() {
+            var submit,
+                suggest = surt({
+                    root: '.surt',
+                    input: '.surt__input',
+                    suggest: '.surt__suggests',
+                    suggestItemCls: 'surt__suggests-item',
+                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                    suggestCls: 'surt_dropdown_true',
+                    tokenCls: 'surt__token',
+                    textCls: 'surt__text',
+                    clone: '.surt__clone-main',
+                    autocomplete: '.surt__clone-hint',
+                    autocompleteCls: 'surt_autocomplete_true',
+                    pick: function(a, c) {
+                        submit = c;
+                    }
+                });
 
             suggest.set({
                 kit: [{
@@ -583,6 +628,7 @@ describe('События.', function() {
             $('.surt__suggests-item').eq(0).trigger(e); // Click
 
             assert($('.surt__input').html() == '<div class="surt__token surt__token_type_rubric">Ресторан</div>');
+            assert(!submit, 'Второй аргумент в pick - false');
             suggest.dispose();
         });
 
