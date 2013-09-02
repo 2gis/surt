@@ -771,6 +771,91 @@ describe('События.', function() {
             assert(x === 0, 'Функция change не выполнилась');
             suggest.dispose();
         });
+
+        it('Клико-выбор сагеста приводит к вызову change', function() {
+            var x,
+                suggest = surt({
+                    root: '.wrapper_common .surt',
+                    input: '.surt__input',
+                    suggest: '.surt__suggests',
+                    suggestItemCls: 'surt__suggests-item',
+                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                    suggestCls: 'surt_dropdown_true',
+                    tokenCls: 'surt__token',
+                    textCls: 'surt__text',
+                    clone: '.surt__clone-main',
+                    autocomplete: '.surt__clone-hint',
+                    autocompleteCls: 'surt_autocomplete_true',
+                    change: function() {
+                        x++;
+                    }
+                });
+
+            suggest.set({
+                kit: [{
+                    text: 'Рестора',
+                    type: 'text'
+                }],
+                suggest: [[{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }]
+            ]}, true);
+
+            x = 0;
+
+            var e;
+            e = jQuery.Event('mousedown');
+            $('.surt__suggests-item').eq(0).trigger(e); // Click
+            
+            assert(x === 1, 'Функция change выполнилась');
+            suggest.dispose();
+        });
+
+        // Не знаю как на это тест написать - проблема в эмуляции реального клика
+        // it.only('Клико-выбор сагеста оставляет курсор в инпуте', function() {
+        //     var x,
+        //         suggest = surt({
+        //             root: '.wrapper_common .surt',
+        //             input: '.surt__input',
+        //             suggest: '.surt__suggests',
+        //             suggestItemCls: 'surt__suggests-item',
+        //             suggestItemCurrentCls: 'surt__suggests-item_state_current',
+        //             suggestCls: 'surt_dropdown_true',
+        //             tokenCls: 'surt__token',
+        //             textCls: 'surt__text',
+        //             clone: '.surt__clone-main',
+        //             autocomplete: '.surt__clone-hint',
+        //             autocompleteCls: 'surt_autocomplete_true',
+        //             change: function() {
+        //                 x++;
+        //             }
+        //         });
+
+        //     suggest.set({
+        //         kit: [{
+        //             text: 'Рестора',
+        //             type: 'text'
+        //         }],
+        //         suggest: [[{
+        //             text: 'Ресторан',
+        //             type: 'rubric'
+        //         }]
+        //     ]}, true);
+
+        //     x = 0;
+
+        //     var e;
+        //     e = jQuery.Event('mousedown');
+        //     $('.surt__suggests-item').eq(0).trigger(e); // Click
+        //     e = jQuery.Event('click');
+        //     $('.surt__suggests-item').eq(0).trigger(e); // Click
+        //     e = jQuery.Event('mouseup');
+        //     $('.surt__suggests-item').eq(0).trigger(e); // Click
+            
+        //     assert($('.wrapper_common .surt__input').is(':focus'), 'Интуп в фокусе');
+        //     // suggest.dispose();
+        // });
     });
 
     describe('Набор текста.', function() {

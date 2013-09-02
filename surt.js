@@ -149,8 +149,6 @@ var
 
                     self._pressedKeys--;
                     if (self._pressedKeys < 0) self._pressedKeys = 0;
-                    
-                    // if (isControlKey(key)) return true;
 
                     if ((key == 40 || key == 38) && $(self.root).hasClass(params.suggestCls) ) {
                         return;
@@ -196,9 +194,6 @@ var
                         $(self.root).removeClass(params.suggestCls);
                         $(self.root).removeClass(params.autocompleteCls);
                         self.markSuggest(-1); // Снятие выделения с сагеста
-                        // self.set({ 
-                        //     suggest: []
-                        // });
 
                         return false;
                     }
@@ -258,43 +253,33 @@ var
                     $(self.root).addClass(self.params.stateFocusCls);
                     $(self.root).addClass(self.params.suggestCls);
                     self.updateAutocomplete();
-                    // if ($(self.autocompleteNode).text() && self.text()) {
-                    //     $(self.root).addClass(self.params.autocompleteCls);
-                    // }
                 })
                 .on('blur', function() {
                     $(self.root).removeClass(self.params.stateFocusCls);
                     $(self.root).removeClass(self.params.readyCls);
                     $(self.root).removeClass(self.params.autocompleteCls);
-                    // setTimeout(function() {
                     $(self.root).removeClass(self.params.suggestCls);
-                    // }, 100); // !!! Костыль для отработки клика по сагесту
                 });
 
             this._events.click = function(e) {
                 var suggestsItems = $('.' + params.suggestItemCls),
                     index = suggestsItems.index( $(this) );
-                    // data = self.args();
-
-                // data.kit = self.suggest[index];
-                // self.set(data, true);
 
                 self._activeSuggest = index;
                 pickSuggest();
+                if (self.params.change) self.params.change(e, self.args());
+
                 if (!$(e.target).closest(self.params.suggestItemCls).length) {
                     $(self.root).removeClass(self.params.suggestCls).removeClass(self.params.autocompleteCls);
                 }
+
+                setTimeout(function() {
+                    self.inputNode.focus(); // Костыль для возвращения фокуса в инпут
+                }, 0);
             };
 
             $(this.root)
-                .on('mousedown', function(e) {
-                    // if (!$(e.target).closest(self.root).length) {
-                    //     $(self.root).removeClass(self.params.suggestCls).removeClass(self.params.autocompleteCls);
-                    // }
-
-                    // e.stopPropagation();
-                })
-                .on('mousedown', '.' + self.params.suggestItemCls, self._events.click);
+                .on('mousedown', '.' + self.params.suggestItemCls, self._events.click); // Почему не клик??
         },
 
         // true если новый кит по смыслу отличается от текущего
