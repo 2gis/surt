@@ -257,9 +257,10 @@ var
                 .on('focus', function() {
                     $(self.root).addClass(self.params.stateFocusCls);
                     $(self.root).addClass(self.params.suggestCls);
-                    if ($(self.autocompleteNode).text() && self.text()) {
-                        $(self.root).addClass(self.params.autocompleteCls);
-                    }
+                    self.updateAutocomplete();
+                    // if ($(self.autocompleteNode).text() && self.text()) {
+                    //     $(self.root).addClass(self.params.autocompleteCls);
+                    // }
                 })
                 .on('blur', function() {
                     $(self.root).removeClass(self.params.stateFocusCls);
@@ -462,7 +463,10 @@ var
         updateAutocomplete: function() {
             var active = this._activeSuggest == -1 ? 0 : this._activeSuggest, // Индекс текущего сагеста
                 su = this.suggest && this.suggest.length && this.suggest[active], // Текущий сагест
-                text = this.text();
+                text = this.text(),
+                self = this;
+
+            if (!this.autocompleteNode) return;
 
             // Автокомплит
             if (this.kit && this.kit.length && this.cloneNode) {
@@ -494,15 +498,19 @@ var
                     this.cloneNode.innerHTML = this.html();
                     if ($(this.root).hasClass(this.params.suggestCls) && isAutocomplete) {
                         $(this.root).addClass(this.params.autocompleteCls);
-                    } else {
-                        $(this.root).removeClass(this.params.autocompleteCls);
+                    } else { // Сагесты свернуты, либо текущий не является автокомплитом
+                        rmAutocomplete();
                     }
-                } else { // Сагестов нет, удаляем текст из автокомплита
-                    this.autocompleteNode.innerHTML = '';
-                    $(this.root).removeClass(this.params.autocompleteCls);
+                } else { // Сагестов нет вообще, удаляем текст из автокомплита
+                    rmAutocomplete();
                 }
-            } else {
-                $(this.root).removeClass(this.params.autocompleteCls);
+            } else { // Кита нет, либо текста нет - автокомплит не нужен
+                rmAutocomplete();
+            }
+
+            function rmAutocomplete() {
+                self.autocompleteNode.innerHTML = '';
+                $(self.root).removeClass(self.params.autocompleteCls);
             }
         },
 

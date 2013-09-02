@@ -24,34 +24,6 @@ describe('События.', function() {
     });
 
     describe('Автокомплит.', function() {
-        // Сомнительный кейс - если сагесты не использовать, какого черта их сетим
-        // it.only('В отсутствии автокомплита (во входных параметрах) нажатие стрелки вправо не приводит к автокомплиту', function() {
-        //     var suggest = surt({
-        //         root: '.surt',
-        //         input: '.surt__input'
-        //     });
-
-        //     suggest.set({
-        //         kit: [{
-        //             text: 'Ре',
-        //             type: 'text'
-        //         }],
-        //         suggest: [[{
-        //             text: 'Ресторан',
-        //             type: 'rubric'
-        //         }]]
-        //     });
-
-        //     // var e = jQuery.Event('keydown'),
-        //     //     html = $('.surt__input').html();
-
-        //     // e.keyCode = 39;
-        //     // $('.surt__input').trigger(e);
-
-        //     // assert(html == $('.surt__input').html());
-        //     // suggest.dispose();
-        // });
-
         it('При не крайне правой позиции курсора нажатие стрелки вправо не приводит к автокомплиту (html mode)', function() {
             function test(params) {
                 var suggest = surt(params);
@@ -375,9 +347,46 @@ describe('События.', function() {
             $('.wrapper_common .surt__input').focus();
 
             var e;
-            e = jQuery.Event('keyup'); e.keyCode = 40; $('.surt__input').trigger(e);
+            e = jQuery.Event('keyup'); $('.surt__input').trigger(e);
 
             assert(!$('.wrapper_common .surt').hasClass('surt_autocomplete_true'), 'Класса автокомплита не должно быть');
+            suggest.dispose();
+        });
+
+        it('Если первый сагест не начинается с текста в инпуте - класс автокомплита не выставляется, текст тоже', function() {
+            var suggest = surt({
+                root: '.wrapper_common .surt',
+                input: '.surt__input',
+                suggest: '.surt__suggests',
+                suggestItemCls: 'surt__suggests-item',
+                suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                suggestCls: 'surt_dropdown_true',
+                tokenCls: 'surt__token',
+                textCls: 'surt__text',
+                clone: '.surt__clone-main',
+                autocomplete: '.surt__clone-hint',
+                autocompleteCls: 'surt_autocomplete_true'
+            });
+
+            suggest.set({
+                kit: [{
+                    text: 'ест',
+                    type: 'text'
+                }],
+                suggest: [[{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }], [{
+                    text: 'Рестораны и кафе',
+                    type: 'filter'
+                }]]
+            });
+
+            $('.wrapper_simple .surt__input').focus();
+            $('.wrapper_common .surt__input').focus();
+
+            assert(!$('.wrapper_common .surt').hasClass('surt_autocomplete_true'), 'Класса автокомплита не должно быть');
+            assert(!$('.wrapper_common .surt__clone-hint').text(), 'Текста в автокомплите не должно быть');
             suggest.dispose();
         });
     });
