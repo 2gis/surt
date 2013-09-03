@@ -131,6 +131,8 @@ var
                 // self.restoreCursor(self.text().length); // Крайне правое положение
 
                 if (params.pick) params.pick(data.kit, submit);
+
+                // self.restoreCursor(self.text().length);
             }
 
             // Если нажата не буква - возвращает true
@@ -235,7 +237,7 @@ var
                             data = self.args();
                             data.kit = self.suggest[active];
                             self.set(data, true);
-                            self.restoreCursor(self.text().length); // != length
+                            // self.restoreCursor(self.text().length); // != length
                         }
                     }
 
@@ -249,7 +251,7 @@ var
                         self.parse();
                     }, 0);
                 })
-                .on('focus', function() {
+                .on('focus click', function() {
                     $(self.root).addClass(self.params.stateFocusCls);
                     $(self.root).addClass(self.params.suggestCls);
                     self.updateAutocomplete();
@@ -272,10 +274,6 @@ var
                 if (!$(e.target).closest(self.params.suggestItemCls).length) {
                     $(self.root).removeClass(self.params.suggestCls).removeClass(self.params.autocompleteCls);
                 }
-
-                setTimeout(function() {
-                    self.inputNode.focus(); // Костыль для возвращения фокуса в инпут
-                }, 0);
             };
 
             $(this.root)
@@ -431,15 +429,31 @@ var
                         }
                     }
 
+                    var count = kit.length;
                     kit = kit.join(this.delimiter + ' ');
-                    suggestHTML.push('<li class="' + this.params.suggestItemCls + '">' + kit + '</li>');
+                    var countMod = '';
+                    if (this.params.suggestItemCountCls) {
+                        countMod = ' ' + this.params.suggestItemCountCls + count;
+                    }
+                    suggestHTML.push('<li class="' + this.params.suggestItemCls + countMod + '">' + kit + '</li>');
                     this._activeSuggest = -1;
                 }
+                var count = suggestHTML.length;
                 suggestHTML = suggestHTML.join('');
                 if (this.suggestNode) {
                     if (suggestHTML) $(this.root).addClass(this.params.suggestCls);
                     else $(this.root).removeClass(this.params.suggestCls);
                     this.suggestNode.innerHTML = suggestHTML;
+                }
+
+                // Проверяем ширину сагестов и выставляем модификатор тем, которые шири
+                var suggestWidth = this.suggestNode.clientWidth,
+                    kits = $('.' + this.params.suggestItemCls, this.suggestNode);
+
+                for (var i = 0 ; i < count ; i++) {
+                    if (kits[i].offsetWidth > suggestWidth && this.suggest[i].length > 1 && this.params.suggestItemOverflowedCls) {
+                        $(kits[i]).addClass(this.params.suggestItemOverflowedCls);
+                    }
                 }
             }
         },
@@ -855,7 +869,16 @@ var
     surt.fn.restoreCursor = function(n) {
         if (!window.getSelection) return; // IE8-
 
+        var self = this;
+
         // if (!node || typeof N == 'undefined') return;
+
+        if (self.inputNode.focus) {
+            setTimeout(function() {
+                self.inputNode.blur(); // f webkit
+                self.inputNode.focus(); // Костыль для возвращения фокуса в инпут
+            }, 0);
+        }
 
         var range = document.createRange(),
             selection = window.getSelection(),
