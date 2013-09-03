@@ -98,7 +98,9 @@
         }
 
         var partial = escape(this.text());
+        /* jshint -W044 */
         partial = '((>[^<]*|^[^<>]*))(' + partial + ')([\w -]*)';
+        /* jshint +W044 */
 
         return html.replace(new RegExp(partial, "i"), '$1<span class="' + this.params.selectionCls + '">$3</span>$4');
     };

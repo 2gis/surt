@@ -812,6 +812,43 @@ describe('События.', function() {
             suggest.dispose();
         });
 
+        it('Нажатие кнопки вниз когда сагеста нет', function() {
+            var x,
+                suggest = surt({
+                    root: '.wrapper_common .surt',
+                    input: '.surt__input',
+                    suggest: '.surt__suggests',
+                    suggestItemCls: 'surt__suggests-item',
+                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                    suggestCls: 'surt_dropdown_true',
+                    tokenCls: 'surt__token',
+                    textCls: 'surt__text',
+                    clone: '.surt__clone-main',
+                    autocomplete: '.surt__clone-hint',
+                    autocompleteCls: 'surt_autocomplete_true',
+                    change: function() {
+                        x++;
+                    }
+                });
+
+            suggest._activeSuggest = 0; // Не установлено при каких обстоятельствах на начальном этапе оно выставляется, но факт
+
+            x = 0;
+
+            var e;
+            e = jQuery.Event('keydown');
+            e.keyCode = 40; // Down
+            $('.wrapper_common .surt__input').trigger(e);
+            e = jQuery.Event('keydown');
+            e.keyCode = 39; // Down
+            $('.wrapper_common .surt__input').trigger(e);
+            e = jQuery.Event('keydown');
+            e.keyCode = 38; // Down
+            $('.wrapper_common .surt__input').trigger(e);
+            
+            suggest.dispose();
+        });
+
         // Не знаю как на это тест написать - проблема в эмуляции реального клика
         // it.only('Клико-выбор сагеста оставляет курсор в инпуте', function() {
         //     var x,

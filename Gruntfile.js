@@ -67,5 +67,5 @@ module.exports = function(grunt) {
     grunt.registerTask('test', ['mochacli', 'mocha-phantomjs']);
     grunt.registerTask('unit', ['mochacli']);
     grunt.registerTask('t', ['jshint', 'mochacli', 'mocha-phantomjs']);
-    grunt.registerTask('jshint', ['jshint']);
+    grunt.registerTask('js', ['jshint']);
 };

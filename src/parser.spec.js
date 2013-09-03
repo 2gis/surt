@@ -236,7 +236,7 @@ describe('Парсер текста.', function() {
         };
 
         // Обычный текст
-        var expected = parser.replace.call(obj, html);
+        expected = parser.replace.call(obj, html);
         assert(expected == 'р<span class="cls">ест</span>ораны', 'text');
 
         // Шаримся внутри html

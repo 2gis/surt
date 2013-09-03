@@ -287,6 +287,32 @@ describe('HTML.', function() {
                 }]
             });
         });
+
+        it('Выставляет модификатор count при наличии', function() {
+            $('.wrapper_common').html(originalHTML);
+            suggest = surt({
+                root: '.surt',
+                input: '.surt__input',
+                suggest: '.surt__suggests',
+                suggestItemCls: 'surt__suggests-item',
+                suggestCls: 'surt_dropdown_true',
+                tokenCls: 'surt__token',
+                textCls: 'surt__text',
+                suggestItemCountCls: 'count_mod_'
+            });
+
+            suggest.set({
+                suggest: [[{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }, {
+                    text: 'wifi',
+                    type: 'filter'
+                }]]
+            });
+
+            assert($('.surt__suggests .surt__suggests-item').eq(0).hasClass('count_mod_2'), 'Есть класс-модификатор count_mod_2');
+        });
     });
 
     describe('Метод parse', function() {

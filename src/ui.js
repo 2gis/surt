@@ -204,7 +204,7 @@ var
                     if (key == 40) {
                         index = 0;
 
-                        if (self._activeSuggest >= 0) {
+                        if (self._activeSuggest >= 0 && self.suggest) {
                             index = self._activeSuggest < self.suggest.length - 1 ? self._activeSuggest + 1 : 0;
                         }
 
@@ -215,9 +215,9 @@ var
 
                     // Стрелка вверх
                     if (key == 38) {
-                        index = self.suggest.length - 1;
+                        index = self.suggest && self.suggest.length - 1;
 
-                        if (self._activeSuggest >= 0) {
+                        if (self._activeSuggest >= 0 && self.suggest) {
                             index = self._activeSuggest > 0 ? self._activeSuggest - 1 : self.suggest.length - 1;
                         }
 
@@ -394,7 +394,8 @@ var
         updateSuggest: function() {
             var suggestHTML = [],
                 tokenCls = this.params.tokenCls,
-                textCls = this.params.textCls || tokenCls;
+                textCls = this.params.textCls || tokenCls,
+                count;
 
             if (this.suggest) {
                 for (var i = 0 ; i < this.suggest.length ; i++) {
@@ -429,7 +430,7 @@ var
                         }
                     }
 
-                    var count = kit.length;
+                    count = kit.length;
                     kit = kit.join(this.delimiter + ' ');
                     var countMod = '';
                     if (this.params.suggestItemCountCls) {
@@ -438,7 +439,7 @@ var
                     suggestHTML.push('<li class="' + this.params.suggestItemCls + countMod + '">' + kit + '</li>');
                     this._activeSuggest = -1;
                 }
-                var count = suggestHTML.length;
+                count = suggestHTML.length;
                 suggestHTML = suggestHTML.join('');
                 if (this.suggestNode) {
                     if (suggestHTML) $(this.root).addClass(this.params.suggestCls);
@@ -447,14 +448,14 @@ var
                 }
 
                 // Проверяем ширину сагестов и выставляем модификатор тем, которые шири
-                var suggestWidth = this.suggestNode.clientWidth,
-                    kits = $('.' + this.params.suggestItemCls, this.suggestNode);
+                // var suggestWidth = this.suggestNode.clientWidth,
+                //     kits = $('.' + this.params.suggestItemCls, this.suggestNode);
 
-                for (var i = 0 ; i < count ; i++) {
-                    if (kits[i].offsetWidth > suggestWidth && this.suggest[i].length > 1 && this.params.suggestItemOverflowedCls) {
-                        $(kits[i]).addClass(this.params.suggestItemOverflowedCls);
-                    }
-                }
+                // for (i = 0 ; i < count ; i++) {
+                //     if (kits[i].offsetWidth > suggestWidth && this.suggest[i].length > 1 && this.params.suggestItemOverflowedCls) {
+                //         $(kits[i]).addClass(this.params.suggestItemOverflowedCls);
+                //     }
+                // }
             }
         },
 
