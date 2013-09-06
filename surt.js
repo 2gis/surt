@@ -231,19 +231,19 @@ var
                         var length = self.text().length;
 
                         // Если курсор в крайне правом положении, делаем сет с новыми данными (довершаем автокомплит)
-                        if (self.getCursor() >= length ) {
+                        if (self.getCursor() >= length && self.suggest) {
                             var active = (self._activeSuggest == -1) ? 0 : self._activeSuggest;
 
                             data = self.args();
                             data.kit = self.suggest[active];
                             self.set(data, true);
-                            // self.restoreCursor(self.text().length); // != length
                         }
                     }
 
                     // Esc
                     if (key == 27) {
                         $(self.root).removeClass(self.params.suggestCls);
+                        e.preventDefault(); /* f opera 12 */
                     }
                 })
                 .on('paste', function() {
