@@ -234,10 +234,13 @@ var
 
                         // Если курсор в крайне правом положении и есть автокомплит, делаем сет с новыми данными (довершаем автокомплит)
                         if (self.getCursor() >= length && self.suggest) {
-                            var active = (self._activeSuggest == -1) ? 0 : self._activeSuggest,
+                            var active = self._activeSuggest,
                                 autocompleteActive = $(self.root).hasClass(self.params.autocompleteCls);
 
-                            if (autocompleteActive) {
+                            if (autocompleteActive || active != -1) {
+                                if (active == -1) {
+                                    active = 0;
+                                }
                                 data = self.args();
                                 data.kit = self.suggest[active];
                                 self.set(data, true);
