@@ -232,14 +232,16 @@ var
                     if (key == 39) {
                         var length = self.text().length;
 
-                        // Если курсор в крайне правом положении, делаем сет с новыми данными (довершаем автокомплит)
-                        if (self.getCursor() >= length ) {
-                            var active = (self._activeSuggest == -1) ? 0 : self._activeSuggest;
+                        // Если курсор в крайне правом положении и есть автокомплит, делаем сет с новыми данными (довершаем автокомплит)
+                        if (self.getCursor() >= length && self.suggest) {
+                            var active = (self._activeSuggest == -1) ? 0 : self._activeSuggest,
+                                autocompleteActive = $(self.root).hasClass(self.params.autocompleteCls);
 
-                            data = self.args();
-                            data.kit = self.suggest[active];
-                            self.set(data, true);
-                            self.restoreCursor(self.text().length); // != length
+                            if (autocompleteActive) {
+                                data = self.args();
+                                data.kit = self.suggest[active];
+                                self.set(data, true);
+                            }
                         }
                     }
 
