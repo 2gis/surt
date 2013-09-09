@@ -119,7 +119,6 @@ body {
                 cursor: pointer;
                 color: #9a9a9a;
                 }
-            .surt__suggests-item:hover,
             .surt__suggests-item.surt__suggests-item_state_current {
                 background: #e0f6fb;
                 background: rgba(13,165,215,.1);

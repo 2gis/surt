@@ -308,7 +308,7 @@ describe('События.', function() {
             // assert($('.wrapper_common .surt__clone-hint').html() == '', 'В автокомплите нет текста');
 
             e = jQuery.Event('keydown'); e.keyCode = 39; $('.surt__input').trigger(e); // Right
-            assert($('.wrapper_common .surt__input').html() == '<div class="surt__token surt__token_type_filter">Рестораны и кафе</div>', 'В инпут выставился именно второй сагест');
+            assert($('.wrapper_common .surt__input').html() == '<div class="surt__token surt__token_type_filter">Рестораны и кафе</div>', 'В инпут выставился именно второй сагест ' + $('.wrapper_common .surt__input').html());
             suggest.dispose();
         });
 
@@ -389,6 +389,90 @@ describe('События.', function() {
             assert(!$('.wrapper_common .surt__clone-hint').text(), 'Текста в автокомплите не должно быть');
             suggest.dispose();
         });
+
+        it('Если сагесты есть, есть активный сагест, но он не подходит для автокомплита, нажатие вправо не приводит к автокомплиту', function() {
+            var suggest = surt({
+                root: '.wrapper_input .surt',
+                input: '.surt__input',
+                suggest: '.surt__suggests',
+                suggestItemCls: 'surt__suggests-item',
+                suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                suggestCls: 'surt_dropdown_true',
+                tokenCls: 'surt__token',
+                textCls: 'surt__text',
+                clone: '.surt__clone-main',
+                autocomplete: '.surt__clone-hint',
+                autocompleteCls: 'surt_autocomplete_true'
+            });
+
+            dima = suggest;
+
+            suggest.set({
+                kit: [{
+                    text: 'ест',
+                    type: 'text'
+                }],
+                suggest: [[{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }], [{
+                    text: 'Рестораны и кафе',
+                    type: 'filter'
+                }]]
+            });
+
+            var e = jQuery.Event('keydown');
+            e.keyCode = 39; // Right arrow
+            $('.surt__input').trigger(e);
+
+            assert($('.wrapper_input .surt__input').val() == 'ест', 'Текст в инпуте не изменился');
+
+            suggest.dispose();
+        });
+
+        // it.only('При инициализации на диве restoreCursor работает', function() {
+        //     var suggest = surt({
+        //         root: '.wrapper_common .surt',
+        //         input: '.surt__input',
+        //         suggest: '.surt__suggests',
+        //         suggestItemCls: 'surt__suggests-item',
+        //         suggestItemCurrentCls: 'surt__suggests-item_state_current',
+        //         suggestCls: 'surt_dropdown_true',
+        //         tokenCls: 'surt__token',
+        //         textCls: 'surt__text',
+        //         clone: '.surt__clone-main',
+        //         autocomplete: '.surt__clone-hint',
+        //         autocompleteCls: 'surt_autocomplete_true'
+        //     });
+
+        //     dima = suggest;
+
+        //     suggest.set({
+        //         kit: [{
+        //             text: 'ест',
+        //             type: 'text'
+        //         }],
+        //         suggest: [[{
+        //             text: 'Ресторан',
+        //             type: 'rubric'
+        //         }], [{
+        //             text: 'Рестораны и кафе',
+        //             type: 'filter'
+        //         }]]
+        //     });
+
+        //     suggest.restoreCursor(999);
+
+        //     var cursorPos = suggest.saveCursor();
+
+        //     console.log(suggest.saveCursor());
+        //     setTimeout(function() {
+        //         console.log(suggest.saveCursor());
+        //         // assert(suggest.saveCursor() == 3, 'Курсор не прыгнул обратно в ноль')
+        //     }, 0);
+
+        //     suggest.dispose();
+        // });
     });
 
     describe('Выбор сагестов.', function() {
@@ -849,6 +933,159 @@ describe('События.', function() {
             suggest.dispose();
         });
 
+        it('Нажатие вниз 1 раз + наведение мышью на второй сагест приводит к его активации и деактивации первого', function() {
+            var suggest = surt({
+                    root: '.surt',
+                    input: '.surt__input',
+                    suggest: '.surt__suggests',
+                    suggestItemCls: 'surt__suggests-item',
+                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                    suggestCls: 'surt_dropdown_true',
+                    tokenCls: 'surt__token',
+                    textCls: 'surt__text',
+                    clone: '.surt__clone-main',
+                    autocomplete: '.surt__clone-hint',
+                    autocompleteCls: 'surt_autocomplete_true'
+                });
+
+            suggest.set({
+                kit: [{
+                    text: 'Ре',
+                    type: 'text'
+                }],
+                suggest: [[{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }], [{
+                    text: 'Резиденция',
+                    type: 'rubric'
+                }], [{
+                    text: 'Река',
+                    type: 'rubric'
+                }]]
+            });
+
+            var e = jQuery.Event('keydown');
+            e.keyCode = 40;
+            $('.surt__input').trigger(e); // Down
+
+            assert($('.surt__suggests-item').eq(0).hasClass('surt__suggests-item_state_current'), 'После нажатия вниз самый первый сагест становится активным');
+            assert($('.surt__clone-hint').text() == 'сторан', 'Автокомплит принадлежит первому сагесту');
+
+            e = jQuery.Event('mousemove');
+            $('.surt__suggests-item').eq(1).trigger(e); // Hover
+
+            assert(!$('.surt__suggests-item').eq(0).hasClass('surt__suggests-item_state_current'), 'После ховера первый сагест перестает быть активным');
+            assert($('.surt__suggests-item').eq(1).hasClass('surt__suggests-item_state_current'), 'После ховера второй сагест становится активным');
+            assert($('.surt__clone-hint').text() == 'зиденция', 'Автокомплит принадлежит второму сагесту');
+
+            suggest.dispose();
+        });
+
+        it('Наведение мыши на второй сагест + нажатие вниз приводит к активации третьего сагеста', function() {
+            var suggest = surt({
+                    root: '.surt',
+                    input: '.surt__input',
+                    suggest: '.surt__suggests',
+                    suggestItemCls: 'surt__suggests-item',
+                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                    suggestCls: 'surt_dropdown_true',
+                    tokenCls: 'surt__token',
+                    textCls: 'surt__text',
+                    clone: '.surt__clone-main',
+                    autocomplete: '.surt__clone-hint',
+                    autocompleteCls: 'surt_autocomplete_true'
+                });
+
+            suggest.set({
+                kit: [{
+                    text: 'Ре',
+                    type: 'text'
+                }],
+                suggest: [[{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }], [{
+                    text: 'Резиденция',
+                    type: 'rubric'
+                }], [{
+                    text: 'Река',
+                    type: 'rubric'
+                }]]
+            });
+
+            var e;
+
+            e = jQuery.Event('mousemove');
+            $('.surt__suggests-item').eq(1).trigger(e); // Hover
+
+            assert($('.surt__suggests-item').eq(1).hasClass('surt__suggests-item_state_current'), 'После ховера на второй, второй активируется');
+            assert(!$('.surt__suggests-item').eq(0).hasClass('surt__suggests-item_state_current'), 'После ховера на второй, первый деактивируется');
+            assert(!$('.surt__suggests-item').eq(2).hasClass('surt__suggests-item_state_current'), 'После ховера на второй, третий деактивируется');
+            assert($('.surt__clone-hint').text() == 'зиденция', 'Автокомплит принадлежит второму сагесту');
+
+            e = jQuery.Event('keydown');
+            e.keyCode = 40;
+            $('.surt__input').trigger(e); // Down
+
+            assert(!$('.surt__suggests-item').eq(0).hasClass('surt__suggests-item_state_current'), 'После нажатия внис со второго на третий, первый деактивируется');
+            assert(!$('.surt__suggests-item').eq(1).hasClass('surt__suggests-item_state_current'), 'После нажатия внис со второго на третий, второй деактивируется');
+            assert($('.surt__suggests-item').eq(2).hasClass('surt__suggests-item_state_current'), 'После нажатия внис со второго на третий, третий активируется');
+            assert($('.surt__clone-hint').text() == 'ка', 'Автокомплит принадлежит третьему сагесту');
+
+            suggest.dispose();
+        });
+
+        it('Наведение мыши на второй сагест + enter приводит к сабмиту второг сагеста', function() {
+            var submit,
+                suggest = surt({
+                    root: '.surt',
+                    input: '.surt__input',
+                    suggest: '.surt__suggests',
+                    suggestItemCls: 'surt__suggests-item',
+                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                    suggestCls: 'surt_dropdown_true',
+                    tokenCls: 'surt__token',
+                    textCls: 'surt__text',
+                    clone: '.surt__clone-main',
+                    autocomplete: '.surt__clone-hint',
+                    autocompleteCls: 'surt_autocomplete_true',
+                    submit: function(data) {
+                        submit = true;
+                    }
+                });
+
+            suggest.set({
+                kit: [{
+                    text: 'Ре',
+                    type: 'text'
+                }],
+                suggest: [[{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }], [{
+                    text: 'Резиденция',
+                    type: 'rubric'
+                }], [{
+                    text: 'Река',
+                    type: 'rubric'
+                }]]
+            });
+
+            var e;
+
+            e = jQuery.Event('mousemove');
+            $('.surt__suggests-item').eq(1).trigger(e); // Hover
+
+            e = jQuery.Event('keydown');
+            e.keyCode = 13;
+            $('.surt__input').trigger(e); // Enter
+
+            assert(submit, 'Был вызван сабмит');
+
+            suggest.dispose();
+        });
+
         // Не знаю как на это тест написать - проблема в эмуляции реального клика
         // it.only('Клико-выбор сагеста оставляет курсор в инпуте', function() {
         //     var x,
@@ -948,6 +1185,42 @@ describe('События.', function() {
             e.keyCode = 18;
             $('.surt__input').eq(0).trigger(e);
             assert(suggest.kit.length == 0);
+
+            suggest.dispose();
+        });
+
+        it('Если инициализация на инпуте - не должно быть html', function() {
+            var suggest = surt({
+                root: '.wrapper_input .surt',
+                input: '.surt__input',
+                suggest: '.surt__suggests',
+                suggestItemCls: 'surt__suggests-item',
+                suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                suggestCls: 'surt_dropdown_true',
+                tokenCls: 'surt__token',
+                textCls: 'surt__text',
+                clone: '.surt__clone-main',
+                autocomplete: '.surt__clone-hint',
+                autocompleteCls: 'surt_autocomplete_true'
+            });
+
+            dima = suggest;
+
+            suggest.set({
+                kit: [{
+                    text: 'ест',
+                    type: 'text'
+                }],
+                suggest: [[{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }], [{
+                    text: 'Рестораны и кафе',
+                    type: 'filter'
+                }]]
+            });
+
+            assert($('.wrapper_input .surt__input').val() == 'ест');
 
             suggest.dispose();
         });

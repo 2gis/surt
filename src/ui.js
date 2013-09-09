@@ -232,11 +232,14 @@ var
 
                         // Если курсор в крайне правом положении, делаем сет с новыми данными (довершаем автокомплит)
                         if (self.getCursor() >= length && self.suggest) {
-                            var active = (self._activeSuggest == -1) ? 0 : self._activeSuggest;
+                            var autocompleteActive = $(self.root).hasClass(self.params.autocompleteCls) || self._activeSuggest != -1,
+                                active = (self._activeSuggest == -1) ? 0 : self._activeSuggest;
 
-                            data = self.args();
-                            data.kit = self.suggest[active];
-                            self.set(data, true);
+                            if (autocompleteActive) {
+                                data = self.args();
+                                data.kit = self.suggest[active];
+                                self.set(data, true);
+                            }
                         }
                     }
 
@@ -276,8 +279,16 @@ var
                 }
             };
 
+            this._events.mousemove = function(e) {
+                var suggestsItems = $('.' + params.suggestItemCls),
+                    index = suggestsItems.index( $(this) );
+
+                self.markSuggest(index);
+            };
+
             $(this.root)
-                .on('mousedown', '.' + self.params.suggestItemCls, self._events.click); // Почему не клик??
+                .on('mousedown', '.' + self.params.suggestItemCls, self._events.click) // Почему не клик??
+                .on('mousemove', '.' + self.params.suggestItemCls, self._events.mousemove);
         },
 
         // true если новый кит по смыслу отличается от текущего
@@ -363,7 +374,7 @@ var
                 for (var i = 0 ; i < this.kit.length ; i++) {
                     var html = this.trim(this.kit[i].text); /* f ie8 */
 
-                    if (this.params.inputMode != 'text') {
+                    if (!this.textMode()) {
                         if (this.kit[i].type == "text" && textCls) {
                             left = '<div class="' + textCls + '">';
                             right = '</div>';
@@ -603,6 +614,10 @@ var
             var suggestsItems = $('.' + this.params.suggestItemCls),
                 currentCls = this.params.suggestItemCurrentCls;
 
+            if (index == undefined) {
+                index = this._activeSuggest;
+            }
+
             suggestsItems.removeClass(currentCls); // Удаляем со всех сагестов класс текущности
             if (index >= 0) {
                 suggestsItems.eq(index).addClass(currentCls); // Если индекс не отрицательный - добавляем класс на текущий кит сагеста
@@ -649,6 +664,11 @@ var
             } else {
                 return str.replace(/^\s+|\s+$/g, '');
             }
+        },
+
+        // Возвращает true, если работа ведется в текстовом режиме
+        textMode: function() {
+            return this.inputNode.tagName == 'INPUT' || this.params.inputMode == 'text';
         }
     };
 
