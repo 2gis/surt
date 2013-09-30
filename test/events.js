@@ -68,6 +68,7 @@ describe('События.', function() {
         });
 
         it('При не крайне правой позиции курсора нажатие стрелки вправо не приводит к автокомплиту (text mode & input)', function() {
+            var completed;
             var suggest = surt({
                 root: '.wrapper_input .surt',
                 input: '.surt__input',
@@ -83,7 +84,10 @@ describe('События.', function() {
                 autocompleteCls: 'surt_autocomplete_true',
                 readyCls: 'surt_ready_true',
                 stateFocusCls: 'surt_state_focus',
-                delimiter: ','
+                delimiter: ',',
+                complete: function() {
+                    completed = true;
+                }
             });
 
             suggest.set({
@@ -109,6 +113,7 @@ describe('События.', function() {
             var text = $('.wrapper_input .surt__input').val();
 
             // assert(html == text);
+            assert(completed, 'Был вызван метод complete');
             suggest.dispose();
         });
 
@@ -480,6 +485,7 @@ describe('События.', function() {
             var x = 0,
                 y = 0,
                 submit = false,
+                shown,
                 suggest = surt({
                     root: '.surt',
                     input: '.surt__input',
@@ -498,6 +504,9 @@ describe('События.', function() {
                     pick: function(kit, c) {
                         y += 10;
                         submit = c;
+                    },
+                    show: function(s) {
+                        shown = s;
                     }
                 });
 
@@ -528,6 +537,7 @@ describe('События.', function() {
             assert(y == 10, 'Был вызван метод pick');
             assert(submit, 'Был вызван метод pick причем второй аргумент был true');
             assert(x == 11, 'Был вызван метод submit');
+            assert(submit === true, 'Был вызван метод show');
             suggest.dispose();
         });
 

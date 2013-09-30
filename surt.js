@@ -235,10 +235,13 @@ var
                             var autocompleteActive = $(self.root).hasClass(self.params.autocompleteCls) || self._activeSuggest != -1,
                                 active = (self._activeSuggest == -1) ? 0 : self._activeSuggest;
 
-                            if (autocompleteActive) {
+                            if (autocompleteActive) { // Автокомплит есть и его надо подставить
                                 data = self.args();
                                 data.kit = self.suggest[active];
                                 self.set(data, true);
+                                if (self.params.complete) { // Для статистики
+                                    self.params.complete();
+                                }
                             }
                         }
                     }
@@ -255,9 +258,17 @@ var
                     }, 0);
                 })
                 .on('focus click', function() {
+                    var had = $(self.root).hasClass(self.params.suggestCls);
+
                     $(self.root).addClass(self.params.stateFocusCls);
                     $(self.root).addClass(self.params.suggestCls);
                     self.updateAutocomplete();
+
+                    if (!had) { // Произошла именно инверсия показа сагеста, а не очередной показ
+                        if (self.params.show) {
+                            self.params.show(self._suggestExist);
+                        }
+                    }
                 })
                 .on('blur', function() {
                     $(self.root).removeClass(self.params.stateFocusCls);
@@ -406,17 +417,21 @@ var
             var suggestHTML = [],
                 tokenCls = this.params.tokenCls,
                 textCls = this.params.textCls || tokenCls,
-                count;
+                count,
+                beforeState = !this._suggestExist;
 
-            if (this.suggest) {
+            this._suggestExist = !!(this.suggest && this.suggest.length);
+            if (this._suggestExist) {
+                if (beforeState) { // Произошла именно инверсия показа сагеста, а не очередной показ
+                    if (this.params.show) {
+                        this.params.show(this._suggestExist);
+                    }
+                }
+
                 for (var i = 0 ; i < this.suggest.length ; i++) {
                     var kit = [];
 
                     for (var j = 0 ; j < this.suggest[i].length ; j++) {
-                        // function espape(text) {
-                        //     return String(text).replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
-                        // }
-
                         var html = this.suggest[i][j].html || this.suggest[i][j].text;
 
                         html = this.trim(html); /* f ie8 */
@@ -896,12 +911,12 @@ var
 
         // if (!node || typeof N == 'undefined') return;
 
-        if (self.inputNode.focus) {
-            setTimeout(function() {
-                self.inputNode.blur(); // f webkit
-                self.inputNode.focus(); // Костыль для возвращения фокуса в инпут
-            }, 0);
-        }
+        // if (self.inputNode.focus) {
+        //     setTimeout(function() {
+        //         self.inputNode.blur(); // f webkit
+        //         self.inputNode.focus(); // Костыль для возвращения фокуса в инпут
+        //     }, 0);
+        // }
 
         var range = document.createRange(),
             selection = window.getSelection(),

@@ -92,12 +92,12 @@
 
         // if (!node || typeof N == 'undefined') return;
 
-        if (self.inputNode.focus) {
-            setTimeout(function() {
-                self.inputNode.blur(); // f webkit
-                self.inputNode.focus(); // Костыль для возвращения фокуса в инпут
-            }, 0);
-        }
+        // if (self.inputNode.focus) {
+        //     setTimeout(function() {
+        //         self.inputNode.blur(); // f webkit
+        //         self.inputNode.focus(); // Костыль для возвращения фокуса в инпут
+        //     }, 0);
+        // }
 
         var range = document.createRange(),
             selection = window.getSelection(),
