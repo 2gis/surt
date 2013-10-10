@@ -541,7 +541,7 @@ describe('События.', function() {
             suggest.dispose();
         });
 
-        it.only('Удаление сагестов и их повторное заполнение приводит к повторному срабатыванию show', function() {
+        it('Удаление сагестов и их повторное заполнение приводит к повторному срабатыванию show', function() {
             var x = 0,
                 y = 0,
                 submit = false,
@@ -559,7 +559,6 @@ describe('События.', function() {
                     autocomplete: '.surt__clone-hint',
                     autocompleteCls: 'surt_autocomplete_true',
                     show: function(s) {
-                        console.log('s', s);
                         if (s) {
                             shown++;
                         }
@@ -595,6 +594,43 @@ describe('События.', function() {
             });
 
             assert(shown === 2, 'Был вызван метод show второй раз');
+
+            suggest.dispose();
+        });
+
+        it('Фокус на поле при пустом сагесте не приводит к show', function() {
+            var x = 0,
+                y = 0,
+                submit = false,
+                shown = 0,
+                suggest = surt({
+                    root: '.surt',
+                    input: '.surt__input',
+                    suggest: '.surt__suggests',
+                    suggestItemCls: 'surt__suggests-item',
+                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                    suggestCls: 'surt_dropdown_true',
+                    tokenCls: 'surt__token',
+                    textCls: 'surt__text',
+                    clone: '.surt__clone-main',
+                    autocomplete: '.surt__clone-hint',
+                    autocompleteCls: 'surt_autocomplete_true',
+                    show: function(s) {
+                        if (s) {
+                            shown++;
+                        }
+                    }
+                });
+
+            $('.surt__input').focus();
+
+            suggest.set({
+                suggest: []
+            });
+
+            $('.surt__input').blur().focus();
+
+            assert(shown === 0, 'show не был вызван ни разу');
 
             suggest.dispose();
         });
