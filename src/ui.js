@@ -421,11 +421,11 @@ var
                 beforeState = !this._suggestExist;
 
             this._suggestExist = !!(this.suggest && this.suggest.length);
-            if (this._suggestExist) {
-                if (beforeState) { // Произошла именно инверсия показа сагеста, а не очередной показ
-                    if (this.params.show) {
-                        this.params.show(this._suggestExist);
-                    }
+            if (this.suggest) {
+                var inversed = beforeState && this._suggestExist;
+
+                if (inversed && this.params.show) { // Произошла именно инверсия показа сагеста, а не очередной показ
+                    this.params.show(this._suggestExist);
                 }
 
                 for (var i = 0 ; i < this.suggest.length ; i++) {

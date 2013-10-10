@@ -542,10 +542,7 @@ describe('События.', function() {
         });
 
         it('Удаление сагестов и их повторное заполнение приводит к повторному срабатыванию show', function() {
-            var x = 0,
-                y = 0,
-                submit = false,
-                shown = 0,
+            var shown = 0,
                 suggest = surt({
                     root: '.surt',
                     input: '.surt__input',
@@ -631,6 +628,42 @@ describe('События.', function() {
             $('.surt__input').blur().focus();
 
             assert(shown === 0, 'show не был вызван ни разу');
+
+            suggest.dispose();
+        });
+
+        it('Установка сагеста [] приводит к его удалению', function() {
+            var suggest = surt({
+                    root: '.wrapper_common .surt',
+                    input: '.surt__input',
+                    suggest: '.surt__suggests',
+                    suggestItemCls: 'surt__suggests-item',
+                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                    suggestCls: 'surt_dropdown_true',
+                    tokenCls: 'surt__token',
+                    textCls: 'surt__text',
+                    clone: '.surt__clone-main',
+                    autocomplete: '.surt__clone-hint',
+                    autocompleteCls: 'surt_autocomplete_true'
+                });
+
+            suggest.set({
+                suggest: [[{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }], [{
+                    text: 'wifi',
+                    type: 'filter'
+                }]]
+            });
+
+            assert($('.wrapper_common .surt__suggests-item').length > 0, 'После установки есть два итема сагеста ' + $('.wrapper_common .surt__suggests-item').length);
+
+            suggest.set({
+                suggest: []
+            });
+
+            assert($('.wrapper_common .surt__suggests-item').length == 0, 'После установки [] у сагеста нет ни одного итема (мы удалили их) ' + $('.wrapper_common .surt__suggests-item').length);
 
             suggest.dispose();
         });
