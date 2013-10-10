@@ -633,7 +633,8 @@ describe('События.', function() {
         });
 
         it('Установка сагеста [] приводит к его удалению', function() {
-            var suggest = surt({
+            var shown,
+                suggest = surt({
                     root: '.wrapper_common .surt',
                     input: '.surt__input',
                     suggest: '.surt__suggests',
@@ -644,7 +645,10 @@ describe('События.', function() {
                     textCls: 'surt__text',
                     clone: '.surt__clone-main',
                     autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true'
+                    autocompleteCls: 'surt_autocomplete_true',
+                    show: function(e) {
+                        shown = e;
+                    }
                 });
 
             suggest.set({
@@ -658,12 +662,14 @@ describe('События.', function() {
             });
 
             assert($('.wrapper_common .surt__suggests-item').length > 0, 'После установки есть два итема сагеста ' + $('.wrapper_common .surt__suggests-item').length);
+            assert(shown, 'Был вызван show с параметром true');
 
             suggest.set({
                 suggest: []
             });
 
             assert($('.wrapper_common .surt__suggests-item').length == 0, 'После установки [] у сагеста нет ни одного итема (мы удалили их) ' + $('.wrapper_common .surt__suggests-item').length);
+            assert(!shown, 'Был вызван show с параметром false');
 
             suggest.dispose();
         });

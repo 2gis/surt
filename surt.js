@@ -422,7 +422,7 @@ var
 
             this._suggestExist = !!(this.suggest && this.suggest.length);
             if (this.suggest) {
-                var inversed = beforeState && this._suggestExist;
+                var inversed = !(beforeState ^ this._suggestExist);
 
                 if (inversed && this.params.show) { // Произошла именно инверсия показа сагеста, а не очередной показ
                     this.params.show(this._suggestExist);
