@@ -239,7 +239,7 @@ var
                                 data = self.args();
                                 data.kit = self.suggest[active];
                                 self.set(data, true);
-                                if (self.params.complete) { // Для статистики
+                                if (self.suggest && self.suggest.length && self.params.complete) { // Для статистики
                                     self.params.complete();
                                 }
                             }
@@ -258,13 +258,13 @@ var
                     }, 0);
                 })
                 .on('focus click', function() {
-                    var had = $(self.root).hasClass(self.params.suggestCls);
+                    var noBefore = !$(self.root).hasClass(self.params.suggestCls);
 
                     $(self.root).addClass(self.params.stateFocusCls);
                     $(self.root).addClass(self.params.suggestCls);
                     self.updateAutocomplete();
 
-                    if (!had) { // Произошла именно инверсия показа сагеста, а не очередной показ
+                    if (noBefore) { // Произошла именно инверсия показа сагеста, а не очередной показ
                         if (self.params.show) {
                             self.params.show(self._suggestExist);
                         }
