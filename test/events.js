@@ -1229,6 +1229,53 @@ describe('События.', function() {
             suggest.dispose();
         });
 
+        it('Если дошли до сагеста и продолжили ввод - сагест должен подставиться + пробел', function() {
+            var suggest = surt({
+                    root: '.surt',
+                    input: '.surt__input',
+                    suggest: '.surt__suggests',
+                    suggestItemCls: 'surt__suggests-item',
+                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                    suggestCls: 'surt_dropdown_true',
+                    tokenCls: 'surt__token',
+                    textCls: 'surt__text',
+                    clone: '.surt__clone-main',
+                    autocomplete: '.surt__clone-hint',
+                    autocompleteCls: 'surt_autocomplete_true'
+                });
+
+            suggest.set({
+                kit: [{
+                    text: 'Ре',
+                    type: 'text'
+                }],
+                suggest: [[{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }], [{
+                    text: 'Резиденция',
+                    type: 'rubric'
+                }], [{
+                    text: 'Река',
+                    type: 'rubric'
+                }]]
+            });
+
+            var e = jQuery.Event('keydown');
+            e.keyCode = 40;
+            $('.surt__input').trigger(e); // Down
+
+            e = jQuery.Event('keyup');
+            e.keyCode = 65; // a
+            $('.surt__input').trigger(e); // Up
+
+            text = $('.surt__input').text();
+
+            assert(text == 'Ресторан е', 'сагест подставился');
+
+            suggest.dispose();
+        });
+
         // Не знаю как на это тест написать - проблема в эмуляции реального клика
         // it.only('Клико-выбор сагеста оставляет курсор в инпуте', function() {
         //     var x,

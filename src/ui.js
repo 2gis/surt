@@ -132,6 +132,8 @@ var
 
                 if (params.pick) params.pick(data.kit, submit);
 
+                self.markSuggest(-1); // Снимаем выделение с сагестов
+
                 // self.restoreCursor(self.text().length);
             }
 
@@ -154,6 +156,19 @@ var
 
                     if ((key == 40 || key == 38) && $(self.root).hasClass(params.suggestCls) ) {
                         return;
+                    }
+
+                    // Если есть активный автокомплит, при дальнейшем наборе его нужно сначала подставить
+                    if (self.suggest && self.suggest[self._activeSuggest]) {
+                        var text = self.text(),
+                            newChar = text.charAt(text.length - 1);
+
+                        pickSuggest();
+
+                        var newText = self.text() + self.delimiter + ' ' + newChar;
+
+                        self.text(newText);
+                        self.restoreCursor(newText.length);
                     }
 
                     self.updateInput();
@@ -629,7 +644,7 @@ var
             var suggestsItems = $('.' + this.params.suggestItemCls),
                 currentCls = this.params.suggestItemCurrentCls;
 
-            if (index == undefined) {
+            if (index === undefined) {
                 index = this._activeSuggest;
             }
 
@@ -639,6 +654,8 @@ var
                 this._activeSuggest = index;
                 this.updateAutocomplete();
             }
+
+            this._activeSuggest = index;
         },
 
         // Возвращает нетокенные ошметки типа ", "
