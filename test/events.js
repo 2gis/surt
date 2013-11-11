@@ -1,6 +1,7 @@
 describe('События.', function() {
     beforeEach(function() {
         $('.wrapper_common').html(originalHTML);
+        $('.wrapper_input').html(simpleHTML);
     });
 
     it('Параметр change', function() {
@@ -410,8 +411,6 @@ describe('События.', function() {
                 autocompleteCls: 'surt_autocomplete_true'
             });
 
-            dima = suggest;
-
             suggest.set({
                 kit: [{
                     text: 'ест',
@@ -478,6 +477,47 @@ describe('События.', function() {
 
         //     suggest.dispose();
         // });
+
+        it('В автокомплит не выводится ничего если суммарно текст длиннее aunt', function() {
+            var suggest = surt({
+                root: '.wrapper_input .surt',
+                input: '.surt__input',
+                suggest: '.surt__suggests',
+                suggestItemCls: 'surt__suggests-item',
+                suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                suggestCls: 'surt_dropdown_true',
+                tokenCls: 'surt__token',
+                textCls: 'surt__text',
+                clone: '.surt__clone-main',
+                autocomplete: '.surt__clone-hint',
+                autocompleteCls: 'surt_autocomplete_true',
+                aunt: 3
+            });
+
+            suggest.set({
+                kit: [{
+                    text: 'Ре',
+                    type: 'text'
+                }],
+                suggest: [[{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }], [{
+                    text: 'Рестораны и кафе',
+                    type: 'filter'
+                }]]
+            });
+
+            var e = jQuery.Event('keydown');
+            e.keyCode = 40; // Down
+            $('.surt__input').trigger(e);
+            e = jQuery.Event('keydown');
+            e.keyCode = 40; // Down
+            $('.surt__input').trigger(e);
+
+            assert($('.wrapper_input .surt__clone-hint').text() == '', 'Текста в автокомплитере нет');
+            suggest.dispose();
+        });
     });
 
     describe('Выбор сагестов.', function() {
@@ -757,6 +797,7 @@ describe('События.', function() {
             $('.wrapper_common .surt .surt__suggests').append('dima');
 
             var e = jQuery.Event('keydown');
+            // debugger
 
             e = jQuery.Event('keydown'); e.keyCode = 40; $('.surt__input').trigger(e); // Down
             e = jQuery.Event('keydown'); e.keyCode = 40; $('.surt__input').trigger(e); // Down keydown
@@ -771,7 +812,7 @@ describe('События.', function() {
             e.keyCode = 13;
             $('.surt__input').trigger(e); // Enter
 
-            assert($('.surt__input').html() == '<div class="surt__token surt__token_type_rubric">Ресторан</div>');
+            assert($('.surt__input').html() == '<div class="surt__token surt__token_type_rubric">Ресторан</div>', 'HTML совпадает: ' + $('.surt__input').html());
             assert($('.wrapper_common .surt__suggests').html() == '<li class="surt__suggests-item"><div class="surt__token surt__token_type_rubric">Ресторан</div></li><li class="surt__suggests-item"><div class="surt__token surt__token_type_filter">wifi</div></li>dima', 'HTML из сагестов не перезаписан');
             suggest.dispose();
         });
@@ -1272,6 +1313,53 @@ describe('События.', function() {
             text = $('.surt__input').text();
 
             assert(text == 'Ресторан е', 'сагест подставился');
+
+            suggest.dispose();
+        });
+
+        it('Если дошли до сагеста и продолжили ввод - сагест должен подставиться + пробел, но на backspace реакции быть не должно', function() {
+            var suggest = surt({
+                    root: '.surt',
+                    input: '.surt__input',
+                    suggest: '.surt__suggests',
+                    suggestItemCls: 'surt__suggests-item',
+                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                    suggestCls: 'surt_dropdown_true',
+                    tokenCls: 'surt__token',
+                    textCls: 'surt__text',
+                    clone: '.surt__clone-main',
+                    autocomplete: '.surt__clone-hint',
+                    autocompleteCls: 'surt_autocomplete_true'
+                });
+
+            suggest.set({
+                kit: [{
+                    text: 'Ре',
+                    type: 'text'
+                }],
+                suggest: [[{
+                    text: 'Ресторан',
+                    type: 'rubric'
+                }], [{
+                    text: 'Резиденция',
+                    type: 'rubric'
+                }], [{
+                    text: 'Река',
+                    type: 'rubric'
+                }]]
+            });
+
+            var e = jQuery.Event('keydown');
+            e.keyCode = 40;
+            $('.surt__input').trigger(e); // Down
+
+            e = jQuery.Event('keyup');
+            e.keyCode = 8; // Backspace
+            $('.surt__input').trigger(e);
+
+            text = $('.surt__input').text();
+
+            assert(text == 'Ре', 'сагест не подставился, текст в инпуте: ' + text);
 
             suggest.dispose();
         });

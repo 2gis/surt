@@ -5,7 +5,8 @@ var
     defaultParams = {
         input: '.surt__input',
         suggest: '.surt__suggests',
-        suggestItemCls: 'surt__suggests-item'
+        suggestItemCls: 'surt__suggests-item',
+        aunt: 99
     };
 
     function spaces(text) {
@@ -139,8 +140,8 @@ var
 
             // Если нажата не буква - возвращает true
             function isControlKey(key) {
-                // Left, Right, Shift, Left Ctrl, Right Ctrl, Cmd, End, Home, Enter
-                return key == 37 || key == 39 || key == 16 || key == 17 || key == 18 || key == 91 || key == 35 || key == 36 || key == 13;
+                // Left, Right, Shift, Left Ctrl, Right Ctrl, Cmd, End, Home, Enter, Backspace
+                return key == 37 || key == 39 || key == 16 || key == 17 || key == 18 || key == 91 || key == 35 || key == 36 || key == 13 || key == 8;
             }
 
             // Навешиваем все необходимые события
@@ -159,7 +160,7 @@ var
                     }
 
                     // Если есть активный автокомплит, при дальнейшем наборе его нужно сначала подставить
-                    if (self.suggest && self.suggest[self._activeSuggest]) {
+                    if (self.suggest && self.suggest[self._activeSuggest] && !isControlKey(key)) {
                         var text = self.text(),
                             newChar = text.charAt(text.length - 1);
 
@@ -537,7 +538,7 @@ var
 
                     this.autocompleteNode.innerHTML = suggestText.slice(text.length);
                     this.cloneNode.innerHTML = this.html();
-                    if ($(this.root).hasClass(this.params.suggestCls) && isAutocomplete) {
+                    if ($(this.root).hasClass(this.params.suggestCls) && isAutocomplete && suggestText.length < this.params.aunt) {
                         $(this.root).addClass(this.params.autocompleteCls);
                     } else { // Сагесты свернуты, либо текущий не является автокомплитом
                         rmAutocomplete();
