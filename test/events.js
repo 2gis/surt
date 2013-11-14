@@ -1117,108 +1117,108 @@ describe('События.', function() {
             suggest.dispose();
         });
 
-        it('Нажатие вниз 1 раз + наведение мышью на второй сагест приводит к его активации и деактивации первого', function() {
-            var suggest = surt({
-                    root: '.surt',
-                    input: '.surt__input',
-                    suggest: '.surt__suggests',
-                    suggestItemCls: 'surt__suggests-item',
-                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
-                    tokenCls: 'surt__token',
-                    textCls: 'surt__text',
-                    clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true'
-                });
+        // it('Нажатие вниз 1 раз + наведение мышью на второй сагест приводит к его активации и деактивации первого', function() {
+        //     var suggest = surt({
+        //             root: '.surt',
+        //             input: '.surt__input',
+        //             suggest: '.surt__suggests',
+        //             suggestItemCls: 'surt__suggests-item',
+        //             suggestItemCurrentCls: 'surt__suggests-item_state_current',
+        //             suggestCls: 'surt_dropdown_true',
+        //             tokenCls: 'surt__token',
+        //             textCls: 'surt__text',
+        //             clone: '.surt__clone-main',
+        //             autocomplete: '.surt__clone-hint',
+        //             autocompleteCls: 'surt_autocomplete_true'
+        //         });
 
-            suggest.set({
-                kit: [{
-                    text: 'Ре',
-                    type: 'text'
-                }],
-                suggest: [[{
-                    text: 'Ресторан',
-                    type: 'rubric'
-                }], [{
-                    text: 'Резиденция',
-                    type: 'rubric'
-                }], [{
-                    text: 'Река',
-                    type: 'rubric'
-                }]]
-            });
+        //     suggest.set({
+        //         kit: [{
+        //             text: 'Ре',
+        //             type: 'text'
+        //         }],
+        //         suggest: [[{
+        //             text: 'Ресторан',
+        //             type: 'rubric'
+        //         }], [{
+        //             text: 'Резиденция',
+        //             type: 'rubric'
+        //         }], [{
+        //             text: 'Река',
+        //             type: 'rubric'
+        //         }]]
+        //     });
 
-            var e = jQuery.Event('keydown');
-            e.keyCode = 40;
-            $('.surt__input').trigger(e); // Down
+        //     var e = jQuery.Event('keydown');
+        //     e.keyCode = 40;
+        //     $('.surt__input').trigger(e); // Down
 
-            assert($('.surt__suggests-item').eq(0).hasClass('surt__suggests-item_state_current'), 'После нажатия вниз самый первый сагест становится активным');
-            assert($('.surt__clone-hint').text() == 'сторан', 'Автокомплит принадлежит первому сагесту');
+        //     assert($('.surt__suggests-item').eq(0).hasClass('surt__suggests-item_state_current'), 'После нажатия вниз самый первый сагест становится активным');
+        //     assert($('.surt__clone-hint').text() == 'сторан', 'Автокомплит принадлежит первому сагесту');
 
-            e = jQuery.Event('mousemove');
-            $('.surt__suggests-item').eq(1).trigger(e); // Hover
+        //     e = jQuery.Event('mousemove');
+        //     $('.surt__suggests-item').eq(1).trigger(e); // Hover
 
-            assert(!$('.surt__suggests-item').eq(0).hasClass('surt__suggests-item_state_current'), 'После ховера первый сагест перестает быть активным');
-            assert($('.surt__suggests-item').eq(1).hasClass('surt__suggests-item_state_current'), 'После ховера второй сагест становится активным');
-            assert($('.surt__clone-hint').text() == 'зиденция', 'Автокомплит принадлежит второму сагесту');
+        //     assert(!$('.surt__suggests-item').eq(0).hasClass('surt__suggests-item_state_current'), 'После ховера первый сагест перестает быть активным');
+        //     assert($('.surt__suggests-item').eq(1).hasClass('surt__suggests-item_state_current'), 'После ховера второй сагест становится активным');
+        //     assert($('.surt__clone-hint').text() == 'зиденция', 'Автокомплит принадлежит второму сагесту');
 
-            suggest.dispose();
-        });
+        //     suggest.dispose();
+        // });
 
-        it('Наведение мыши на второй сагест + нажатие вниз приводит к активации третьего сагеста', function() {
-            var suggest = surt({
-                    root: '.surt',
-                    input: '.surt__input',
-                    suggest: '.surt__suggests',
-                    suggestItemCls: 'surt__suggests-item',
-                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
-                    tokenCls: 'surt__token',
-                    textCls: 'surt__text',
-                    clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true'
-                });
+        // it('Наведение мыши на второй сагест + нажатие вниз приводит к активации третьего сагеста', function() {
+        //     var suggest = surt({
+        //             root: '.surt',
+        //             input: '.surt__input',
+        //             suggest: '.surt__suggests',
+        //             suggestItemCls: 'surt__suggests-item',
+        //             suggestItemCurrentCls: 'surt__suggests-item_state_current',
+        //             suggestCls: 'surt_dropdown_true',
+        //             tokenCls: 'surt__token',
+        //             textCls: 'surt__text',
+        //             clone: '.surt__clone-main',
+        //             autocomplete: '.surt__clone-hint',
+        //             autocompleteCls: 'surt_autocomplete_true'
+        //         });
 
-            suggest.set({
-                kit: [{
-                    text: 'Ре',
-                    type: 'text'
-                }],
-                suggest: [[{
-                    text: 'Ресторан',
-                    type: 'rubric'
-                }], [{
-                    text: 'Резиденция',
-                    type: 'rubric'
-                }], [{
-                    text: 'Река',
-                    type: 'rubric'
-                }]]
-            });
+        //     suggest.set({
+        //         kit: [{
+        //             text: 'Ре',
+        //             type: 'text'
+        //         }],
+        //         suggest: [[{
+        //             text: 'Ресторан',
+        //             type: 'rubric'
+        //         }], [{
+        //             text: 'Резиденция',
+        //             type: 'rubric'
+        //         }], [{
+        //             text: 'Река',
+        //             type: 'rubric'
+        //         }]]
+        //     });
 
-            var e;
+        //     var e;
 
-            e = jQuery.Event('mousemove');
-            $('.surt__suggests-item').eq(1).trigger(e); // Hover
+        //     e = jQuery.Event('mousemove');
+        //     $('.surt__suggests-item').eq(1).trigger(e); // Hover
 
-            assert($('.surt__suggests-item').eq(1).hasClass('surt__suggests-item_state_current'), 'После ховера на второй, второй активируется');
-            assert(!$('.surt__suggests-item').eq(0).hasClass('surt__suggests-item_state_current'), 'После ховера на второй, первый деактивируется');
-            assert(!$('.surt__suggests-item').eq(2).hasClass('surt__suggests-item_state_current'), 'После ховера на второй, третий деактивируется');
-            assert($('.surt__clone-hint').text() == 'зиденция', 'Автокомплит принадлежит второму сагесту');
+        //     assert($('.surt__suggests-item').eq(1).hasClass('surt__suggests-item_state_current'), 'После ховера на второй, второй активируется');
+        //     assert(!$('.surt__suggests-item').eq(0).hasClass('surt__suggests-item_state_current'), 'После ховера на второй, первый деактивируется');
+        //     assert(!$('.surt__suggests-item').eq(2).hasClass('surt__suggests-item_state_current'), 'После ховера на второй, третий деактивируется');
+        //     assert($('.surt__clone-hint').text() == 'зиденция', 'Автокомплит принадлежит второму сагесту');
 
-            e = jQuery.Event('keydown');
-            e.keyCode = 40;
-            $('.surt__input').trigger(e); // Down
+        //     e = jQuery.Event('keydown');
+        //     e.keyCode = 40;
+        //     $('.surt__input').trigger(e); // Down
 
-            assert(!$('.surt__suggests-item').eq(0).hasClass('surt__suggests-item_state_current'), 'После нажатия внис со второго на третий, первый деактивируется');
-            assert(!$('.surt__suggests-item').eq(1).hasClass('surt__suggests-item_state_current'), 'После нажатия внис со второго на третий, второй деактивируется');
-            assert($('.surt__suggests-item').eq(2).hasClass('surt__suggests-item_state_current'), 'После нажатия внис со второго на третий, третий активируется');
-            assert($('.surt__clone-hint').text() == 'ка', 'Автокомплит принадлежит третьему сагесту');
+        //     assert(!$('.surt__suggests-item').eq(0).hasClass('surt__suggests-item_state_current'), 'После нажатия внис со второго на третий, первый деактивируется');
+        //     assert(!$('.surt__suggests-item').eq(1).hasClass('surt__suggests-item_state_current'), 'После нажатия внис со второго на третий, второй деактивируется');
+        //     assert($('.surt__suggests-item').eq(2).hasClass('surt__suggests-item_state_current'), 'После нажатия внис со второго на третий, третий активируется');
+        //     assert($('.surt__clone-hint').text() == 'ка', 'Автокомплит принадлежит третьему сагесту');
 
-            suggest.dispose();
-        });
+        //     suggest.dispose();
+        // });
 
         it('Наведение мыши на второй сагест + enter приводит к сабмиту второг сагеста', function() {
             var submit,

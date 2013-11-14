@@ -118,7 +118,7 @@ var
 
             // Выбрать сагест и принудительно затолкать его в инпут
             // submit true если синхронно за выбором следует сабмит
-            function pickSuggest(submit) {
+            function pickSuggest(submit, e) {
                 var data = self.args(),
                     suggest = self.params.selectionCls ? data.suggest : undefined; // Насильно обновляем сагест если могло поменяться выделение selectionCls
 
@@ -131,7 +131,7 @@ var
 
                 // self.restoreCursor(self.text().length); // Крайне правое положение
 
-                if (params.pick) params.pick(data.kit, submit);
+                if (params.pick) params.pick(data.kit, submit, e);
 
                 self.markSuggest(-1); // Снимаем выделение с сагестов
 
@@ -164,7 +164,7 @@ var
                         var text = self.text(),
                             newChar = text.charAt(text.length - 1);
 
-                        pickSuggest();
+                        pickSuggest(false, e);
 
                         var newText = self.text() + self.delimiter + ' ' + newChar;
 
@@ -202,7 +202,7 @@ var
                         e.preventDefault();
 
                         if ( $(self.root).hasClass(params.suggestCls) && $('.' + params.suggestItemCurrentCls).length ) {
-                            pickSuggest(true);
+                            pickSuggest(true, e);
                         }
                         // Здесь сабмит
                         if (self.params.submit) {
@@ -298,7 +298,7 @@ var
                     index = suggestsItems.index( $(this) );
 
                 self._activeSuggest = index;
-                pickSuggest();
+                pickSuggest(false, e);
                 if (self.params.change) self.params.change(e, self.args());
 
                 if (!$(e.target).closest(self.params.suggestItemCls).length) {
@@ -306,16 +306,16 @@ var
                 }
             };
 
-            this._events.mousemove = function(e) {
-                var suggestsItems = $('.' + params.suggestItemCls),
-                    index = suggestsItems.index( $(this) );
+            // this._events.mousemove = function(e) {
+            //     var suggestsItems = $('.' + params.suggestItemCls),
+            //         index = suggestsItems.index( $(this) );
 
-                self.markSuggest(index);
-            };
+            //     self.markSuggest(index);
+            // };
 
             $(this.root)
-                .on('mousedown', '.' + self.params.suggestItemCls, self._events.click) // Почему не клик??
-                .on('mousemove', '.' + self.params.suggestItemCls, self._events.mousemove);
+                .on('mousedown', '.' + self.params.suggestItemCls, self._events.click); // Почему не клик??
+                // .on('mousemove', '.' + self.params.suggestItemCls, self._events.mousemove);
         },
 
         // true если новый кит по смыслу отличается от текущего
