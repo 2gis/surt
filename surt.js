@@ -945,10 +945,12 @@ var
         n = n || pos;
         
         // Цикл вниз по детям для поиска текстовой ноды куда надо выставить курсор
-        while (targetNode && targetNode.nodeType == 1) {
-            obj = findPosChild(targetNode, n);
-            targetNode = obj.child;
-            n = obj.n;
+        if (this.inputNode.tagName != 'INPUT') {
+            while (targetNode && targetNode.nodeType == 1) {
+                obj = findPosChild(targetNode, n);
+                targetNode = obj.child;
+                n = obj.n;
+            }
         }
         
         if (targetNode && targetNode.nodeType == 3) {
@@ -958,6 +960,13 @@ var
             range.collapse(true); // Collapses the Range to one of its boundary points.
             selection.removeAllRanges(); // Removes all ranges from the selection.
             selection.addRange(range); // A range object that will be added to the selection.
+        }
+
+        // Chrome scroll at end
+        if (n >= this.text().length - 1) {
+            setTimeout(function() {
+                self.inputNode.scrollLeft = 99999;
+            }, 0);
         }
         
         this.inputNode.focus();
