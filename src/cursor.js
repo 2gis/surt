@@ -85,10 +85,11 @@
         return this.cursorPos;
     };
 
-    surt.fn.restoreCursor = function(n) {
+    surt.fn.restoreCursor = function(ccp) {
         if (!window.getSelection) return; // IE8-
 
-        var self = this;
+        var self = this,
+            n = ccp;
 
         // if (!node || typeof N == 'undefined') return;
 
@@ -125,10 +126,14 @@
             selection.addRange(range); // A range object that will be added to the selection.
         }
 
-        // Chrome scroll at end
-        if (n >= this.text().length - 1) {
+        if (ccp >= this.text().length - 1) {
             setTimeout(function() {
+                // Chrome scroll to the end
                 self.inputNode.scrollLeft = 99999;
+
+                // Firefox scroll to the end
+                self.inputNode.selectionStart = n;
+                self.inputNode.selectionEnd = n;
             }, 0);
         }
         
