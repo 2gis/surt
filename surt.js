@@ -98,6 +98,7 @@ var
             this.cloneNode = $(params.clone, root)[0];
             this.autocompleteNode = $(params.autocomplete, root)[0];
             this.delimiter = params.delimiter || ''; // Разделитель токенов, между правой границей токена и следующим за ним пробелом
+            this._submitEvents = params.events || ['enter'];
             this._pressedKeys = 0;
             this._time = new Date().getTime();
             this._events = {};
@@ -204,9 +205,9 @@ var
                         if ( $(self.root).hasClass(params.suggestCls) && $('.' + params.suggestItemCurrentCls).length ) {
                             pickSuggest(true, e);
                         }
-                        // Здесь сабмит
-                        if (self.params.submit) {
-                            self.params.submit();
+                        // Стандартный сабмит по ентеру
+                        if (self.params.submit && self._submitEvents.indexOf('enter') != -1) {
+                            self.params.submit(e);
                         }
                         // Удаляем сагесты и автокомплит
                         $(self.root).removeClass(params.suggestCls);
@@ -255,6 +256,10 @@ var
                                 data = self.args();
                                 data.kit = self.suggest[active];
                                 self.set(data, true);
+                                // Сабмит на заполнении автокомплита
+                                if (self.params.submit && self._submitEvents.indexOf('auto') != -1) {
+                                    self.params.submit(e);
+                                }
                                 if (self.suggest && self.suggest.length && self.params.complete) { // Для статистики
                                     self.params.complete();
                                 }
@@ -297,9 +302,15 @@ var
                 var suggestsItems = $('.' + params.suggestItemCls),
                     index = suggestsItems.index( $(this) );
 
+                var willSubmit = self._submitEvents.indexOf('click') != -1;
+
                 self._activeSuggest = index;
-                pickSuggest(false, e);
-                if (self.params.change) self.params.change(e, self.args());
+                pickSuggest(willSubmit, e);
+                if (self.params.submit && willSubmit) { // Если пользователь хочет, то клик по сагесту приведёт к поиску, и обновлять сагест уже не надо
+                    self.params.submit(e);
+                } else if (self.params.change) { // Иначе - стандартное обновление сагеста
+                    self.params.change(e, self.args());
+                }
 
                 if (!$(e.target).closest(self.params.suggestItemCls).length) {
                     $(self.root).removeClass(self.params.suggestCls).removeClass(self.params.autocompleteCls);
