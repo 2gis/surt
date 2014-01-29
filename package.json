@@ -1,7 +1,7 @@
 {
     "name": "surt",
     "description": "Smart suggest.",
-    "version": "0.1.0",
+    "version": "0.2.5",
     "homepage": "https://github.com/Diokuz/surt",
     "authors": [
         "Dmitry Kuznecov <@Diokuz>"

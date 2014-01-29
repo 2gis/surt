@@ -63,7 +63,7 @@ describe('HTML.', function() {
             });
 
             var html = getHTML();
-            assert(html == '<div class="surt__text">Ресторан</div> <div class="surt__token surt__token_type_filter">Wi-Fi</div> <div class="surt__token surt__token_type_attr">кухня</div>', 'Генерирует html по киту из поисковой строки, в конце нет пробела');
+            assert(html == '<div class="surt__text">Ресторан</div> <div class="surt__token _type_filter">Wi-Fi</div> <div class="surt__token _type_attr">кухня</div>', 'Генерирует html по киту из поисковой строки, в конце нет пробела');
         });
 
         it('Кит undefined, в сагесте один кит', function() {
@@ -82,7 +82,7 @@ describe('HTML.', function() {
             });
 
             var html = getHTML();
-            assert.ok(html == '<li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__token surt__token_type_filter">Wi-Fi</div> <div class="surt__token surt__token_type_attr">кухня</div></li>');
+            assert.ok(html == '<li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__token _type_filter">Wi-Fi</div> <div class="surt__token _type_attr">кухня</div></li>');
         });
 
         it('Кит + 2 сагеста', function() {
@@ -116,7 +116,7 @@ describe('HTML.', function() {
             });
 
             var html = getHTML();
-            assert.ok(html == '<div class="surt__text">Ресторан</div><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__token surt__token_type_filter">Wi-Fi</div> <div class="surt__token surt__token_type_attr">кухня</div></li><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__token surt__token_type_filter">Wi-Fi</div> <div class="surt__token surt__token_type_attr">Абра ка дабра</div></li>');
+            assert.ok(html == '<div class="surt__text">Ресторан</div><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__token _type_filter">Wi-Fi</div> <div class="surt__token _type_attr">кухня</div></li><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__token _type_filter">Wi-Fi</div> <div class="surt__token _type_attr">Абра ка дабра</div></li>');
         });
 
         it('Кит не передается в set - должен остаться старый кит', function() {
@@ -199,7 +199,7 @@ describe('HTML.', function() {
             });
 
             var html = getHTML();
-            assert.ok(html == '<div class="surt__text">Ресторан</div><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__token surt__token_type_filter">Wi-Fi</div> <div class="surt__token surt__token_type_attr">кухня</div></li><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__token surt__token_type_filter">Wi-Fi</div> <div class="surt__token surt__token_type_attr">Абра ка дабра</div></li>');
+            assert.ok(html == '<div class="surt__text">Ресторан</div><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__token _type_filter">Wi-Fi</div> <div class="surt__token _type_attr">кухня</div></li><li class="surt__suggests-item"><div class="surt__text">Ресторан</div> <div class="surt__token _type_filter">Wi-Fi</div> <div class="surt__token _type_attr">Абра ка дабра</div></li>');
         });
 
         it('Изменение крайнего кита -> сброс его в тип text', function() {
@@ -234,7 +234,7 @@ describe('HTML.', function() {
             suggest.restoreCursor(8);
 
             // Backspace
-            $('.surt__input').html('<div class="surt__token surt__token_type_rubric">Ресторан</div> <div class="surt__token surt__token_type_filter">wif</div>');
+            $('.surt__input').html('<div class="surt__token _type_rubric">Ресторан</div> <div class="surt__token _type_filter">wif</div>');
             e = jQuery.Event('keydown');
             e.keyCode = 8;
             $('.surt__input').trigger(e); // Down
@@ -243,7 +243,7 @@ describe('HTML.', function() {
             $('.surt__input').trigger(e); // Up
 
             var html = $('.surt__input').html();
-            assert.ok(html == '<div class="surt__token surt__token_type_rubric">Ресторан</div> <div class="surt__text">wif</div>');
+            assert.ok(html == '<div class="surt__token _type_rubric">Ресторан</div> <div class="surt__text">wif</div>');
         });
 
         it('В ките был 1 токен, сетим 2 токена', function() {

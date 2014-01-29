@@ -417,7 +417,7 @@ var
                             left = '<div class="' + textCls + '">';
                             right = '</div>';
                         } else if (tokenCls) {
-                            left = '<div class="' + tokenCls + ' ' + tokenCls + '_type_' + this.kit[i].type + '">';
+                            left = '<div class="' + tokenCls + ' ' + '_type_' + this.kit[i].type + '">';
                             right = '</div>';
                         }
                         html = left + html + right;
@@ -470,7 +470,7 @@ var
 
                         if ( this.suggest[i][j].type != 'text' ) {
                             if (tokenCls) {
-                                html = '<div class="' + tokenCls + ' ' + tokenCls + '_type_' + this.suggest[i][j].type + '">' + html + '</div>';
+                                html = '<div class="' + tokenCls + ' ' + '_type_' + this.suggest[i][j].type + '">' + html + '</div>';
                             }
 
                             kit.push(html);
@@ -724,13 +724,12 @@ var
         module.exports = surt;
     }
 
-    surt.version = '0.2.4';
+    surt.version = '0.2.5';
 
     // if ($ && $.fn) {
     //     $.fn.surt = surt;
     // }
 })(this);
-
 (function(window, undefined) {
     // var surt = window.surt || {};
 

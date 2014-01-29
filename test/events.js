@@ -149,7 +149,7 @@ describe('События.', function() {
             e.keyCode = 39;
             $('.surt__input').trigger(e);
 
-            assert($('.surt__input').html() == '<div class="surt__token surt__token_type_rubric">Ресторан</div>');
+            assert($('.surt__input').html() == '<div class="surt__token _type_rubric">Ресторан</div>');
             suggest.dispose();
         });
 
@@ -189,7 +189,7 @@ describe('События.', function() {
                 complete = $('.wrapper_common .surt__clone-main').html();
 
             assert(pos == $('.surt__input').text().length, 'Позиция выставилась в крайне правое положение ' + pos + '|' + $('.surt__input').text().length);
-            assert(html == '<div class="surt__token surt__token_type_rubric">Ресторан</div>', 'В инпут попадает первый сагест');
+            assert(html == '<div class="surt__token _type_rubric">Ресторан</div>', 'В инпут попадает первый сагест');
             assert(complete == html, 'В комплите выставляется строго содержимое инпута');
             suggest.dispose();
         });
@@ -273,7 +273,7 @@ describe('События.', function() {
             assert($('.wrapper_common .surt__clone-hint').html() == 'стораны и кафе');
 
             e = jQuery.Event('keydown'); e.keyCode = 39; $('.surt__input').trigger(e); // Right
-            assert($('.wrapper_common .surt__input').html() == '<div class="surt__token surt__token_type_filter">Рестораны и кафе</div>', 'В инпут выставился именно второй сагест');
+            assert($('.wrapper_common .surt__input').html() == '<div class="surt__token _type_filter">Рестораны и кафе</div>', 'В инпут выставился именно второй сагест');
             suggest.dispose();
         });
 
@@ -314,7 +314,7 @@ describe('События.', function() {
             // assert($('.wrapper_common .surt__clone-hint').html() == '', 'В автокомплите нет текста');
 
             e = jQuery.Event('keydown'); e.keyCode = 39; $('.surt__input').trigger(e); // Right
-            assert($('.wrapper_common .surt__input').html() == '<div class="surt__token surt__token_type_filter">Рестораны и кафе</div>', 'В инпут выставился именно второй сагест ' + $('.wrapper_common .surt__input').html());
+            assert($('.wrapper_common .surt__input').html() == '<div class="surt__token _type_filter">Рестораны и кафе</div>', 'В инпут выставился именно второй сагест ' + $('.wrapper_common .surt__input').html());
             suggest.dispose();
         });
 
@@ -573,7 +573,7 @@ describe('События.', function() {
             e.keyCode = 13;
             $('.surt__input').trigger(e); // Enter
 
-            assert($('.surt__input').html() == '<div class="surt__token surt__token_type_rubric">Ресторан</div>');
+            assert($('.surt__input').html() == '<div class="surt__token _type_rubric">Ресторан</div>');
             assert(y == 10, 'Был вызван метод pick');
             assert(submit, 'Был вызван метод pick причем второй аргумент был true');
             assert(x == 11, 'Был вызван метод submit');
@@ -757,8 +757,8 @@ describe('События.', function() {
             e.keyCode = 13;
             $('.surt__input').trigger(e); // Enter
 
-            assert($('.wrapper_common .surt__input').html() == '<div class="surt__token surt__token_type_filter">wifi</div>', 'В инпут помещен html из второго сагеста');
-            assert($('.wrapper_common .surt__suggests').html() == '<li class="surt__suggests-item"><div class="surt__token surt__token_type_rubric">Ресторан</div></li><li class="surt__suggests-item"><div class="surt__token surt__token_type_filter">wifi</div></li>dima', 'HTML из сагестов не перезаписан (производительность)');
+            assert($('.wrapper_common .surt__input').html() == '<div class="surt__token _type_filter">wifi</div>', 'В инпут помещен html из второго сагеста');
+            assert($('.wrapper_common .surt__suggests').html() == '<li class="surt__suggests-item"><div class="surt__token _type_rubric">Ресторан</div></li><li class="surt__suggests-item"><div class="surt__token _type_filter">wifi</div></li>dima', 'HTML из сагестов не перезаписан (производительность)');
             suggest.dispose();
         });
 
@@ -812,8 +812,8 @@ describe('События.', function() {
             e.keyCode = 13;
             $('.surt__input').trigger(e); // Enter
 
-            assert($('.surt__input').html() == '<div class="surt__token surt__token_type_rubric">Ресторан</div>', 'HTML совпадает: ' + $('.surt__input').html());
-            assert($('.wrapper_common .surt__suggests').html() == '<li class="surt__suggests-item"><div class="surt__token surt__token_type_rubric">Ресторан</div></li><li class="surt__suggests-item"><div class="surt__token surt__token_type_filter">wifi</div></li>dima', 'HTML из сагестов не перезаписан');
+            assert($('.surt__input').html() == '<div class="surt__token _type_rubric">Ресторан</div>', 'HTML совпадает: ' + $('.surt__input').html());
+            assert($('.wrapper_common .surt__suggests').html() == '<li class="surt__suggests-item"><div class="surt__token _type_rubric">Ресторан</div></li><li class="surt__suggests-item"><div class="surt__token _type_filter">wifi</div></li>dima', 'HTML из сагестов не перезаписан');
             suggest.dispose();
         });
 
@@ -862,7 +862,7 @@ describe('События.', function() {
             e.keyCode = 13;
             $('.surt__input').trigger(e); // Enter
 
-            assert($('.surt__input').html() == '<div class="surt__token surt__token_type_rubric">Ресторан</div>');
+            assert($('.surt__input').html() == '<div class="surt__token _type_rubric">Ресторан</div>');
             suggest.dispose();
         });
 
@@ -904,7 +904,7 @@ describe('События.', function() {
             e = jQuery.Event('mousedown');
             $('.surt__suggests-item').eq(0).trigger(e); // Click
 
-            assert($('.surt__input').html() == '<div class="surt__token surt__token_type_rubric">Ресторан</div>');
+            assert($('.surt__input').html() == '<div class="surt__token _type_rubric">Ресторан</div>');
             assert(!submit, 'Второй аргумент в pick - false');
             suggest.dispose();
         });
@@ -946,7 +946,7 @@ describe('События.', function() {
             e = jQuery.Event('mousedown');
             $('.surt__suggests-item').eq(1).trigger(e); // Click
 
-            assert($('.surt__input').html() == '<div class="surt__token surt__token_type_filter">wifi</div>');
+            assert($('.surt__input').html() == '<div class="surt__token _type_filter">wifi</div>');
             suggest.dispose();
         });
 
