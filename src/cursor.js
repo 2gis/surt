@@ -137,6 +137,6 @@
             }, 0);
         }
         
-        this.inputNode.focus();
+        // this.inputNode.focus();
     };
 })(this);
