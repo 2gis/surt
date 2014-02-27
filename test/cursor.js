@@ -30,8 +30,7 @@ describe('Позиция курсора.', function() {
 
     beforeEach(function() {
         $('.wrapper_common').html(originalHTML);
-        suggest = surt({
-            root: '.surt',
+        suggest = $('.surt').surt({
             input: '.surt__input',
             suggest: '.surt__suggests',
             suggestItemCls: 'surt__suggests-item',

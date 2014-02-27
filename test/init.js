@@ -4,60 +4,51 @@ describe('Инициализация.', function() { // При кривой ин
     });
 
     it('По-умолчанию', function() {
-        var suggest = surt();
+        var suggest;
+
+        try {
+            suggest = $('.nonono').surt();
+        } catch (e) {}
 
         assert(!suggest, 'При кривой инициализации вместо объекта конструктор должен возвращать undefined');
     });
 
     it('С пустым объектом параметров', function() {
-        var suggest = surt({});
-        
-        assert(!suggest, 'При кривой инициализации вместо объекта конструктор должен возвращать undefined');
-    });
+        var suggest;
 
-    it('С пустым объектом параметров', function() {
-        var suggest = surt({});
-        
-        assert(!suggest, 'При кривой инициализации вместо объекта конструктор должен возвращать undefined');
-    });
-
-    it('Только с инпутом в параметрах, которого нет на странице', function() {
-        var suggest = surt({
-            input: '.nonono'
-        });
-        
-        assert(!suggest, 'При кривой инициализации вместо объекта конструктор должен возвращать undefined');
-    });
-
-    it('Только с root в параметрах, которого нет на странице', function() {
-        var suggest = surt({
-            root: '.nonono'
-        });
+        try {
+            suggest = $('.nonono').surt({});
+        } catch (e) {}
         
         assert(!suggest, 'При кривой инициализации вместо объекта конструктор должен возвращать undefined');
     });
 
     it('Root + input в параметрах, root нет на странице', function() {
-        var suggest = surt({
-            root: '.nonono',
-            input: '.nonono'
-        });
+        var suggest;
+
+        try {
+            suggest = $('.nonono').surt({
+                input: '.nonono'
+            });
+        } catch (e) {}
         
         assert(!suggest, 'При кривой инициализации вместо объекта конструктор должен возвращать undefined');
     });
 
     it('Root + input в параметрах, input нет на странице', function() {
-        var suggest = surt({
-            root: '.surt',
-            input: '.nonono'
-        });
+        var suggest;
+
+        try {
+            suggest = $('.surt').surt({
+                input: '.nonono'
+            });
+        } catch (e) {}
         
         assert(!suggest, 'При кривой инициализации вместо объекта конструктор должен возвращать undefined');
     });
 
     it('Root + input в параметрах, и он есть на странице (успешная инициализация)', function() {
-        var suggest = surt({
-                root: '.surt',
+        var suggest = $('.surt').surt({
                 input: '.surt__input'
             }),
             root = $(suggest.root);
@@ -70,14 +61,16 @@ describe('Инициализация.', function() { // При кривой ин
     });
 
     it('Повторная инициализация', function() {
-        var suggest = surt({
-                root: '.surt',
+        var suggest = $('.surt').surt({
                 input: '.surt__input'
             }),
-            second = surt({
-                root: '.surt',
+            second;
+
+        try {
+            suggest = $('.surt').surt({
                 input: '.surt__input'
             });
+        } catch (e) {}
         
         assert.ok(suggest);
         assert(!second, 'При повторной инициализации конструктор должен возвращать undefined');

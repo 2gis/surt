@@ -11,8 +11,7 @@ describe('События.', function() {
             x++;
         }
 
-        var suggest = surt({
-            root: '.surt',
+        var suggest = $('.surt').surt({
             input: '.surt__input',
             change: callback
         });
@@ -27,7 +26,7 @@ describe('События.', function() {
     describe('Автокомплит.', function() {
         it('При не крайне правой позиции курсора нажатие стрелки вправо не приводит к автокомплиту (html mode)', function() {
             function test(params) {
-                var suggest = surt(params);
+                var suggest = $(params.root).surt(params);
 
                 suggest.set({
                     kit: [{
@@ -70,8 +69,7 @@ describe('События.', function() {
 
         it('При не крайне правой позиции курсора нажатие стрелки вправо не приводит к автокомплиту (text mode & input)', function() {
             var completed;
-            var suggest = surt({
-                root: '.wrapper_input .surt',
+            var suggest = $('.wrapper_input .surt').surt({
                 input: '.surt__input',
                 inputMode: 'text',
                 suggest: '.surt__suggests',
@@ -119,8 +117,7 @@ describe('События.', function() {
         });
 
         it('При крайне правой позиции курсора нажатие стрелки вправо приводит к автокомплиту', function() {
-            var suggest = surt({
-                root: '.surt',
+            var suggest = $('.surt').surt({
                 input: '.surt__input',
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
@@ -154,8 +151,7 @@ describe('События.', function() {
         });
 
         it('При нажатии вправо автокомплит подставляется а курсор уходит в крайне правое положение', function() {
-            var suggest = surt({
-                    root: '.wrapper_common .surt',
+            var suggest = $('.wrapper_common .surt').surt({
                     input: '.surt__input',
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
@@ -195,8 +191,7 @@ describe('События.', function() {
         });
 
         it('При вызове метода submit автокомплит изчезает', function() {
-            var suggest = surt({
-                    root: '.surt',
+            var suggest = $('.surt').surt({
                     input: '.surt__input',
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
@@ -237,8 +232,7 @@ describe('События.', function() {
         });
 
         it('Нажатие вниз приводит к заполнению в автокомплите второго сагеста', function() {
-            var suggest = surt({
-                root: '.wrapper_common .surt',
+            var suggest = $('.wrapper_common .surt').surt({
                 input: '.surt__input',
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
@@ -278,8 +272,7 @@ describe('События.', function() {
         });
 
         it('Выбор сагеста и нажатие вправо приводит к его попаданию в поле даже когда не начинается с текста в инпуте', function() {
-            var suggest = surt({
-                root: '.wrapper_common .surt',
+            var suggest = $('.wrapper_common .surt').surt({
                 input: '.surt__input',
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
@@ -319,8 +312,7 @@ describe('События.', function() {
         });
 
         it('При удалении текста модификатор автокомплита не выставляется', function() {
-            var suggest = surt({
-                root: '.wrapper_common .surt',
+            var suggest = $('.wrapper_common .surt').surt({
                 input: '.surt__input',
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
@@ -360,8 +352,7 @@ describe('События.', function() {
         });
 
         it('Если первый сагест не начинается с текста в инпуте - класс автокомплита не выставляется, текст тоже', function() {
-            var suggest = surt({
-                root: '.wrapper_common .surt',
+            var suggest = $('.wrapper_common .surt').surt({
                 input: '.surt__input',
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
@@ -397,8 +388,7 @@ describe('События.', function() {
         });
 
         it('Если сагесты есть, есть активный сагест, но он не подходит для автокомплита, нажатие вправо не приводит к автокомплиту', function() {
-            var suggest = surt({
-                root: '.wrapper_input .surt',
+            var suggest = $('.wrapper_input .surt').surt({
                 input: '.surt__input',
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
@@ -434,53 +424,8 @@ describe('События.', function() {
             suggest.dispose();
         });
 
-        // it.only('При инициализации на диве restoreCursor работает', function() {
-        //     var suggest = surt({
-        //         root: '.wrapper_common .surt',
-        //         input: '.surt__input',
-        //         suggest: '.surt__suggests',
-        //         suggestItemCls: 'surt__suggests-item',
-        //         suggestItemCurrentCls: 'surt__suggests-item_state_current',
-        //         suggestCls: 'surt_dropdown_true',
-        //         tokenCls: 'surt__token',
-        //         textCls: 'surt__text',
-        //         clone: '.surt__clone-main',
-        //         autocomplete: '.surt__clone-hint',
-        //         autocompleteCls: 'surt_autocomplete_true'
-        //     });
-
-        //     dima = suggest;
-
-        //     suggest.set({
-        //         kit: [{
-        //             text: 'ест',
-        //             type: 'text'
-        //         }],
-        //         suggest: [[{
-        //             text: 'Ресторан',
-        //             type: 'rubric'
-        //         }], [{
-        //             text: 'Рестораны и кафе',
-        //             type: 'filter'
-        //         }]]
-        //     });
-
-        //     suggest.restoreCursor(999);
-
-        //     var cursorPos = suggest.saveCursor();
-
-        //     console.log(suggest.saveCursor());
-        //     setTimeout(function() {
-        //         console.log(suggest.saveCursor());
-        //         // assert(suggest.saveCursor() == 3, 'Курсор не прыгнул обратно в ноль')
-        //     }, 0);
-
-        //     suggest.dispose();
-        // });
-
         it('В автокомплит не выводится ничего если суммарно текст длиннее aunt', function() {
-            var suggest = surt({
-                root: '.wrapper_input .surt',
+            var suggest = $('.wrapper_input .surt').surt({
                 input: '.surt__input',
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
@@ -526,8 +471,7 @@ describe('События.', function() {
                 y = 0,
                 submit = false,
                 shown,
-                suggest = surt({
-                    root: '.surt',
+                suggest = $('.surt').surt({
                     input: '.surt__input',
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
@@ -583,8 +527,7 @@ describe('События.', function() {
 
         it('Удаление сагестов и их повторное заполнение приводит к повторному срабатыванию show', function() {
             var shown = 0,
-                suggest = surt({
-                    root: '.surt',
+                suggest = $('.surt').surt({
                     input: '.surt__input',
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
@@ -640,8 +583,7 @@ describe('События.', function() {
                 y = 0,
                 submit = false,
                 shown = 0,
-                suggest = surt({
-                    root: '.surt',
+                suggest = $('.surt').surt({
                     input: '.surt__input',
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
@@ -674,8 +616,7 @@ describe('События.', function() {
 
         it('Установка сагеста [] приводит к его удалению', function() {
             var shown,
-                suggest = surt({
-                    root: '.wrapper_common .surt',
+                suggest = $('.wrapper_common .surt').surt({
                     input: '.surt__input',
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
@@ -715,8 +656,7 @@ describe('События.', function() {
         });
 
         it('2 нажатия вниз + enter приводит к выбору второго сагеста', function() {
-            var suggest = surt({
-                root: '.wrapper_common .surt',
+            var suggest = $('.wrapper_common .surt').surt({
                 input: '.surt__input',
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
@@ -764,8 +704,7 @@ describe('События.', function() {
 
         it('2 нажатия вниз + нажатие вверх + enter приводит к выбору первого сагеста', function() {
             var x = 0,
-                suggest = surt({
-                    root: '.surt',
+                suggest = $('.surt').surt({
                     input: '.surt__input',
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
@@ -818,8 +757,7 @@ describe('События.', function() {
         });
 
         it('Вниз + вверх + вниз + enter приводит к выбору первого сагеста', function() {
-            var suggest = surt({
-                root: '.surt',
+            var suggest = $('.surt').surt({
                 input: '.surt__input',
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
@@ -868,8 +806,7 @@ describe('События.', function() {
 
         it('Клик по первому сагесту приводит к его выбору, а второй аргумент в pick - false', function() {
             var submit,
-                suggest = surt({
-                    root: '.surt',
+                suggest = $('.surt').surt({
                     input: '.surt__input',
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
@@ -910,8 +847,7 @@ describe('События.', function() {
         });
 
         it('Клик по второму сагесту приводит к его выбору', function() {
-            var suggest = surt({
-                root: '.surt',
+            var suggest = $('.surt').surt({
                 input: '.surt__input',
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
@@ -952,7 +888,7 @@ describe('События.', function() {
 
         it('Клик по первому сагесту, когда текст в инпуте совпадает с ним, приводит к его выбору', function() {
             function test(params) {
-                var suggest = surt(params);
+                var suggest = $(params.root).surt(params);
 
                 suggest.set({
                     kit: [{
@@ -1013,8 +949,7 @@ describe('События.', function() {
 
         it('Клик по enter не приводит к вызову change', function() {
             var x,
-                suggest = surt({
-                    root: '.surt',
+                suggest = $('.surt').surt({
                     input: '.surt__input',
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
@@ -1042,8 +977,7 @@ describe('События.', function() {
 
         it('Клико-выбор сагеста приводит к вызову change', function() {
             var x,
-                suggest = surt({
-                    root: '.wrapper_common .surt',
+                suggest = $('.wrapper_common .surt').surt({
                     input: '.surt__input',
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
@@ -1082,8 +1016,7 @@ describe('События.', function() {
 
         it('Нажатие кнопки вниз когда сагеста нет', function() {
             var x,
-                suggest = surt({
-                    root: '.wrapper_common .surt',
+                suggest = $('.wrapper_common .surt').surt({
                     input: '.surt__input',
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
@@ -1222,8 +1155,7 @@ describe('События.', function() {
 
         it('Наведение мыши на второй сагест + enter приводит к сабмиту второг сагеста', function() {
             var submit,
-                suggest = surt({
-                    root: '.surt',
+                suggest = $('.surt').surt({
                     input: '.surt__input',
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
@@ -1271,8 +1203,7 @@ describe('События.', function() {
         });
 
         it('Если дошли до сагеста и продолжили ввод - сагест должен подставиться + пробел', function() {
-            var suggest = surt({
-                    root: '.surt',
+            var suggest = $('.surt').surt({
                     input: '.surt__input',
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
@@ -1318,8 +1249,7 @@ describe('События.', function() {
         });
 
         it('Если дошли до сагеста и продолжили ввод - сагест должен подставиться + пробел, но на backspace реакции быть не должно', function() {
-            var suggest = surt({
-                    root: '.surt',
+            var suggest = $('.surt').surt({
                     input: '.surt__input',
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
@@ -1363,57 +1293,11 @@ describe('События.', function() {
 
             suggest.dispose();
         });
-
-        // Не знаю как на это тест написать - проблема в эмуляции реального клика
-        // it.only('Клико-выбор сагеста оставляет курсор в инпуте', function() {
-        //     var x,
-        //         suggest = surt({
-        //             root: '.wrapper_common .surt',
-        //             input: '.surt__input',
-        //             suggest: '.surt__suggests',
-        //             suggestItemCls: 'surt__suggests-item',
-        //             suggestItemCurrentCls: 'surt__suggests-item_state_current',
-        //             suggestCls: 'surt_dropdown_true',
-        //             tokenCls: 'surt__token',
-        //             textCls: 'surt__text',
-        //             clone: '.surt__clone-main',
-        //             autocomplete: '.surt__clone-hint',
-        //             autocompleteCls: 'surt_autocomplete_true',
-        //             change: function() {
-        //                 x++;
-        //             }
-        //         });
-
-        //     suggest.set({
-        //         kit: [{
-        //             text: 'Рестора',
-        //             type: 'text'
-        //         }],
-        //         suggest: [[{
-        //             text: 'Ресторан',
-        //             type: 'rubric'
-        //         }]
-        //     ]}, true);
-
-        //     x = 0;
-
-        //     var e;
-        //     e = jQuery.Event('mousedown');
-        //     $('.surt__suggests-item').eq(0).trigger(e); // Click
-        //     e = jQuery.Event('click');
-        //     $('.surt__suggests-item').eq(0).trigger(e); // Click
-        //     e = jQuery.Event('mouseup');
-        //     $('.surt__suggests-item').eq(0).trigger(e); // Click
-            
-        //     assert($('.wrapper_common .surt__input').is(':focus'), 'Интуп в фокусе');
-        //     // suggest.dispose();
-        // });
     });
 
     describe('Набор текста.', function() {
         it('keyup по cmd должен инициировать обновление кита', function() {
-            var suggest = surt({
-                root: '.surt',
+            var suggest = $('.surt').surt({
                 input: '.surt__input',
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
@@ -1468,8 +1352,7 @@ describe('События.', function() {
         });
 
         it('Если инициализация на инпуте - не должно быть html', function() {
-            var suggest = surt({
-                root: '.wrapper_input .surt',
+            var suggest = $('.wrapper_input .surt').surt({
                 input: '.surt__input',
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
@@ -1506,8 +1389,7 @@ describe('События.', function() {
 
     describe('Параметр selectionCls.', function() {
         it('Наличие параметра selectionCls приводит к оборачиванию совпадающих с поиском частей токенов в сагестах этим классом', function() {
-            var suggest = surt({
-                    root: '.wrapper_common .surt',
+            var suggest = $('.wrapper_common .surt').surt({
                     input: '.surt__input',
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
@@ -1545,8 +1427,7 @@ describe('События.', function() {
         });
 
         it('Выбор сагеста приводит к изменению html сагестов при наличии параметра selectionCls', function() {
-            var suggest = surt({
-                    root: '.wrapper_common .surt',
+            var suggest = $('.wrapper_common .surt').surt({
                     input: '.surt__input',
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
@@ -1591,4 +1472,37 @@ describe('События.', function() {
             suggest.dispose();
         });
     });
+
+    it('Enter при наличии элемента с классом suggestItemCurrentCls не приводит к ошибке', function() {
+            var suggest = $('.wrapper_common .surt').surt({
+                    input: '.surt__input',
+                    suggest: '.surt__suggests',
+                    suggestItemCls: 'surt__suggests-item',
+                    suggestItemCurrentCls: '_current',
+                    suggestCls: '_dropdown'
+                });
+
+            // Выставляем текст в инпут
+            suggest.set({
+                kit: [{
+                    text: 'рес',
+                    type: 'text'
+                }]
+            });
+
+            $('body').append('<br class="_current">');
+
+            var e;
+
+            e = jQuery.Event('click');
+            $('.wrapper_common .surt__input').trigger(e);
+            
+            e = jQuery.Event('keydown');
+            e.keyCode = 13;
+            $('.wrapper_common .surt__input').trigger(e);
+
+            assert(true);
+
+            // suggest.dispose();
+        });
 });

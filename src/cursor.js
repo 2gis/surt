@@ -1,8 +1,6 @@
 // Cursor positioning in content editable container
-(function(window, undefined) {
-    var surt = window.surt || {};
-
-    surt.fn = surt.fn || {};
+(function() {
+    var surt = $.fn.surt;
 
     /*
      * Находит ребенка и позицию внутри него по заданной ноде и позиции внутри этой ноды
@@ -139,4 +137,4 @@
         
         // this.inputNode.focus();
     };
-})(this);
+})();

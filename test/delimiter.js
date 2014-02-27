@@ -1,8 +1,7 @@
 // Режим работы сагестера "без кирпичей" (простой текстовый сагестер но с запоминанием типов в коде)
 describe('Разделитель токенов.', function() {
     it('Последовательное заполнение инпута вручную.', function() {
-        var suggester = surt({
-                root: '.wrapper_delimiter .surt',
+        var suggester = $('.wrapper_delimiter .surt').surt({
                 input: '.surt__input',
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',

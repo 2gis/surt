@@ -1,6 +1,5 @@
 (function(window, undefined) {
 var
-    $,
     space = String.fromCharCode(160),
     defaultParams = {
         input: '.surt__input',
@@ -33,6 +32,8 @@ var
     }
 
     var surt = function(params) {
+        var ret;
+
         params = params || {};
 
         for (var key in defaultParams) {
@@ -41,14 +42,7 @@ var
             }
         }
 
-        $ = window.jQuery || params.$;
-
-        if (!$) return;
-
-        // Обработка режима плагина jQuery
-        if (!(params && params.root) && this && this[0] && this[0].nodeType == 1) {
-            params.root = this[0];
-        }
+        params.root = this[0];
 
         function validateNode(node, name) {
             if (!(node && node.nodeType == 1)) {
@@ -72,11 +66,9 @@ var
                 throw new Error('Surt: already initialized');
             }
 
-            ret = new surt.fn.constructor(params, $);
+            ret = new surt.fn.constructor(params);
         } catch (e) {
-            console.warn(e.name + ': ', e.message);
-
-            return;
+            throw new Error(e.name + ': ' + e.message);
         }
 
         return ret;
@@ -84,7 +76,7 @@ var
 
     surt.fn = {
         // Создает объект surt
-        constructor: function(params, $) {
+        constructor: function(params) {
             var self = this,
                 root = params.root;
 
@@ -202,7 +194,7 @@ var
                     if (key == 13) {
                         e.preventDefault();
 
-                        if ( $(self.root).hasClass(params.suggestCls) && $('.' + params.suggestItemCurrentCls).length ) {
+                        if ( $(self.root).hasClass(params.suggestCls) && $(self.root).find('.' + params.suggestItemCurrentCls).length ) {
                             pickSuggest(true, e);
                         }
                         // Стандартный сабмит по ентеру
@@ -718,15 +710,7 @@ var
 
     surt.fn.constructor.prototype = surt.fn;
 
-    window.surt = surt;
+    $.fn.surt = surt;
 
-    if (typeof module != "undefined") {
-        module.exports = surt;
-    }
-
-    surt.version = '0.2.5';
-
-    // if ($ && $.fn) {
-    //     $.fn.surt = surt;
-    // }
+    surt.version = '0.3.0';
 })(this);

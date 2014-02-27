@@ -105,11 +105,9 @@
         return html.replace(new RegExp(partial, "i"), '$1<span class="' + this.params.selectionCls + '">$3</span>$4');
     };
 
-    surt = window.surt || {};
-    surt.fn = surt.fn || {};
-    surt.fn.parser = parser;
-
     if (typeof module != "undefined") {
         module.exports = parser;
+    } else {
+        $.fn.surt.fn.parser = parser;
     }
 })(this);

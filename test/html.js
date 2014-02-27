@@ -1,8 +1,7 @@
 describe('HTML.', function() {
     function reinit() {
         $('.wrapper_common').html(originalHTML);
-        suggest = surt({
-            root: '.surt',
+        suggest = $('.surt').surt({
             input: '.surt__input',
             suggest: '.surt__suggests',
             suggestItemCls: 'surt__suggests-item',
@@ -206,8 +205,7 @@ describe('HTML.', function() {
             var e;
 
             $('.wrapper').html(originalHTML);
-            suggest = surt({
-                root: '.surt',
+            suggest = $('.surt').surt({
                 input: '.surt__input',
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
@@ -290,8 +288,7 @@ describe('HTML.', function() {
 
         it('Выставляет модификатор count при наличии', function() {
             $('.wrapper_common').html(originalHTML);
-            suggest = surt({
-                root: '.surt',
+            suggest = $('.surt').surt({
                 input: '.surt__input',
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',

@@ -6,7 +6,7 @@ describe('Текстовый режим.', function() {
 
     function commotIts(params, shtml) {
         it('Правильно выставляет текстовый input и сагест когда', function() {
-            var suggest = surt(params);
+            var suggest = $(params.root).surt(params);
 
             assert(suggest, 'Возвращает surt объект');
 
