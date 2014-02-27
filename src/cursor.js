@@ -116,7 +116,7 @@
         }
         
         if (targetNode && targetNode.nodeType == 3) {
-            n = Math.min(n, this.$(targetNode).text().length);
+            n = Math.min(n, $(targetNode).text().length);
             n = Math.max(n, 0);
             range.setStart(targetNode, n); // Sets the start position of a Range.
             range.collapse(true); // Collapses the Range to one of its boundary points.

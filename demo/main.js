@@ -1,6 +1,5 @@
 $(document).ready(function() {
-    var standart = surt({
-        root: '.surt_standart',
+    var standart = $('.surt_standart').surt({
         input: '.surt__input',
         suggest: '.surt__suggests',
         suggestItemCls: 'surt__suggests-item',
@@ -21,8 +20,7 @@ $(document).ready(function() {
         }
     });
 
-    var simple = surt({
-        root: '.surt_simple',
+    var simple = $('.surt_simple').surt({
         input: '.surt__input',
         inputMode: 'text',
         suggest: '.surt__suggests',

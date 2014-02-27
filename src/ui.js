@@ -81,7 +81,6 @@ var
                 root = params.root;
 
             params = params || {};
-            this.$ = $;
             this.params = params;
             // this.parser = surt.parser;
             this.inputNode = $(params.input, root)[0];

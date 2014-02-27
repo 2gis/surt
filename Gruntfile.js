@@ -42,6 +42,19 @@ module.exports = function(grunt) {
                 }
             }
         },
+        'closure-compiler': {
+            frontend: {
+                closurePath: '/usr/local/Cellar/closure-compiler/20130823/libexec',
+                js: '<%= pkg.name %>.js',
+                jsOutputFile: '<%= pkg.name %>.min.js',
+                maxBuffer: 500,
+                options: {
+                    compilation_level: 'SIMPLE_OPTIMIZATIONS', // 'SIMPLE_OPTIMIZATIONS', // ADVANCED_OPTIMIZATIONS
+                    language_in: 'ECMASCRIPT5_STRICT'
+                },
+                noreport: true
+            }
+        },
         'mocha-phantomjs': {
             options: {
                 view: '1024x768'
@@ -60,6 +73,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-closure-compiler');
     grunt.loadNpmTasks('grunt-mocha-cli');
 
     grunt.registerTask('default', ['concat:def', 'uglify:def']);
