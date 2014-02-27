@@ -1,6 +1,5 @@
 (function(window, undefined) {
 var
-    $,
     space = String.fromCharCode(160),
     defaultParams = {
         input: '.surt__input',
@@ -33,6 +32,8 @@ var
     }
 
     var surt = function(params) {
+        var ret;
+
         params = params || {};
 
         for (var key in defaultParams) {
@@ -41,14 +42,7 @@ var
             }
         }
 
-        $ = window.jQuery || params.$;
-
-        if (!$) return;
-
-        // Обработка режима плагина jQuery
-        if (!(params && params.root) && this && this[0] && this[0].nodeType == 1) {
-            params.root = this[0];
-        }
+        params.root = this[0];
 
         function validateNode(node, name) {
             if (!(node && node.nodeType == 1)) {
@@ -72,11 +66,9 @@ var
                 throw new Error('Surt: already initialized');
             }
 
-            ret = new surt.fn.constructor(params, $);
+            ret = new surt.fn.constructor(params);
         } catch (e) {
-            console.warn(e.name + ': ', e.message);
-
-            return;
+            throw new Error(e.name + ': ' + e.message);
         }
 
         return ret;
@@ -84,7 +76,7 @@ var
 
     surt.fn = {
         // Создает объект surt
-        constructor: function(params, $) {
+        constructor: function(params) {
             var self = this,
                 root = params.root;
 
@@ -147,7 +139,7 @@ var
 
             // Навешиваем все необходимые события
             $(this.inputNode)
-                .on('keyup', function(e){
+                .on('keyup.surt', function(e){
                     var key = e.keyCode,
                         data;
 
@@ -182,7 +174,7 @@ var
                         params.change(e, data);
                     }
                 })
-                .on('keydown input paste', function(e) { // input paste
+                .on('keydown.surt input.surt paste.surt', function(e) { // input paste
                     var key = e.keyCode,
                         index,
                         data;
@@ -202,7 +194,7 @@ var
                     if (key == 13) {
                         e.preventDefault();
 
-                        if ( $(self.root).hasClass(params.suggestCls) && $('.' + params.suggestItemCurrentCls).length ) {
+                        if ( $(self.root).hasClass(params.suggestCls) && $(self.root).find('.' + params.suggestItemCurrentCls).length ) {
                             pickSuggest(true, e);
                         }
                         // Стандартный сабмит по ентеру
@@ -273,12 +265,12 @@ var
                         e.preventDefault(); /* f opera 12 */
                     }
                 })
-                .on('paste', function() {
+                .on('paste.surt', function() {
                     setTimeout(function(){
                         self.parse();
                     }, 0);
                 })
-                .on('focus click', function() {
+                .on('focus.surt click.surt', function() {
                     var noBefore = !$(self.root).hasClass(self.params.suggestCls);
 
                     $(self.root).addClass(self.params.stateFocusCls);
@@ -291,31 +283,12 @@ var
                         }
                     }
                 })
-                .on('blur', function() {
+                .on('blur.surt', function() {
                     $(self.root).removeClass(self.params.stateFocusCls);
                     $(self.root).removeClass(self.params.readyCls);
                     $(self.root).removeClass(self.params.autocompleteCls);
                     $(self.root).removeClass(self.params.suggestCls);
                 });
-
-            this._events.click = function(e) {
-                var suggestsItems = $('.' + params.suggestItemCls),
-                    index = suggestsItems.index( $(this) );
-
-                var willSubmit = self._submitEvents.indexOf('click') != -1;
-
-                self._activeSuggest = index;
-                pickSuggest(willSubmit, e);
-                if (self.params.submit && willSubmit) { // Если пользователь хочет, то клик по сагесту приведёт к поиску, и обновлять сагест уже не надо
-                    self.params.submit(e);
-                } else if (self.params.change) { // Иначе - стандартное обновление сагеста
-                    self.params.change(e, self.args());
-                }
-
-                if (!$(e.target).closest(self.params.suggestItemCls).length) {
-                    $(self.root).removeClass(self.params.suggestCls).removeClass(self.params.autocompleteCls);
-                }
-            };
 
             // this._events.mousemove = function(e) {
             //     var suggestsItems = $('.' + params.suggestItemCls),
@@ -325,7 +298,24 @@ var
             // };
 
             $(this.root)
-                .on('mousedown', '.' + self.params.suggestItemCls, self._events.click); // Почему не клик??
+                .on('mousedown.surt', '.' + self.params.suggestItemCls, function(e) {
+                    var suggestsItems = $('.' + params.suggestItemCls),
+                        index = suggestsItems.index( $(this) );
+
+                    var willSubmit = self._submitEvents.indexOf('click') != -1;
+
+                    self._activeSuggest = index;
+                    pickSuggest(willSubmit, e);
+                    if (self.params.submit && willSubmit) { // Если пользователь хочет, то клик по сагесту приведёт к поиску, и обновлять сагест уже не надо
+                        self.params.submit(e);
+                    } else if (self.params.change) { // Иначе - стандартное обновление сагеста
+                        self.params.change(e, self.args());
+                    }
+
+                    if (!$(e.target).closest(self.params.suggestItemCls).length) {
+                        $(self.root).removeClass(self.params.suggestCls).removeClass(self.params.autocompleteCls);
+                    }
+                }); // Почему не клик??
                 // .on('mousemove', '.' + self.params.suggestItemCls, self._events.mousemove);
         },
 
@@ -698,7 +688,7 @@ var
 
         dispose: function() {
             $(this.root).attr('data-surt-inited', 'disposed');
-            $(this.root).off('mousedown', '.' + this.params.suggestItemCls, this._events.click);
+            $(this.root).off('surt');
             clearTimeout(this._upTimer);
         },
 
@@ -718,17 +708,9 @@ var
 
     surt.fn.constructor.prototype = surt.fn;
 
-    window.surt = surt;
+    $.fn.surt = surt;
 
-    if (typeof module != "undefined") {
-        module.exports = surt;
-    }
-
-    surt.version = '0.2.5';
-
-    // if ($ && $.fn) {
-    //     $.fn.surt = surt;
-    // }
+    surt.version = '0.3.0';
 })(this);
 (function(window, undefined) {
     // var surt = window.surt || {};
@@ -837,19 +819,15 @@ var
         return html.replace(new RegExp(partial, "i"), '$1<span class="' + this.params.selectionCls + '">$3</span>$4');
     };
 
-    surt = window.surt || {};
-    surt.fn = surt.fn || {};
-    surt.fn.parser = parser;
-
     if (typeof module != "undefined") {
         module.exports = parser;
+    } else {
+        $.fn.surt.fn.parser = parser;
     }
 })(this);
 // Cursor positioning in content editable container
-(function(window, undefined) {
-    var surt = window.surt || {};
-
-    surt.fn = surt.fn || {};
+(function() {
+    var surt = $.fn.surt;
 
     /*
      * Находит ребенка и позицию внутри него по заданной ноде и позиции внутри этой ноды
@@ -986,4 +964,4 @@ var
         
         // this.inputNode.focus();
     };
-})(this);
+})();

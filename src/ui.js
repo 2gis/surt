@@ -139,7 +139,7 @@ var
 
             // Навешиваем все необходимые события
             $(this.inputNode)
-                .on('keyup', function(e){
+                .on('keyup.surt', function(e){
                     var key = e.keyCode,
                         data;
 
@@ -174,7 +174,7 @@ var
                         params.change(e, data);
                     }
                 })
-                .on('keydown input paste', function(e) { // input paste
+                .on('keydown.surt input.surt paste.surt', function(e) { // input paste
                     var key = e.keyCode,
                         index,
                         data;
@@ -265,12 +265,12 @@ var
                         e.preventDefault(); /* f opera 12 */
                     }
                 })
-                .on('paste', function() {
+                .on('paste.surt', function() {
                     setTimeout(function(){
                         self.parse();
                     }, 0);
                 })
-                .on('focus click', function() {
+                .on('focus.surt click.surt', function() {
                     var noBefore = !$(self.root).hasClass(self.params.suggestCls);
 
                     $(self.root).addClass(self.params.stateFocusCls);
@@ -283,31 +283,12 @@ var
                         }
                     }
                 })
-                .on('blur', function() {
+                .on('blur.surt', function() {
                     $(self.root).removeClass(self.params.stateFocusCls);
                     $(self.root).removeClass(self.params.readyCls);
                     $(self.root).removeClass(self.params.autocompleteCls);
                     $(self.root).removeClass(self.params.suggestCls);
                 });
-
-            this._events.click = function(e) {
-                var suggestsItems = $('.' + params.suggestItemCls),
-                    index = suggestsItems.index( $(this) );
-
-                var willSubmit = self._submitEvents.indexOf('click') != -1;
-
-                self._activeSuggest = index;
-                pickSuggest(willSubmit, e);
-                if (self.params.submit && willSubmit) { // Если пользователь хочет, то клик по сагесту приведёт к поиску, и обновлять сагест уже не надо
-                    self.params.submit(e);
-                } else if (self.params.change) { // Иначе - стандартное обновление сагеста
-                    self.params.change(e, self.args());
-                }
-
-                if (!$(e.target).closest(self.params.suggestItemCls).length) {
-                    $(self.root).removeClass(self.params.suggestCls).removeClass(self.params.autocompleteCls);
-                }
-            };
 
             // this._events.mousemove = function(e) {
             //     var suggestsItems = $('.' + params.suggestItemCls),
@@ -317,7 +298,24 @@ var
             // };
 
             $(this.root)
-                .on('mousedown', '.' + self.params.suggestItemCls, self._events.click); // Почему не клик??
+                .on('mousedown.surt', '.' + self.params.suggestItemCls, function(e) {
+                    var suggestsItems = $('.' + params.suggestItemCls),
+                        index = suggestsItems.index( $(this) );
+
+                    var willSubmit = self._submitEvents.indexOf('click') != -1;
+
+                    self._activeSuggest = index;
+                    pickSuggest(willSubmit, e);
+                    if (self.params.submit && willSubmit) { // Если пользователь хочет, то клик по сагесту приведёт к поиску, и обновлять сагест уже не надо
+                        self.params.submit(e);
+                    } else if (self.params.change) { // Иначе - стандартное обновление сагеста
+                        self.params.change(e, self.args());
+                    }
+
+                    if (!$(e.target).closest(self.params.suggestItemCls).length) {
+                        $(self.root).removeClass(self.params.suggestCls).removeClass(self.params.autocompleteCls);
+                    }
+                }); // Почему не клик??
                 // .on('mousemove', '.' + self.params.suggestItemCls, self._events.mousemove);
         },
 
@@ -690,7 +688,7 @@ var
 
         dispose: function() {
             $(this.root).attr('data-surt-inited', 'disposed');
-            $(this.root).off('mousedown', '.' + this.params.suggestItemCls, this._events.click);
+            $(this.root).off('surt');
             clearTimeout(this._upTimer);
         },
 
