@@ -197,7 +197,7 @@ var
                             pickSuggest(true, e);
                         }
                         // Стандартный сабмит по ентеру
-                        if (self.params.submit && self._submitEvents.indexOf('enter') != -1) {
+                        if (self.params.submit && $.inArray('enter', self._submitEvents) != -1) {
                             self.params.submit(e);
                         }
                         // Удаляем сагесты и автокомплит
@@ -248,7 +248,7 @@ var
                                 data.kit = self.suggest[active];
                                 self.set(data, true);
                                 // Сабмит на заполнении автокомплита
-                                if (self.params.submit && self._submitEvents.indexOf('auto') != -1) {
+                                if (self.params.submit && $.inArray('auto', self._submitEvents) != -1) {
                                     self.params.submit(e);
                                 }
                                 if (self.suggest && self.suggest.length && self.params.complete) { // Для статистики
@@ -301,7 +301,7 @@ var
                     var suggestsItems = $('.' + params.suggestItemCls),
                         index = suggestsItems.index( $(this) );
 
-                    var willSubmit = self._submitEvents.indexOf('click') != -1;
+                    var willSubmit = $.inArray('click', self._submitEvents) != -1;
 
                     self._activeSuggest = index;
                     pickSuggest(willSubmit, e);
