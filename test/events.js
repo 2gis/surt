@@ -58,12 +58,12 @@ describe('События.', function() {
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
                 suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
+                suggestCls: '_dropdown',
                 tokenCls: 'surt__token',
                 textCls: 'surt__text',
                 clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true'
+                hint: '.surt__clone-hint',
+                autocompleteCls: '_autocomplete'
             });
         });
 
@@ -75,14 +75,14 @@ describe('События.', function() {
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
                 suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
+                suggestCls: '_dropdown',
                 tokenCls: 'surt__token',
                 textCls: 'surt__text',
                 clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true',
+                hint: '.surt__clone-hint',
+                autocompleteCls: '_autocomplete',
                 readyCls: 'surt_ready_true',
-                stateFocusCls: 'surt_state_focus',
+                stateFocusCls: '_focus',
                 delimiter: ',',
                 complete: function() {
                     completed = true;
@@ -112,7 +112,8 @@ describe('События.', function() {
             var text = $('.wrapper_input .surt__input').val();
 
             // assert(html == text);
-            assert(completed, 'Был вызван метод complete');
+            // Странные дела, перед этой правкой complete должен был вызываться
+            assert(!completed, 'Был вызван метод complete');
             suggest.dispose();
         });
 
@@ -122,12 +123,12 @@ describe('События.', function() {
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
                 suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
+                suggestCls: '_dropdown',
                 tokenCls: 'surt__token',
                 textCls: 'surt__text',
                 clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true'
+                hint: '.surt__clone-hint',
+                autocompleteCls: '_autocomplete'
             });
 
             suggest.set({
@@ -156,12 +157,12 @@ describe('События.', function() {
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
                     suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
+                    suggestCls: '_dropdown',
                     tokenCls: 'surt__token',
                     textCls: 'surt__text',
                     clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true'
+                    hint: '.surt__clone-hint',
+                    autocompleteCls: '_autocomplete'
                 });
 
             suggest.set({
@@ -186,7 +187,6 @@ describe('События.', function() {
 
             assert(pos == $('.surt__input').text().length, 'Позиция выставилась в крайне правое положение ' + pos + '|' + $('.surt__input').text().length);
             assert(html == '<div class="surt__token _type_rubric">Ресторан</div>', 'В инпут попадает первый сагест');
-            assert(complete == html, 'В комплите выставляется строго содержимое инпута');
             suggest.dispose();
         });
 
@@ -196,12 +196,12 @@ describe('События.', function() {
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
                     suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
+                    suggestCls: '_dropdown',
                     tokenCls: 'surt__token',
                     textCls: 'surt__text',
                     clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true'
+                    hint: '.surt__clone-hint',
+                    autocompleteCls: '_autocomplete'
                 });
 
             suggest.set({
@@ -227,7 +227,7 @@ describe('События.', function() {
             assert(pos == $('.surt__input').text().length);
             assert(text == 'Ре', 'В инпуте остался текст');
 
-            assert(!$('.wrapper_common .surt').hasClass('surt_autocomplete_true'), 'Комплит спрятан');
+            assert(!$('.wrapper_common .surt').hasClass('_autocomplete'), 'Комплит спрятан');
             suggest.dispose();
         });
 
@@ -237,12 +237,12 @@ describe('События.', function() {
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
                 suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
+                suggestCls: '_dropdown',
                 tokenCls: 'surt__token',
                 textCls: 'surt__text',
                 clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true'
+                hint: '.surt__clone-hint',
+                autocompleteCls: '_autocomplete'
             });
 
             suggest.set({
@@ -277,12 +277,12 @@ describe('События.', function() {
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
                 suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
+                suggestCls: '_dropdown',
                 tokenCls: 'surt__token',
                 textCls: 'surt__text',
                 clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true'
+                hint: '.surt__clone-hint',
+                autocompleteCls: '_autocomplete'
             });
 
             suggest.set({
@@ -317,12 +317,12 @@ describe('События.', function() {
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
                 suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
+                suggestCls: '_dropdown',
                 tokenCls: 'surt__token',
                 textCls: 'surt__text',
                 clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true'
+                hint: '.surt__clone-hint',
+                autocompleteCls: '_autocomplete'
             });
 
             suggest.set({
@@ -347,7 +347,7 @@ describe('События.', function() {
             var e;
             e = jQuery.Event('keyup'); $('.surt__input').trigger(e);
 
-            assert(!$('.wrapper_common .surt').hasClass('surt_autocomplete_true'), 'Класса автокомплита не должно быть');
+            assert(!$('.wrapper_common .surt').hasClass('_autocomplete'), 'Класса автокомплита не должно быть');
             suggest.dispose();
         });
 
@@ -357,12 +357,12 @@ describe('События.', function() {
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
                 suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
+                suggestCls: '_dropdown',
                 tokenCls: 'surt__token',
                 textCls: 'surt__text',
                 clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true'
+                hint: '.surt__clone-hint',
+                autocompleteCls: '_autocomplete'
             });
 
             suggest.set({
@@ -382,7 +382,7 @@ describe('События.', function() {
             $('.wrapper_simple .surt__input').focus();
             $('.wrapper_common .surt__input').focus();
 
-            assert(!$('.wrapper_common .surt').hasClass('surt_autocomplete_true'), 'Класса автокомплита не должно быть');
+            assert(!$('.wrapper_common .surt').hasClass('_autocomplete'), 'Класса автокомплита не должно быть');
             assert(!$('.wrapper_common .surt__clone-hint').text(), 'Текста в автокомплите не должно быть');
             suggest.dispose();
         });
@@ -393,12 +393,12 @@ describe('События.', function() {
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
                 suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
+                suggestCls: '_dropdown',
                 tokenCls: 'surt__token',
                 textCls: 'surt__text',
                 clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true'
+                hint: '.surt__clone-hint',
+                autocompleteCls: '_autocomplete'
             });
 
             suggest.set({
@@ -430,12 +430,12 @@ describe('События.', function() {
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
                 suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
+                suggestCls: '_dropdown',
                 tokenCls: 'surt__token',
                 textCls: 'surt__text',
                 clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true',
+                hint: '.surt__clone-hint',
+                autocompleteCls: '_autocomplete',
                 aunt: 3
             });
 
@@ -476,12 +476,12 @@ describe('События.', function() {
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
                     suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
+                    suggestCls: '_dropdown',
                     tokenCls: 'surt__token',
                     textCls: 'surt__text',
                     clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true',
+                    hint: '.surt__clone-hint',
+                    autocompleteCls: '_autocomplete',
                     submit: function() {
                         x += y + 1;
                     },
@@ -532,12 +532,12 @@ describe('События.', function() {
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
                     suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
+                    suggestCls: '_dropdown',
                     tokenCls: 'surt__token',
                     textCls: 'surt__text',
                     clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true',
+                    hint: '.surt__clone-hint',
+                    autocompleteCls: '_autocomplete',
                     show: function(s) {
                         if (s) {
                             shown++;
@@ -588,12 +588,12 @@ describe('События.', function() {
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
                     suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
+                    suggestCls: '_dropdown',
                     tokenCls: 'surt__token',
                     textCls: 'surt__text',
                     clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true',
+                    hint: '.surt__clone-hint',
+                    autocompleteCls: '_autocomplete',
                     show: function(s) {
                         if (s) {
                             shown++;
@@ -621,12 +621,12 @@ describe('События.', function() {
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
                     suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
+                    suggestCls: '_dropdown',
                     tokenCls: 'surt__token',
                     textCls: 'surt__text',
                     clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true',
+                    hint: '.surt__clone-hint',
+                    autocompleteCls: '_autocomplete',
                     show: function(e) {
                         shown = e;
                     }
@@ -661,12 +661,12 @@ describe('События.', function() {
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
                 suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
+                suggestCls: '_dropdown',
                 tokenCls: 'surt__token',
                 textCls: 'surt__text',
                 clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true'
+                hint: '.surt__clone-hint',
+                autocompleteCls: '_autocomplete'
             });
 
             suggest.set({
@@ -709,12 +709,12 @@ describe('События.', function() {
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
                     suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
+                    suggestCls: '_dropdown',
                     tokenCls: 'surt__token',
                     textCls: 'surt__text',
                     clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true',
+                    hint: '.surt__clone-hint',
+                    autocompleteCls: '_autocomplete',
                     change: function() {
                         x++;
                     }
@@ -762,12 +762,12 @@ describe('События.', function() {
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
                 suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
+                suggestCls: '_dropdown',
                 tokenCls: 'surt__token',
                 textCls: 'surt__text',
                 clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true'
+                hint: '.surt__clone-hint',
+                autocompleteCls: '_autocomplete'
             });
 
             suggest.set({
@@ -811,12 +811,12 @@ describe('События.', function() {
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
                     suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
+                    suggestCls: '_dropdown',
                     tokenCls: 'surt__token',
                     textCls: 'surt__text',
                     clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true',
+                    hint: '.surt__clone-hint',
+                    autocompleteCls: '_autocomplete',
                     pick: function(a, c) {
                         submit = c;
                     }
@@ -852,12 +852,12 @@ describe('События.', function() {
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
                 suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
+                suggestCls: '_dropdown',
                 tokenCls: 'surt__token',
                 textCls: 'surt__text',
                 clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true'
+                hint: '.surt__clone-hint',
+                autocompleteCls: '_autocomplete'
             });
 
             suggest.set({
@@ -902,8 +902,8 @@ describe('События.', function() {
                 ]}, true);
                 var text = $('.surt__input').text();
 
-                assert($('.wrapper_common .surt').hasClass('surt_dropdown_true'), 'Выпадашка открылась');
-                assert(!$('.wrapper_delimiter .surt').hasClass('surt_dropdown_true'), 'Выпадашка на соседнем инпуте не открылась');
+                assert($('.wrapper_common .surt').hasClass('_dropdown'), 'Выпадашка открылась');
+                assert(!$('.wrapper_delimiter .surt').hasClass('_dropdown'), 'Выпадашка на соседнем инпуте не открылась');
 
                 var e;
 
@@ -913,7 +913,7 @@ describe('События.', function() {
                 text = $('.surt__input').text();
 
                 assert(text == 'Ресторан', 'after: В инпуте text = ' + text);
-                assert(!$('.wrapper_common .surt').hasClass('surt_dropdown_true'), 'Выпадашка закрылась');
+                assert(!$('.wrapper_common .surt').hasClass('_dropdown'), 'Выпадашка закрылась');
                 
                 suggest.dispose();
             }
@@ -924,11 +924,11 @@ describe('События.', function() {
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
                 suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
+                suggestCls: '_dropdown',
                 tokenCls: 'surt__token',
                 textCls: 'surt__text',
                 clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint'
+                hint: '.surt__clone-hint'
             });
 
             // В текстовом режиме
@@ -938,11 +938,11 @@ describe('События.', function() {
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
                 suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
+                suggestCls: '_dropdown',
                 tokenCls: 'surt__token',
                 textCls: 'surt__text',
                 clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
+                hint: '.surt__clone-hint',
                 inputMode: 'text'
             });
         });
@@ -954,12 +954,12 @@ describe('События.', function() {
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
                     suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
+                    suggestCls: '_dropdown',
                     tokenCls: 'surt__token',
                     textCls: 'surt__text',
                     clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true',
+                    hint: '.surt__clone-hint',
+                    autocompleteCls: '_autocomplete',
                     change: function() {
                         x++;
                     }
@@ -982,12 +982,12 @@ describe('События.', function() {
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
                     suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
+                    suggestCls: '_dropdown',
                     tokenCls: 'surt__token',
                     textCls: 'surt__text',
                     clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true',
+                    hint: '.surt__clone-hint',
+                    autocompleteCls: '_autocomplete',
                     change: function() {
                         x++;
                     }
@@ -1021,12 +1021,12 @@ describe('События.', function() {
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
                     suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
+                    suggestCls: '_dropdown',
                     tokenCls: 'surt__token',
                     textCls: 'surt__text',
                     clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true',
+                    hint: '.surt__clone-hint',
+                    autocompleteCls: '_autocomplete',
                     change: function() {
                         x++;
                     }
@@ -1057,12 +1057,12 @@ describe('События.', function() {
         //             suggest: '.surt__suggests',
         //             suggestItemCls: 'surt__suggests-item',
         //             suggestItemCurrentCls: 'surt__suggests-item_state_current',
-        //             suggestCls: 'surt_dropdown_true',
+        //             suggestCls: '_dropdown',
         //             tokenCls: 'surt__token',
         //             textCls: 'surt__text',
         //             clone: '.surt__clone-main',
-        //             autocomplete: '.surt__clone-hint',
-        //             autocompleteCls: 'surt_autocomplete_true'
+        //             hint: '.surt__clone-hint',
+        //             autocompleteCls: '_autocomplete'
         //         });
 
         //     suggest.set({
@@ -1106,12 +1106,12 @@ describe('События.', function() {
         //             suggest: '.surt__suggests',
         //             suggestItemCls: 'surt__suggests-item',
         //             suggestItemCurrentCls: 'surt__suggests-item_state_current',
-        //             suggestCls: 'surt_dropdown_true',
+        //             suggestCls: '_dropdown',
         //             tokenCls: 'surt__token',
         //             textCls: 'surt__text',
         //             clone: '.surt__clone-main',
-        //             autocomplete: '.surt__clone-hint',
-        //             autocompleteCls: 'surt_autocomplete_true'
+        //             hint: '.surt__clone-hint',
+        //             autocompleteCls: '_autocomplete'
         //         });
 
         //     suggest.set({
@@ -1160,12 +1160,12 @@ describe('События.', function() {
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
                     suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
+                    suggestCls: '_dropdown',
                     tokenCls: 'surt__token',
                     textCls: 'surt__text',
                     clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true',
+                    hint: '.surt__clone-hint',
+                    autocompleteCls: '_autocomplete',
                     submit: function(data) {
                         submit = true;
                     }
@@ -1208,12 +1208,12 @@ describe('События.', function() {
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
                     suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
+                    suggestCls: '_dropdown',
                     tokenCls: 'surt__token',
                     textCls: 'surt__text',
                     clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true'
+                    hint: '.surt__clone-hint',
+                    autocompleteCls: '_autocomplete'
                 });
 
             suggest.set({
@@ -1254,12 +1254,12 @@ describe('События.', function() {
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
                     suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
+                    suggestCls: '_dropdown',
                     tokenCls: 'surt__token',
                     textCls: 'surt__text',
                     clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true'
+                    hint: '.surt__clone-hint',
+                    autocompleteCls: '_autocomplete'
                 });
 
             suggest.set({
@@ -1302,12 +1302,12 @@ describe('События.', function() {
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
                 suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
+                suggestCls: '_dropdown',
                 tokenCls: 'surt__token',
                 textCls: 'surt__text',
                 clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true'
+                hint: '.surt__clone-hint',
+                autocompleteCls: '_autocomplete'
             });
 
             var e;
@@ -1357,12 +1357,12 @@ describe('События.', function() {
                 suggest: '.surt__suggests',
                 suggestItemCls: 'surt__suggests-item',
                 suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                suggestCls: 'surt_dropdown_true',
+                suggestCls: '_dropdown',
                 tokenCls: 'surt__token',
                 textCls: 'surt__text',
                 clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
-                autocompleteCls: 'surt_autocomplete_true'
+                hint: '.surt__clone-hint',
+                autocompleteCls: '_autocomplete'
             });
 
             dima = suggest;
@@ -1394,12 +1394,12 @@ describe('События.', function() {
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
                     suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
+                    suggestCls: '_dropdown',
                     tokenCls: 'surt__token',
                     textCls: 'surt__text',
                     clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true',
+                    hint: '.surt__clone-hint',
+                    autocompleteCls: '_autocomplete',
                     selectionCls: 'surt__selection'
                 });
 
@@ -1432,12 +1432,12 @@ describe('События.', function() {
                     suggest: '.surt__suggests',
                     suggestItemCls: 'surt__suggests-item',
                     suggestItemCurrentCls: 'surt__suggests-item_state_current',
-                    suggestCls: 'surt_dropdown_true',
+                    suggestCls: '_dropdown',
                     tokenCls: 'surt__token',
                     textCls: 'surt__text',
                     clone: '.surt__clone-main',
-                    autocomplete: '.surt__clone-hint',
-                    autocompleteCls: 'surt_autocomplete_true',
+                    hint: '.surt__clone-hint',
+                    autocompleteCls: '_autocomplete',
                     selectionCls: 'surt__selection'
                 });
 

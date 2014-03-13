@@ -59,7 +59,7 @@ module.exports = function(grunt) {
             options: {
                 view: '1024x768'
             },
-            all: ['test/*.auto.html']
+            all: ['test/*.html']
         },
         'mochacli': {
             options: {

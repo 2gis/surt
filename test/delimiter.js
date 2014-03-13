@@ -10,7 +10,7 @@ describe('Разделитель токенов.', function() {
                 tokenCls: 'surt__token',
                 textCls: 'surt__text',
                 clone: '.surt__clone-main',
-                autocomplete: '.surt__clone-hint',
+                hint: '.surt__clone-hint',
                 autocompleteCls: 'surt_autocomplete_true',
                 readyCls: 'surt_ready_true',
                 delimiter: ',',

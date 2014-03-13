@@ -50,26 +50,22 @@ var
             }
         }
 
-        try {
-            params.root = $(params.root)[0];
+        params.root = $(params.root)[0];
 
-            validateNode(params.root, 'params.root');
-            if (params.input) {
-                params.input = $(params.input, params.root)[0];
-            }
-            if (!params.input) {
-                params.input = $('[contenteditable="true"]', params.root);
-            }
-            validateNode(params.input, 'params.input');
-
-            if ($(params.root).attr('data-surt-inited') == 'true') {
-                throw new Error('Surt: already initialized');
-            }
-
-            ret = new surt.fn.constructor(params);
-        } catch (e) {
-            throw new Error(e.name + ': ' + e.message);
+        validateNode(params.root, 'params.root');
+        if (params.input) {
+            params.input = $(params.input, params.root)[0];
         }
+        if (!params.input) {
+            params.input = $('[contenteditable="true"]', params.root);
+        }
+        validateNode(params.input, 'params.input');
+
+        if ($(params.root).attr('data-surt-inited') == 'true') {
+            throw new Error('Surt: already initialized');
+        }
+
+        ret = new surt.fn.constructor(params);
 
         return ret;
     };
@@ -87,8 +83,9 @@ var
             this.root = $(params.root, root)[0];
             this.suggestNode = $(params.suggest, root)[0];
             this.cloneNode = $(params.clone, root)[0];
-            this.autocompleteNode = $(params.autocomplete, root)[0];
+            this.hintNode = $(params.hint, root)[0];
             this.delimiter = params.delimiter || ''; // Разделитель токенов, между правой границей токена и следующим за ним пробелом
+            this.placeholder = params.placeholder || '';
             this._submitEvents = params.events || ['enter'];
             this._pressedKeys = 0;
             this._time = new Date().getTime();
@@ -136,6 +133,8 @@ var
                 return key == 37 || key == 39 || key == 16 || key == 17 || key == 18 || key == 91 || key == 35 || key == 36 || key == 13 || key == 8;
             }
 
+            this.updateHint();
+
             // Навешиваем все необходимые события
             $(this.inputNode)
                 .on('keyup.surt', function(e){
@@ -165,7 +164,7 @@ var
                     }
 
                     self.updateInput();
-                    self.updateAutocomplete();
+                    self.updateHint();
 
                     data = self.args();
 
@@ -187,6 +186,8 @@ var
                     // Для контрол-клавиш блокировки быть не должно
                     if (isControlKey(key)) {
                         self._pressedKeys = 0;
+                    } else {
+                        $(self.root).removeClass(self.params.placeholderCls);
                     }
 
                     // Enter
@@ -274,7 +275,7 @@ var
 
                     $(self.root).addClass(self.params.stateFocusCls);
                     $(self.root).addClass(self.params.suggestCls);
-                    self.updateAutocomplete();
+                    self.updateHint();
 
                     if (noBefore) { // Произошла именно инверсия показа сагеста, а не очередной показ
                         if (self.params.show) {
@@ -350,7 +351,7 @@ var
                 this.updateSuggest();
             }
 
-            this.updateAutocomplete();
+            this.updateHint();
 
             this.restoreCursor();
         },
@@ -367,7 +368,7 @@ var
         update: function() {
             this.updateKit();
             this.updateSuggest();
-            this.updateAutocomplete();
+            this.updateHint();
         },
 
         // Обновляет инпут по смыслам, включая хвост
@@ -501,14 +502,27 @@ var
             }
         },
 
-        // Обновляет html в автокомплите
+        updateHint: function() {
+            this.updateAutocomplete();
+
+            if (!this.text()) {
+                $(this.root)
+                    .addClass(this.params.placeholderCls)
+                    .removeClass(this.params.autocompleteCls);
+                this.updatePlaceholder();
+            }
+        },
+
+        // Обновляет html в подсказке как автокомплит
         updateAutocomplete: function() {
             var active = this._activeSuggest == -1 ? 0 : this._activeSuggest, // Индекс текущего сагеста
                 su = this.suggest && this.suggest.length && this.suggest[active], // Текущий сагест
                 text = this.text(),
                 self = this;
 
-            if (!this.autocompleteNode) return;
+            if (!this.hintNode) return;
+
+            $(this.root).removeClass(this.params.placeholderCls);
 
             // Автокомплит
             if (this.kit && this.kit.length && this.cloneNode) {
@@ -536,7 +550,7 @@ var
                         $(this.root).removeClass(this.params.readyCls);
                     }
 
-                    this.autocompleteNode.innerHTML = suggestText.slice(text.length);
+                    this.hintNode.innerHTML = suggestText.slice(text.length);
                     this.cloneNode.innerHTML = this.html();
                     if ($(this.root).hasClass(this.params.suggestCls) && isAutocomplete && suggestText.length < this.params.aunt) {
                         $(this.root).addClass(this.params.autocompleteCls);
@@ -551,9 +565,17 @@ var
             }
 
             function rmAutocomplete() {
-                self.autocompleteNode.innerHTML = '';
+                $(self.hintNode).html('');
+                $(self.cloneNode).html('');
                 $(self.root).removeClass(self.params.autocompleteCls);
             }
+        },
+
+        // Обновляет html в подсказке как плейсхолдер
+        updatePlaceholder: function(text) {
+            text = text || this.placeholder;
+
+            $(this.hintNode).html(this.placeholder);
         },
 
         // Возвращает текст из поисковой строки
@@ -653,7 +675,7 @@ var
             if (index >= 0) {
                 suggestsItems.eq(index).addClass(currentCls); // Если индекс не отрицательный - добавляем класс на текущий кит сагеста
                 this._activeSuggest = index;
-                this.updateAutocomplete();
+                this.updateHint();
             }
 
             this._activeSuggest = index;

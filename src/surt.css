@@ -35,9 +35,10 @@ body {
         transition: box-shadow 0.2s;
         border-radius: 2px;
         }
-    .surt_state_focus .surt__wrap:after {
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) inset,
-                    0 0 5px 0 rgba(13, 165, 213, .5) inset;
+    .surt._focus .surt__wrap:after {
+        box-shadow:
+            0 2px 6px rgba(0, 0, 0, 0.15) inset,
+            0 0 5px 0 rgba(13, 165, 213, .5) inset;
         }
     .surt__wrap:hover {
         box-shadow: 0 0 2px 1px #55c0e2;
@@ -77,24 +78,25 @@ body {
                 opacity: 0;
                 color: #ddd;
                 }
-            .surt__clone-hint:after {
-                content: '';
-                background: url('../demo/surt-autocomplete.png');
-                width: 16px;
-                height: 12px;
+            .surt._autocomplete .surt__clone-hint,
+            .surt._placeholder .surt__clone-hint {
+                opacity: 1;
+                }
+            .surt._autocomplete .surt__clone-hint:after {
                 display: inline-block;
                 margin: 0 0 0 8px;
+                width: 16px;
+                height: 12px;
+                background: url('../demo/surt-autocomplete.png');
+                content: '';
                 vertical-align: -2px;
                 }
-            .surt_autocomplete_true .surt__clone-hint {
+            .surt._ready .surt__clone-hint {
                 opacity: 1;
-            }
-            .surt_ready_true .surt__clone-hint {
-                opacity: 1;
-            }
-            .surt_ready_true .surt__clone-hint:after {
+                }
+            .surt._ready .surt__clone-hint:after {
                 background: url('../demo/surt-ready.png');
-            }
+                }
         .surt__suggests {
             list-style: none;
             margin:0;
@@ -104,7 +106,7 @@ body {
             -webkit-user-select: none;
             user-select: none;
             }
-        .surt_dropdown_true .surt__suggests {
+        .surt._dropdown .surt__suggests {
             display: block;
             }
             .surt__suggests-item {
@@ -241,11 +243,11 @@ body {
 }
 
 /* Когда курсор внутри инпута */
-.surt_state_focus {
+.surt._focus {
     z-index: 2;
 }
 
 /* Когда показана выпадашка сагестов (обычно скрыта) */
-.surt_dropdown_true {
+.surt._dropdown {
     z-index: 2;
 }
