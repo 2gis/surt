@@ -1473,6 +1473,51 @@ describe('События.', function() {
         });
     });
 
+    describe('Параметр suggestCls.', function() {
+        it('Класс suggestCls убирается когда количество сагестов становится 0', function() {
+            var suggest = $('.wrapper_common .surt').surt({
+                    input: '.surt__input',
+                    suggest: '.surt__suggests',
+                    suggestItemCls: 'surt__suggests-item',
+                    suggestItemCurrentCls: 'surt__suggests-item_state_current',
+                    suggestCls: '_dropdown',
+                    tokenCls: 'surt__token',
+                    textCls: 'surt__text',
+                    clone: '.surt__clone-main',
+                    hint: '.surt__clone-hint',
+                    autocompleteCls: '_autocomplete',
+                    selectionCls: 'surt__selection'
+                });
+
+            // Выставляем текст в диво-инпут
+            suggest.set({
+                kit: [{
+                    text: 'рес',
+                    type: 'text'
+                }],
+                suggest: [[{
+                    text: 'КрабоРесторан',
+                    type: 'text'
+                }]]
+            });
+
+            $('.wrapper_common .surt__input').trigger('focus');
+
+            assert($('.wrapper_common .surt').hasClass('_dropdown'), 'Класс _dropdown должен был навеситься');
+
+            // Заполняем сагест - должно произойти выделение подстрок 'рес' в токенам
+            suggest.set({
+                suggest: []
+            });
+
+            $('.wrapper_common .surt__input').trigger('focus');
+
+            assert(!$('.wrapper_common .surt').hasClass('_dropdown'), 'Класс _dropdown должен был удалиться');
+
+            suggest.dispose();
+        });
+    });
+
     it('Enter при наличии элемента с классом suggestItemCurrentCls не приводит к ошибке', function() {
             var suggest = $('.wrapper_common .surt').surt({
                     input: '.surt__input',

@@ -274,7 +274,9 @@ var
                     var noBefore = !$(self.root).hasClass(self.params.suggestCls);
 
                     $(self.root).addClass(self.params.stateFocusCls);
-                    $(self.root).addClass(self.params.suggestCls);
+                    if (self.suggest && self.suggest.length) {
+                        $(self.root).addClass(self.params.suggestCls);
+                    }
                     self.updateHint();
 
                     if (noBefore) { // Произошла именно инверсия показа сагеста, а не очередной показ
@@ -301,6 +303,8 @@ var
                 .on('mousedown.surt', '.' + self.params.suggestItemCls, function(e) {
                     var suggestsItems = $('.' + params.suggestItemCls),
                         index = suggestsItems.index( $(this) );
+
+                    if (!self.suggest || !self.suggest[index]) return; // html illegal append situation
 
                     var willSubmit = $.inArray('click', self._submitEvents) != -1;
 
