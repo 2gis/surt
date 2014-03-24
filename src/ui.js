@@ -118,13 +118,11 @@ var
                     suggest: suggest
                 }, true);
 
-                // self.restoreCursor(self.text().length); // Крайне правое положение
-
                 if (params.pick) params.pick(data.kit, submit, e);
 
                 self.markSuggest(-1); // Снимаем выделение с сагестов
 
-                // self.restoreCursor(self.text().length);
+                self.scroll();
             }
 
             // Если нажата не буква - возвращает true
@@ -606,15 +604,23 @@ var
 
         // Возвращает или устанавливает html в инпут
         html: function(html) {
+            var input = $(this.inputNode);
+
             if (!html) {
-                return $(this.inputNode).html() || this.text();
+                return input.html() || this.text();
             } else {
                 if (this.inputNode.tagName == 'INPUT') {
-                    $(this.inputNode).val(html);
+                    input.val(html);
                 } else {
-                    $(this.inputNode).html(html);
+                    input.html(html);
                 }
+                this.scroll();
             }
+        },
+
+        // Переводит текст в крайне правое положение, чтоб было видно конец строки текста
+        scroll: function() {
+            this.inputNode.scrollLeft = this.inputNode.scrollWidth; // pseudo Infinity, which does not supported by Chrome
         },
 
         // Возвращает текущую версию с данными

@@ -118,13 +118,11 @@ var
                     suggest: suggest
                 }, true);
 
-                // self.restoreCursor(self.text().length); // Крайне правое положение
-
                 if (params.pick) params.pick(data.kit, submit, e);
 
                 self.markSuggest(-1); // Снимаем выделение с сагестов
 
-                // self.restoreCursor(self.text().length);
+                self.scroll();
             }
 
             // Если нажата не буква - возвращает true
@@ -606,15 +604,23 @@ var
 
         // Возвращает или устанавливает html в инпут
         html: function(html) {
+            var input = $(this.inputNode);
+
             if (!html) {
-                return $(this.inputNode).html() || this.text();
+                return input.html() || this.text();
             } else {
                 if (this.inputNode.tagName == 'INPUT') {
-                    $(this.inputNode).val(html);
+                    input.val(html);
                 } else {
-                    $(this.inputNode).html(html);
+                    input.html(html);
                 }
+                this.scroll();
             }
+        },
+
+        // Переводит текст в крайне правое положение, чтоб было видно конец строки текста
+        scroll: function() {
+            this.inputNode.scrollLeft = this.inputNode.scrollWidth; // pseudo Infinity, which does not supported by Chrome
         },
 
         // Возвращает текущую версию с данными
@@ -936,19 +942,11 @@ var
     };
 
     surt.fn.restoreCursor = function(ccp) {
+        if (this.textMode()) return;
         if (!window.getSelection) return; // IE8-
 
         var self = this,
             n = ccp;
-
-        // if (!node || typeof N == 'undefined') return;
-
-        // if (self.inputNode.focus) {
-        //     setTimeout(function() {
-        //         self.inputNode.blur(); // f webkit
-        //         self.inputNode.focus(); // Костыль для возвращения фокуса в инпут
-        //     }, 0);
-        // }
 
         var range = document.createRange(),
             selection = window.getSelection(),
@@ -976,17 +974,15 @@ var
             selection.addRange(range); // A range object that will be added to the selection.
         }
 
-        if (ccp >= this.text().length - 1) {
-            setTimeout(function() {
-                // Chrome scroll to the end
-                self.inputNode.scrollLeft = 99999;
+        // if (ccp >= this.text().length - 1) {
+        //     setTimeout(function() {
+        //         // Chrome scroll to the end
+        //         self.inputNode.scrollLeft = 99999;
 
-                // Firefox scroll to the end
-                self.inputNode.selectionStart = n;
-                self.inputNode.selectionEnd = n;
-            }, 0);
-        }
-        
-        // this.inputNode.focus();
+        //         // Firefox scroll to the end
+        //         self.inputNode.selectionStart = n;
+        //         self.inputNode.selectionEnd = n;
+        //     }, 0);
+        // }
     };
 })();

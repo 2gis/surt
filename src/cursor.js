@@ -84,19 +84,11 @@
     };
 
     surt.fn.restoreCursor = function(ccp) {
+        if (this.textMode()) return;
         if (!window.getSelection) return; // IE8-
 
         var self = this,
             n = ccp;
-
-        // if (!node || typeof N == 'undefined') return;
-
-        // if (self.inputNode.focus) {
-        //     setTimeout(function() {
-        //         self.inputNode.blur(); // f webkit
-        //         self.inputNode.focus(); // Костыль для возвращения фокуса в инпут
-        //     }, 0);
-        // }
 
         var range = document.createRange(),
             selection = window.getSelection(),
@@ -124,17 +116,15 @@
             selection.addRange(range); // A range object that will be added to the selection.
         }
 
-        if (ccp >= this.text().length - 1) {
-            setTimeout(function() {
-                // Chrome scroll to the end
-                self.inputNode.scrollLeft = 99999;
+        // if (ccp >= this.text().length - 1) {
+        //     setTimeout(function() {
+        //         // Chrome scroll to the end
+        //         self.inputNode.scrollLeft = 99999;
 
-                // Firefox scroll to the end
-                self.inputNode.selectionStart = n;
-                self.inputNode.selectionEnd = n;
-            }, 0);
-        }
-        
-        // this.inputNode.focus();
+        //         // Firefox scroll to the end
+        //         self.inputNode.selectionStart = n;
+        //         self.inputNode.selectionEnd = n;
+        //     }, 0);
+        // }
     };
 })();

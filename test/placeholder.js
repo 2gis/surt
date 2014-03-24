@@ -19,7 +19,7 @@ describe('Placeholder.', function() {
     });
 
     it('Placeholder is setted and visible on start', function() {
-                assert.equal($('.surt__clone-hint').text(), params.placeholder);
+        assert.equal($('.surt__clone-hint').text(), params.placeholder);
         assert($('.surt').hasClass(params.placeholderCls), 'No placeholderCls found');
         assert(!$('.surt').hasClass(params.autocompleteCls), 'autocompleteCls found');
         assert($(params.hint).css('opacity') > 0, 'hint has zero opacity');
