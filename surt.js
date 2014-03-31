@@ -674,7 +674,7 @@ var
 
         // Выставляет класс текущности на кит сагеста номер index, и удаляет его с остальных
         markSuggest: function(index) {
-            var suggestsItems = $('.' + this.params.suggestItemCls),
+            var suggestsItems = $('.' + this.params.suggestItemCls, this.params.root),
                 currentCls = this.params.suggestItemCurrentCls;
 
             if (index === undefined) {
