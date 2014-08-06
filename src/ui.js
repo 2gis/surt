@@ -1,6 +1,8 @@
 (function(window, undefined) {
 var
-    space = String.fromCharCode(160),
+    SPACE = ' ',
+    nbspRe = new RegExp(String.fromCharCode(160), "g"),
+
     defaultParams = {
         input: '.surt__input',
         suggest: '.surt__suggests',
@@ -8,10 +10,9 @@ var
         aunt: 99
     };
 
+    // Заменяем неразрывные пробелы на пробел
     function spaces(text) {
-        var re = new RegExp(space, "g"); // Заменяем неразрывные пробелы на пробел
-
-        return text.replace(re, " ");
+        return text.replace(nbspRe, SPACE);
     }
 
     function kitsAreEqual(kit1, kit2) {
@@ -155,7 +156,7 @@ var
 
                         pickSuggest(false, e);
 
-                        var newText = self.text() + self.delimiter + ' ' + newChar;
+                        var newText = self.text() + self.delimiter + SPACE + newChar;
 
                         self.text(newText);
                         self.restoreCursor(newText.length);
@@ -383,7 +384,7 @@ var
                 this.setKit(newKit);
                 
                 if (tail && this.params.inputMode != 'text') {
-                    $(this.inputNode).append(tail.replace(' ', '&nbsp;'));
+                    $(this.inputNode).append(tail.replace(SPACE, '&nbsp;'));
                     this.restoreCursor(999);
                 }
             }
@@ -409,7 +410,7 @@ var
                             left = '<div class="' + textCls + '">';
                             right = '</div>';
                         } else if (tokenCls) {
-                            left = '<div class="' + tokenCls + ' ' + '_type_' + this.kit[i].type + '">';
+                            left = '<div class="' + tokenCls + SPACE + '_type_' + this.kit[i].type + '">';
                             right = '</div>';
                         }
                         html = left + html + right;
@@ -422,7 +423,7 @@ var
                     inputHTML.push(html);
                 }
 
-                inputHTML = inputHTML.join(this.delimiter + ' ');
+                inputHTML = inputHTML.join(this.delimiter + SPACE);
                 // if (this.trailingSpace) inputHTML += space;
                 if (this.params.inputMode != 'text' || force) {
                     this.html(inputHTML);
@@ -462,7 +463,7 @@ var
 
                         if ( this.suggest[i][j].type != 'text' ) {
                             if (tokenCls) {
-                                html = '<div class="' + tokenCls + ' ' + '_type_' + this.suggest[i][j].type + '">' + html + '</div>';
+                                html = '<div class="' + tokenCls + SPACE + '_type_' + this.suggest[i][j].type + '">' + html + '</div>';
                             }
 
                             kit.push(html);
@@ -476,10 +477,10 @@ var
                     }
 
                     count = kit.length;
-                    kit = kit.join(this.delimiter + ' ');
+                    kit = kit.join(this.delimiter + SPACE);
                     var countMod = '';
                     if (this.params.suggestItemCountCls) {
-                        countMod = ' ' + this.params.suggestItemCountCls + count;
+                        countMod = SPACE + this.params.suggestItemCountCls + count;
                     }
                     suggestHTML.push('<li class="' + this.params.suggestItemCls + countMod + '">' + kit + '</li>');
                     this._activeSuggest = -1;
@@ -544,7 +545,7 @@ var
                             suggestText.push(this.suggest[active][i].text);
                         }
                     }
-                    suggestText = suggestText.join(this.delimiter + ' ');
+                    suggestText = suggestText.join(this.delimiter + SPACE);
                     if (suggestText == text) { // Автокомплит полностью набран, пора нажимать ентер
                         $(this.root).addClass(this.params.readyCls);
                     } else {
@@ -586,7 +587,7 @@ var
             kit = kit || this.kit;
 
             for (var i = 0 ; i < kit.length ; i++) {
-                if (i > 0) text += ' ';
+                if (i > 0) text += SPACE;
                 text += kit[i].text;
             }
 
@@ -638,8 +639,8 @@ var
         parse: function(ctext) {
             var text = ctext || this.text();
 
-            this.trailingSpace = text[text.length - 1] === ' ';
-            newKit = this.parser(this.kit, text);
+            this.trailingSpace = text[text.length - 1] === SPACE;
+            var newKit = this.parser(this.kit, text);
 
             return newKit;
         },
@@ -679,16 +680,15 @@ var
 
             if (index === undefined) {
                 index = this._activeSuggest;
+            } else {
+                this._activeSuggest = index;
             }
 
             suggestsItems.removeClass(currentCls); // Удаляем со всех сагестов класс текущности
             if (index >= 0) {
                 suggestsItems.eq(index).addClass(currentCls); // Если индекс не отрицательный - добавляем класс на текущий кит сагеста
-                this._activeSuggest = index;
                 this.updateHint();
             }
-
-            this._activeSuggest = index;
         },
 
         // Возвращает нетокенные ошметки типа ", "
@@ -704,7 +704,7 @@ var
                     kitText.push(kit[i].text);
                 }
             }
-            kitText = kitText.join(this.delimiter + ' ');
+            kitText = kitText.join(this.delimiter + SPACE);
 
             if (text.indexOf(kitText) == 0) {
                 tail = text.substr(kitText.length, text.length);
