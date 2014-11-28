@@ -125,10 +125,16 @@ var
                 self.scroll();
             }
 
-            // Если нажата не буква - возвращает true
-            function isControlKey(key) {
-                // Left, Right, Shift, Left Ctrl, Right Ctrl, Cmd, End, Home, Enter, Backspace
-                return key == 37 || key == 39 || key == 16 || key == 17 || key == 18 || key == 91 || key == 35 || key == 36 || key == 13 || key == 8;
+            // Если нажата клавиша, меняющая текст - возвращает true
+            function affectsToValue(key) {
+                return key == 8 ||                  // backspace
+                    key == 32 ||                    // пробел
+                    key == 46 ||                    // delete
+                    key > 47 && key < 91 ||         // числа, буквы, символы
+                    key > 95 && key < 112 ||        // numpad
+                    key > 159 && key < 177 ||
+                    key > 187 && key < 193 ||
+                    key > 218 && key < 223;
             }
 
             this.updateHint();
@@ -149,7 +155,7 @@ var
                     }
 
                     // Если есть активный автокомплит, при дальнейшем наборе его нужно сначала подставить
-                    if (self.suggest && self.suggest[self._activeSuggest] && !isControlKey(key)) {
+                    if (self.suggest && self.suggest[self._activeSuggest] && affectsToValue(key)) {
                         var text = self.text(),
                             newChar = text.charAt(text.length - 1);
 
@@ -166,7 +172,7 @@ var
 
                     data = self.args();
 
-                    if (params.change && key != 13) {
+                    if (params.change && affectsToValue(key)) {
                         params.change(e, data);
                     }
                 })
@@ -176,13 +182,13 @@ var
                         data;
 
                     // Прочие буквы
-                    if ( e.type == 'keydown' && !isControlKey(key) ) { // При нажатии на символ
+                    if ( e.type == 'keydown' && affectsToValue(key) ) { // При нажатии на символ
                         self._pressedKeys++;
                         resetTimer();
                     }
 
                     // Для контрол-клавиш блокировки быть не должно
-                    if (isControlKey(key)) {
+                    if (!affectsToValue(key)) {
                         self._pressedKeys = 0;
                     } else {
                         $(self.root).removeClass(self.params.placeholderCls);
