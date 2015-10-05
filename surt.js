@@ -198,7 +198,7 @@ var
                     if (key == 13) {
                         e.preventDefault();
 
-                        var suggestPicked = !!($(self.root).hasClass(params.suggestCls) && $(self.root).find('.' + params.suggestItemCurrentCls).length);
+                        var suggestPicked = $(self.root).hasClass(params.suggestCls) && $(self.root).find('.' + params.suggestItemCurrentCls).length;
                         if (suggestPicked) {
                             pickSuggest(true, e);
                         }
@@ -388,7 +388,7 @@ var
 
             if (this.semanticChanged(newKit) || tail) {
                 this.setKit(newKit);
-                
+
                 if (tail && this.params.inputMode != 'text') {
                     $(this.inputNode).append(tail.replace(' ', '&nbsp;'));
                     this.restoreCursor(999);
@@ -777,7 +777,7 @@ var
     /**
      * @kit - old kit of tokens
      * @text - new user query
-     * @return - new kit based on old kit tokens and new text 
+     * @return - new kit based on old kit tokens and new text
      */
     var parser = function(kit, oriText) {
         var newKit = [],
@@ -878,7 +878,7 @@ var
      */
     function findPosChild(node, N) {
         var sum = 0;
-        
+
         for (var i = 0 ; i < node.childNodes.length ; i++) {
             var length = $(node.childNodes[i]).text().length;
 
@@ -894,7 +894,7 @@ var
         if (N < 0) { // При отрицательной позиции ставим курсор в начало
             sum = 0;
         }
-        
+
         return {
             child: node.childNodes[node.childNodes.length - 1],
             n: sum
@@ -925,7 +925,7 @@ var
             while (child && child != this.inputNode) {
                 var sibling = child.previousSibling,
                     text;
-                
+
                 while (sibling) {
                     text = $(sibling).text();
                     N += text.length; // К позиции курсора внутри child прибавляем позицию самого child
@@ -959,10 +959,10 @@ var
             selection = window.getSelection(),
             targetNode = this.inputNode,
             pos;
-        
+
         pos = this._lastPos ? this.text().length : this.cursorPos;
         n = n || pos;
-        
+
         // Цикл вниз по детям для поиска текстовой ноды куда надо выставить курсор
         if (this.inputNode.tagName != 'INPUT') {
             while (targetNode && targetNode.nodeType == 1) {
@@ -971,7 +971,7 @@ var
                 n = obj.n;
             }
         }
-        
+
         if (targetNode && targetNode.nodeType == 3) {
             n = Math.min(n, $(targetNode).text().length);
             n = Math.max(n, 0);
