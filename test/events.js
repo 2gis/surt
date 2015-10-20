@@ -16,7 +16,10 @@ describe('События.', function() {
             change: callback
         });
 
-        $('.surt__input').trigger('keyup');
+        var e = $.Event('keyup');
+        // charCode of print-character, other keyCodes don't cause change event
+        e.keyCode = 65;
+        $('.surt__input').trigger(e);
 
         suggest.dispose();
         assert(x == 1);
