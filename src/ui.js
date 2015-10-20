@@ -199,7 +199,8 @@ var
                     }
 
                     // Для контрол-клавиш блокировки быть не должно
-                    if (!affectsToValue(key)) {
+                    // Дополнительно учитывается случай, когда событие инициировано из кода (e.keyCode = undefined)
+                    if (key && !affectsToValue(key)) {
                         self._pressedKeys = 0;
                     } else {
                         $(self.root).removeClass(self.params.placeholderCls);
