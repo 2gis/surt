@@ -750,6 +750,7 @@ var
 
     surt.version = '0.3.0';
 })(this);
+
 (function(window, undefined) {
     // var surt = window.surt || {};
 
@@ -863,6 +864,7 @@ var
         $.fn.surt.fn.parser = parser;
     }
 })(this);
+
 // Cursor positioning in content editable container
 (function() {
     var surt = $.fn.surt;
