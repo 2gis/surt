@@ -198,12 +198,13 @@ var
                     if (key == 13) {
                         e.preventDefault();
 
-                        if ( $(self.root).hasClass(params.suggestCls) && $(self.root).find('.' + params.suggestItemCurrentCls).length ) {
+                        var suggestPicked = $(self.root).hasClass(params.suggestCls) && $(self.root).find('.' + params.suggestItemCurrentCls).length;
+                        if (suggestPicked) {
                             pickSuggest(true, e);
                         }
                         // Стандартный сабмит по ентеру
                         if (self.params.submit && $.inArray('enter', self._submitEvents) != -1) {
-                            self.params.submit(e);
+                            self.params.submit(e, suggestPicked);
                         }
                         // Удаляем сагесты и автокомплит
                         $(self.root).removeClass(params.suggestCls);
@@ -254,7 +255,7 @@ var
                                 self.set(data, true);
                                 // Сабмит на заполнении автокомплита
                                 if (self.params.submit && $.inArray('auto', self._submitEvents) != -1) {
-                                    self.params.submit(e);
+                                    self.params.submit(e, true);
                                 }
                                 if (self.suggest && self.suggest.length && self.params.complete) { // Для статистики
                                     self.params.complete();
@@ -315,7 +316,7 @@ var
                     self._activeSuggest = index;
                     pickSuggest(willSubmit, e);
                     if (self.params.submit && willSubmit) { // Если пользователь хочет, то клик по сагесту приведёт к поиску, и обновлять сагест уже не надо
-                        self.params.submit(e);
+                        self.params.submit(e, true);
                     } else if (self.params.change) { // Иначе - стандартное обновление сагеста
                         self.params.change(e, self.args());
                     }
@@ -387,7 +388,7 @@ var
 
             if (this.semanticChanged(newKit) || tail) {
                 this.setKit(newKit);
-                
+
                 if (tail && this.params.inputMode != 'text') {
                     $(this.inputNode).append(tail.replace(' ', '&nbsp;'));
                     this.restoreCursor(999);

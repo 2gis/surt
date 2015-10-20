@@ -25,7 +25,7 @@
     /**
      * @kit - old kit of tokens
      * @text - new user query
-     * @return - new kit based on old kit tokens and new text 
+     * @return - new kit based on old kit tokens and new text
      */
     var parser = function(kit, oriText) {
         var newKit = [],
