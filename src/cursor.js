@@ -13,7 +13,7 @@
      */
     function findPosChild(node, N) {
         var sum = 0;
-        
+
         for (var i = 0 ; i < node.childNodes.length ; i++) {
             var length = $(node.childNodes[i]).text().length;
 
@@ -29,7 +29,7 @@
         if (N < 0) { // При отрицательной позиции ставим курсор в начало
             sum = 0;
         }
-        
+
         return {
             child: node.childNodes[node.childNodes.length - 1],
             n: sum
@@ -60,7 +60,7 @@
             while (child && child != this.inputNode) {
                 var sibling = child.previousSibling,
                     text;
-                
+
                 while (sibling) {
                     text = $(sibling).text();
                     N += text.length; // К позиции курсора внутри child прибавляем позицию самого child
@@ -94,10 +94,10 @@
             selection = window.getSelection(),
             targetNode = this.inputNode,
             pos;
-        
+
         pos = this._lastPos ? this.text().length : this.cursorPos;
         n = n || pos;
-        
+
         // Цикл вниз по детям для поиска текстовой ноды куда надо выставить курсор
         if (this.inputNode.tagName != 'INPUT') {
             while (targetNode && targetNode.nodeType == 1) {
@@ -106,7 +106,7 @@
                 n = obj.n;
             }
         }
-        
+
         if (targetNode && targetNode.nodeType == 3) {
             n = Math.min(n, $(targetNode).text().length);
             n = Math.max(n, 0);
