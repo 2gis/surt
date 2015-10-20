@@ -166,6 +166,8 @@ var
                     }
 
                     // Если есть активный автокомплит, при дальнейшем наборе его нужно сначала подставить
+                    // Используем isControlKey вместо affectsToValue, так как клавиши delete и backspace
+                    // не должны влиять на выбор элемента из саггеста
                     if (self.suggest && self.suggest[self._activeSuggest] && !isControlKey(key)) {
                         var text = self.text(),
                             newChar = text.charAt(text.length - 1);
