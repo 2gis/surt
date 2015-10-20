@@ -137,6 +137,17 @@ var
                     key > 218 && key < 223;
             }
 
+            // Если нажата не буква - возвращает true
+            function isControlKey(key) {
+                // Left, Right, Shift, Left Ctrl, Right Ctrl, Cmd, End, Home, Enter, Backspace, Delete
+                return key == 37 || key == 39 ||
+                    key == 16 || key == 17 ||
+                    key == 18 || key == 91 ||
+                    key == 35 || key == 36 ||
+                    key == 13 || key == 8 ||
+                    key == 46;
+            }
+
             this.updateHint();
 
             // Навешиваем все необходимые события
@@ -155,7 +166,7 @@ var
                     }
 
                     // Если есть активный автокомплит, при дальнейшем наборе его нужно сначала подставить
-                    if (self.suggest && self.suggest[self._activeSuggest] && affectsToValue(key)) {
+                    if (self.suggest && self.suggest[self._activeSuggest] && !isControlKey(key)) {
                         var text = self.text(),
                             newChar = text.charAt(text.length - 1);
 

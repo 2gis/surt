@@ -34,7 +34,7 @@ describe('Позиция курсора.', function() {
             input: '.surt__input',
             suggest: '.surt__suggests',
             suggestItemCls: 'surt__suggests-item',
-            suggestCls: 'surt_dropdown_true',
+            suggestCls: '_dropdown',
             tokenCls: 'surt__token',
             textCls: 'surt__text'
         });
