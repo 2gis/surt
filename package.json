@@ -1,17 +1,19 @@
 {
   "name": "surt",
-  "description": "Smart suggest.",
-  "version": "0.2.10",
-  "homepage": "https://github.com/Diokuz/surt",
+  "description": "Smart suggest widget",
+  "version": "0.2.13",
+  "homepage": "https://github.com/2gis/surt",
   "authors": [
     "Dmitry Kuznecov <@Diokuz>"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Diokuz/surt.git"
+    "url": "https://github.com/2gis/surt.git"
   },
   "keywords": [
-    "scrollbar",
+    "dropdown",
+    "suggest",
+    "autocompletion",
     "custom",
     "crossbrowser"
   ],
@@ -28,5 +30,6 @@
     "grunt-mocha-phantomjs": "~0.3.0",
     "chai": "~1.7.0",
     "grunt-closure-compiler": "0.0.21"
-  }
+  },
+  "license": "MIT"
 }
