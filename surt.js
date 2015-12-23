@@ -596,7 +596,7 @@ var
 
         // Обновляет html в подсказке как плейсхолдер
         updatePlaceholder: function(text) {
-            text = text || this.placeholder;
+            this.placeholder = text || this.placeholder;
 
             $(this.hintNode).html(this.placeholder);
         },
