@@ -1,7 +1,7 @@
 {
   "name": "surt",
   "description": "Smart suggest widget",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "homepage": "https://github.com/2gis/surt",
   "authors": [
     "Dmitry Kuznecov <@Diokuz>"
