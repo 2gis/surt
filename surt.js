@@ -134,7 +134,8 @@ var
                     key > 95 && key < 112 ||        // numpad
                     key > 159 && key < 177 ||
                     key > 187 && key < 193 ||
-                    key > 218 && key < 223;
+                    key > 218 && key < 223 ||
+                    key > 256;
             }
 
             // Если нажата не буква - возвращает true
@@ -165,6 +166,15 @@ var
                         return;
                     }
 
+                    if (key == 229) {
+                        // IME charcode: мобильные браузеры не умеют передавать оригинальные коды.
+                        // Так что берем последний символ, щито поделать.
+                        key = self.text().charCodeAt(self.text().length - 1);
+                        if (key != key) { // если нету, тут будет NaN, отлавливаем.
+                            return;
+                        }
+                    }
+
                     // Если есть активный автокомплит, при дальнейшем наборе его нужно сначала подставить
                     // Используем isControlKey вместо affectsToValue, так как клавиши delete и backspace
                     // не должны влиять на выбор элемента из саггеста
@@ -172,6 +182,9 @@ var
                         var text = self.text(),
                             newChar = text.charAt(text.length - 1);
 
+                        if (newChar == ' ') { // Если передан пробел, второй пробел не требуется
+                            newChar = '';
+                        }
                         pickSuggest(false, e);
 
                         var newText = self.text() + self.delimiter + ' ' + newChar;
@@ -211,15 +224,21 @@ var
                     // Enter
                     if (key == 13) {
                         e.preventDefault();
+                        var submit = true;
+                        if (self._activeSuggest != -1 && self.suggest[self._activeSuggest][0].incomplete_query) {
+                            submit = false;
+                        }
 
                         var suggestPicked = $(self.root).hasClass(params.suggestCls) && $(self.root).find('.' + params.suggestItemCurrentCls).length;
                         if (suggestPicked) {
-                            pickSuggest(true, e);
+                            pickSuggest(submit, e);
                         }
+
                         // Стандартный сабмит по ентеру
-                        if (self.params.submit && $.inArray('enter', self._submitEvents) != -1) {
+                        if (submit && self.params.submit && $.inArray('enter', self._submitEvents) != -1) {
                             self.params.submit(e, suggestPicked);
                         }
+
                         // Удаляем сагесты и автокомплит
                         $(self.root).removeClass(params.suggestCls);
                         $(self.root).removeClass(params.autocompleteCls);
@@ -573,7 +592,9 @@ var
                         $(this.root).removeClass(this.params.readyCls);
                     }
 
-                    this.hintNode.innerHTML = suggestText.slice(text.length);
+                    if (this._activeSuggest != -1) {
+                        this.hintNode.innerHTML = suggestText.slice(text.length);
+                    }
                     this.cloneNode.innerHTML = this.html();
                     if ($(this.root).hasClass(this.params.suggestCls) && isAutocomplete && suggestText.length < this.params.aunt) {
                         $(this.root).addClass(this.params.autocompleteCls);
@@ -708,6 +729,8 @@ var
                 this._activeSuggest = index;
                 this.updateHint();
             }
+
+            $(this.root).addClass(this.params.placeholderCls);
 
             this._activeSuggest = index;
         },
