@@ -157,7 +157,10 @@ var
                     var key = e.keyCode,
                         data;
 
-                    if (key == 27) return; // Esc
+                    if (key == 27) {
+                        e.stopPropagation();
+                        return;
+                    }; // Esc
 
                     self._pressedKeys--;
                     if (self._pressedKeys < 0) self._pressedKeys = 0;
