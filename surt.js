@@ -593,6 +593,8 @@ var
 
                     if (this._activeSuggest != -1) {
                         this.hintNode.innerHTML = suggestText.slice(text.length);
+                    } else {
+                        this.hintNode.innerHTML = '';
                     }
                     this.cloneNode.innerHTML = this.html();
                     if ($(this.root).hasClass(this.params.suggestCls) && isAutocomplete && suggestText.length < this.params.aunt) {
@@ -635,6 +637,12 @@ var
         },
 
         isIncompleteQuery: function() {
+            // Если саггест один, в любом случае не считаем его "неполным",
+            // т.к. юзер может получить неприятное поведение — выбрал неполный саггест,
+            // сабмита не произошло, а кроме этого саггеста других нет, придётся руками сабмитить.
+            if (this.suggest && this.suggest.length == 1) {
+                return false;
+            }
             if (!this.suggest ||
                 !this.suggest[this._activeSuggest] ||
                 !this.suggest[this._activeSuggest][0] ||
