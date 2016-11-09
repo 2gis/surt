@@ -229,11 +229,12 @@ var
                         // Стандартный сабмит по ентеру
                         if (submit && self.params.submit && $.inArray('enter', self._submitEvents) != -1) {
                             self.params.submit(e, suggestPicked);
+
+                            // Удаляем сагесты и автокомплит
+                            $(self.root).removeClass(params.suggestCls);
+                            $(self.root).removeClass(params.autocompleteCls);
                         }
 
-                        // Удаляем сагесты и автокомплит
-                        $(self.root).removeClass(params.suggestCls);
-                        $(self.root).removeClass(params.autocompleteCls);
                         self.markSuggest(-1); // Снятие выделения с сагеста
 
                         return false;
