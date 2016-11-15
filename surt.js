@@ -182,18 +182,7 @@ var
                     // Используем isControlKey вместо affectsToValue, так как клавиши delete и backspace
                     // не должны влиять на выбор элемента из саггеста
                     if (self.suggest && self.suggest[self._activeSuggest] && !isControlKey(key)) {
-                        var text = self.text(),
-                            newChar = text.charAt(text.length - 1);
-
-                        if (newChar == ' ') { // Если передан пробел, второй пробел не требуется
-                            newChar = '';
-                        }
                         pickSuggest(false, e);
-
-                        var newText = self.text() + self.delimiter + ' ' + newChar;
-
-                        self.text(newText);
-                        self.restoreCursor(newText.length);
                     }
 
                     self.updateInput();
@@ -228,7 +217,7 @@ var
                     if (key == 13) {
                         e.preventDefault();
                         var submit = true;
-                        if (self._activeSuggest != -1 && self.suggest[self._activeSuggest][0].incomplete_query) {
+                        if (self.isIncompleteQuery()) {
                             submit = false;
                         }
 
@@ -240,11 +229,12 @@ var
                         // Стандартный сабмит по ентеру
                         if (submit && self.params.submit && $.inArray('enter', self._submitEvents) != -1) {
                             self.params.submit(e, suggestPicked);
+
+                            // Удаляем сагесты и автокомплит
+                            $(self.root).removeClass(params.suggestCls);
+                            $(self.root).removeClass(params.autocompleteCls);
                         }
 
-                        // Удаляем сагесты и автокомплит
-                        $(self.root).removeClass(params.suggestCls);
-                        $(self.root).removeClass(params.autocompleteCls);
                         self.markSuggest(-1); // Снятие выделения с сагеста
 
                         return false;
@@ -347,9 +337,10 @@ var
 
                     if (!self.suggest || !self.suggest[index]) return; // html illegal append situation
 
-                    var willSubmit = $.inArray('click', self._submitEvents) != -1;
-
                     self._activeSuggest = index;
+
+                    var willSubmit = $.inArray('click', self._submitEvents) != -1 && !self.isIncompleteQuery();
+
                     pickSuggest(willSubmit, e);
                     if (self.params.submit && willSubmit) { // Если пользователь хочет, то клик по сагесту приведёт к поиску, и обновлять сагест уже не надо
                         self.params.submit(e, true);
@@ -466,6 +457,11 @@ var
                 }
 
                 inputHTML = inputHTML.join(this.delimiter + ' ');
+                
+                if (this.isIncompleteQuery() && inputHTML[inputHTML.length - 1] != ' ') {
+                    inputHTML += ' ';
+                }
+
                 // if (this.trailingSpace) inputHTML += space;
                 if (this.params.inputMode != 'text' || force) {
                     this.html(inputHTML);
@@ -597,6 +593,8 @@ var
 
                     if (this._activeSuggest != -1) {
                         this.hintNode.innerHTML = suggestText.slice(text.length);
+                    } else {
+                        this.hintNode.innerHTML = '';
                     }
                     this.cloneNode.innerHTML = this.html();
                     if ($(this.root).hasClass(this.params.suggestCls) && isAutocomplete && suggestText.length < this.params.aunt) {
@@ -636,6 +634,23 @@ var
             }
 
             return spaces(text);
+        },
+
+        isIncompleteQuery: function() {
+            // Если саггест один, в любом случае не считаем его "неполным",
+            // т.к. юзер может получить неприятное поведение — выбрал неполный саггест,
+            // сабмита не произошло, а кроме этого саггеста других нет, придётся руками сабмитить.
+            if (this.suggest && this.suggest.length == 1) {
+                return false;
+            }
+            if (!this.suggest ||
+                !this.suggest[this._activeSuggest] ||
+                !this.suggest[this._activeSuggest][0] ||
+                !this.suggest[this._activeSuggest][0].item) {
+                return false;
+            }
+
+            return this.suggest[this._activeSuggest][0].item.hint.incomplete_query;
         },
 
         // Возвращает или устанавливает текст в инпут
