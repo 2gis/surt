@@ -650,6 +650,16 @@ var
                 return false;
             }
 
+            var hintText = this.suggest[this._activeSuggest][0].item.hint.text;
+            var inputText = this.inputNode.value;
+
+            if (hintText.trim() == inputText.trim()) {
+                // Если из саггеста выбирается ровно (с точностью до пробелов по краям) тот же текст,
+                // что уже набран в инпуте, не считаем саггест "неполным", т.к.
+                // с точки зрения юзера ничего не произойдёт и будет похоже на баг.
+                return false;
+            }
+
             return this.suggest[this._activeSuggest][0].item.hint.incomplete_query;
         },
 
