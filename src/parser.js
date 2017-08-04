@@ -94,9 +94,12 @@
     // Заменяет подстроки partial в тексте html минуя внутренности тегов html
     parser.replace = function(html) {
         function escape(text) {
-            return String(text).replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
         }
-
         var partial = escape(this.text());
         /* jshint -W044 */
         partial = '((>[^<]*|^[^<>]*))(' + partial + ')([\w -]*)';
