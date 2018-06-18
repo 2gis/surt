@@ -457,7 +457,7 @@ var
                 }
 
                 inputHTML = inputHTML.join(this.delimiter + ' ');
-                
+
                 if (this.isIncompleteQuery() && inputHTML[inputHTML.length - 1] != ' ') {
                     inputHTML += ' ';
                 }
@@ -620,7 +620,9 @@ var
         updatePlaceholder: function(text) {
             this.placeholder = text || this.placeholder;
 
-            $(this.hintNode).html(this.placeholder);
+            if (!this.text()) {
+                $(this.hintNode).html(this.placeholder);
+            }
         },
 
         // Возвращает текст из поисковой строки
